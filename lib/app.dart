@@ -7,10 +7,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'ListM',
       theme: AppTheme.lightTheme,
-      onGenerateRoute: AppRouter.generateRoute,
+      routerDelegate: AppRouterDelegate(),
+      routeInformationParser: AppRouteInformationParser(),
     );
   }
 }
