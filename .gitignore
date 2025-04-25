@@ -41,3 +41,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android build outputs
+.gradle/
+android/local.properties
+android/app/.cxx/
+
+# iOS/macOS
+ios/Pods/
+macos/Pods/
