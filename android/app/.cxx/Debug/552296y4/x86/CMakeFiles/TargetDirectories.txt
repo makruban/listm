@@ -1,2 +1,0 @@
-/Users/max/Development/Projects/Flutter/Business/listm/listm/android/app/.cxx/Debug/552296y4/x86/CMakeFiles/edit_cache.dir
-/Users/max/Development/Projects/Flutter/Business/listm/listm/android/app/.cxx/Debug/552296y4/x86/CMakeFiles/rebuild_cache.dir
