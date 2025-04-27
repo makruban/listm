@@ -1,0 +1,7 @@
+{
+  "@@locale": "es",
+  "appTitle": "TripWise",
+  "@appTitle": { "description": "The name of the application" },
+  "welcome": "Bienvenido a TripWise",
+  "@welcome": { "description": "Welcome message on the home screen" }
+}
