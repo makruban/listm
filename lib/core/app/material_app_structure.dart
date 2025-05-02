@@ -4,14 +4,21 @@ import 'package:listm/presentation/screens/main_screen.dart';
 import 'package:listm/presentation/screens/splash_screen.dart';
 
 class MaterialAppStructure extends StatelessWidget {
-  const MaterialAppStructure({super.key});
+  final bool showFloatingButton;
+
+  const MaterialAppStructure({
+    super.key,
+    this.showFloatingButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ListM',
       theme: MaterialThemeManager.getMaterialAppTheme(),
-      home: const SplashScreen(),
+      home: Scaffold(
+        body: const SplashScreen(),
+      ),
       routes: {
         '/home': (context) => const MainScreen(),
       },
