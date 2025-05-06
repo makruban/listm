@@ -16,9 +16,7 @@ class MaterialAppStructure extends StatelessWidget {
     return MaterialApp(
       title: 'ListM',
       theme: MaterialThemeManager.getMaterialAppTheme(),
-      home: Scaffold(
-        body: const SplashScreen(),
-      ),
+      home: const SplashScreen(),
       routes: {
         '/home': (context) => const MainScreen(),
       },

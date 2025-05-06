@@ -13,12 +13,6 @@ class AllItemsScreen extends StatelessWidget {
       body: const Center(
         child: Text('All Items Screen'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Implement add item functionality
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
