@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/item_tile.dart';
 
 class AllItemsScreen extends StatelessWidget {
   const AllItemsScreen({Key? key}) : super(key: key);
