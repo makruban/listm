@@ -3,28 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'all_items_screen.dart';
 import 'packing_lists_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   static const _screens = [
     PackingListsScreen(),
     AllItemsScreen(),
   ];
 
-  static final _items = [
-    BottomNavigationBarItem(icon: _icons[0], label: _titles[0]),
-    BottomNavigationBarItem(icon: _icons[1], label: _titles[1]),
-  ];
-  static const _titles = [
-    'Packing Lists',
-    'All Items',
-  ];
   static const _icons = [
     Icon(Icons.list),
     Icon(Icons.all_inbox),
   ];
+
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return BlocProvider<NavigationCubit>(
       create: (_) => NavigationCubit(),
       child: BlocBuilder<NavigationCubit, NavigationTab>(
@@ -36,7 +38,11 @@ class MainScreen extends StatelessWidget {
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: tab.index,
-              items: _items,
+              items: [
+                BottomNavigationBarItem(
+                    icon: _icons[0], label: loc!.packingLists),
+                BottomNavigationBarItem(icon: _icons[1], label: loc.allItems),
+              ],
               onTap: (i) => context
                   .read<NavigationCubit>()
                   .setTab(NavigationTab.values[i]),
