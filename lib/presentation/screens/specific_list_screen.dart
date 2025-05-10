@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/item_tile.dart';
 
 class SpecificListScreen extends StatelessWidget {
   const SpecificListScreen({Key? key}) : super(key: key);

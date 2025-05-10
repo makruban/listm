@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/models/item.dart';
+import 'package:listm/domain/entities/item_entity.dart';
 
 // Events
 abstract class ItemsEvent {}
@@ -7,7 +7,7 @@ abstract class ItemsEvent {}
 class LoadItems extends ItemsEvent {}
 
 class AddItem extends ItemsEvent {
-  final Item item;
+  final ItemEntity item;
   AddItem(this.item);
 }
 
@@ -17,7 +17,7 @@ abstract class ItemsState {}
 class ItemsInitial extends ItemsState {}
 
 class ItemsLoaded extends ItemsState {
-  final List<Item> items;
+  final List<ItemEntity> items;
   ItemsLoaded(this.items);
 }
 

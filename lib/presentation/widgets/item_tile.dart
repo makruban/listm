@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../data/models/item.dart';
+import 'package:listm/domain/entities/item_entity.dart';
 
 class ItemTile extends StatelessWidget {
-  final Item item;
+  final ItemEntity item;
   final VoidCallback? onTap;
 
   const ItemTile({

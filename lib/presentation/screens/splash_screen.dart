@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:go_router/go_router.dart';
+import 'package:listm/core/resources/app_routes.dart';
+import 'package:listm/core/resources/asset_paths.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(
       const Duration(seconds: 2),
-      () => Navigator.pushReplacementNamed(context, '/home'),
+      () => GoRouter.of(context).go(AppRoutes.home),
     );
   }
 
@@ -44,7 +47,7 @@ class SplashBackground extends StatelessWidget {
       ),
       child: Center(
         child: Image.asset(
-          'assets/images/splash.png',
+          AssetPaths.splashImage,
           scale: 6.0,
         ),
       ),

@@ -3,5 +3,17 @@
   "appTitle": "TripWise",
   "@appTitle": { "description": "The name of the application" },
   "welcome": "Willkommen bei TripWise",
-  "@welcome": { "description": "Welcome message on the home screen" }
+  "@welcome": { "description": "Welcome message on the home screen" },
+
+  "packingLists": "Packlisten",
+  "@packingLists": { "description": "Label für den Packlisten-Tab" },
+
+  "allItems": "Alle Artikel",
+  "@allItems": { "description": "Label für den Alle-Artikel-Tab" },
+
+  "addPackingList": "Packliste hinzufügen",
+  "@addPackingList": { "description": "Tooltip für FAB im Packlisten-Tab" },
+
+  "addItem": "Artikel hinzufügen",
+  "@addItem": { "description": "Tooltip für FAB im Alle-Artikel-Tab" }
 }
