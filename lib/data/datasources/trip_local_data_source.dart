@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:listm/core/resources/app_key_constants.dart';
 import 'package:listm/data/models/item_model.dart';
 import 'package:listm/data/models/trip_model.dart';
 import 'package:listm/domain/value_objects/item_id.dart';
@@ -20,7 +21,7 @@ abstract class TripLocalDataSource {
 }
 
 class TripLocalDataSourceImpl implements TripLocalDataSource {
-  static const String cacheKey = 'CACHED_TRIPS';
+  static const String cacheKey = CacheKeys.trips;
 
   final SharedPreferencesWithCache prefsWithCache;
 

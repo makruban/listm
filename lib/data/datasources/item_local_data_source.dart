@@ -1,3 +1,4 @@
+import 'package:listm/core/resources/app_key_constants.dart';
 import 'package:listm/data/models/item_model.dart';
 import 'package:listm/domain/value_objects/item_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,7 @@ abstract class ItemLocalDataSource {
 }
 
 class ItemLocalDataSourceImpl implements ItemLocalDataSource {
-  static const String cacheKey = 'CACHED_ITEMS';
+  static const String cacheKey = CacheKeys.items;
 
   final SharedPreferencesWithCache prefsWithCache;
 
