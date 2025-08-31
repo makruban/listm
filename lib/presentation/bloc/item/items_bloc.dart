@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:listm/core/util/unique_id_service.dart';
 import 'package:listm/domain/entities/item_entity.dart';
 import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_item_by_id_usecase.dart';
@@ -60,7 +61,15 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
 
   Future<void> _onAddItem(AddItemEvent event, Emitter<ItemsState> emit) async {
     try {
-      await _addItemUseCase(event.item);
+      final String title = event.name ?? '';
+      final ItemEntity item = ItemEntity(
+        id: await UniqueIdService.instance.generateTripId(
+          strategy: IdGenerationStrategy.uuid,
+        ),
+        title: title,
+        description: '',
+      );
+      await _addItemUseCase(item);
       add(const LoadItems());
     } catch (e) {
       emit(ItemsFailure(e.toString()));

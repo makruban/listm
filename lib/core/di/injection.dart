@@ -17,6 +17,7 @@ import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
+import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:listm/data/datasources/item_local_data_source.dart';
 import 'package:listm/data/repositories/item_repository_impl.dart';
@@ -105,5 +106,8 @@ Future<void> configureDependencies() async {
       deleteTripUseCase: getIt<DeleteTripUseCase>(),
       deleteAllTripsUseCase: getIt<DeleteAllTripsUseCase>(),
     ),
+  );
+  getIt.registerFactory(
+    () => NavigationCubit(),
   );
 }

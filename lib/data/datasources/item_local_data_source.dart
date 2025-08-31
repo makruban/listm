@@ -73,7 +73,7 @@ class ItemLocalDataSourceImpl implements ItemLocalDataSource {
   @override
   Future<void> deleteItemFromCache(ItemId id) async {
     final items = await getItemsFromCache();
-    items.removeWhere((item) => item.id == id);
+    items.removeWhere((item) => item.id == id.value);
     await _saveItemsToCache(items);
   }
 

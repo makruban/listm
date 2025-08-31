@@ -17,10 +17,7 @@ class GetTripByIdEvent extends TripsEvent {
 }
 
 /// Event to add a new trip.
-class AddTripEvent extends TripsEvent {
-  final TripEntity trip;
-  const AddTripEvent(this.trip);
-}
+class AddTripEvent extends TripsEvent {}
 
 /// Event to update an existing trip.
 class UpdateTripEvent extends TripsEvent {

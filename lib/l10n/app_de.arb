@@ -15,5 +15,25 @@
   "@addPackingList": { "description": "Tooltip für FAB im Packlisten-Tab" },
 
   "addItem": "Artikel hinzufügen",
-  "@addItem": { "description": "Tooltip für FAB im Alle-Artikel-Tab" }
+  "@addItem": { "description": "Tooltip für FAB im Alle-Artikel-Tab" },
+  "noTripsMessage": "Keine Packlisten gefunden. Tippe auf +, um eine hinzuzufügen.",
+  "@noTripsMessage": {
+    "description": "Nachricht, wenn keine Packlisten vorhanden sind"
+  },
+
+  "tripsLoadError": "Fehler beim Laden der Packlisten: {error}",
+  "@tripsLoadError": {
+    "description": "Fehlermeldung, wenn Packlisten nicht geladen werden können",
+    "placeholders": { "error": {} }
+  },
+
+  "untitledTrip": "Unbenannte Reise",
+  "@untitledTrip": {
+    "description": "Fallback-Titel, wenn eine Reise keinen Namen hat"
+  },
+
+  "itemsLabel": "Elemente",
+  "@itemsLabel": {
+    "description": "Bezeichnung für die Anzahl der Elemente in einer Reise"
+  }
 }

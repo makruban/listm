@@ -23,12 +23,19 @@ class GetItemByIdEvent extends ItemsEvent {
 }
 
 /// Event to add a new item.
+// class AddItemEvent extends ItemsEvent {
+//   final ItemEntity item;
+//   const AddItemEvent(this.item);
+
+//   @override
+//   List<Object?> get props => [item];
+// }
 class AddItemEvent extends ItemsEvent {
-  final ItemEntity item;
-  const AddItemEvent(this.item);
+  final String? name;
+  const AddItemEvent({this.name});
 
   @override
-  List<Object?> get props => [item];
+  List<Object?> get props => [name];
 }
 
 /// Event to update an existing item.

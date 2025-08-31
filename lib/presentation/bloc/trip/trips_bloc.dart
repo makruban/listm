@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:listm/core/util/unique_id_service.dart';
 import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/usecases/trip_usecases/add_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/delete_all_trips_usecase.dart';
@@ -66,7 +67,13 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
 
   Future<void> _onAddTrip(AddTripEvent event, Emitter<TripsState> emit) async {
     try {
-      await _addTripUseCase(event.trip);
+      final trip = TripEntity(
+          id: await UniqueIdService.instance
+              .generateTripId(strategy: IdGenerationStrategy.uuid),
+          title: 'Trip',
+          itemCount: 0,
+          icon: '');
+      await _addTripUseCase(trip);
       add(const LoadTrips());
     } catch (e) {
       emit(TripsFailure(e.toString()));
