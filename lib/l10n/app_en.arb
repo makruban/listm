@@ -19,5 +19,25 @@
   "addItem": "Add Item",
   "@addItem": {
     "description": "Tooltip text for the FAB when on All Items"
-  }
+  },
+  "noTripsMessage": "No packing lists found. Tap + to add one.",
+"@noTripsMessage": {
+"description": "Message shown when there are no trips in the list"
+},
+"tripsLoadError": "Failed to load packing lists: {error}",
+"@tripsLoadError": {
+"description": "Error message when trips fail to load",
+"placeholders": { "error": {} }
+},
+"untitledTrip": "Untitled trip",
+"@untitledTrip": {
+"description": "Fallback title when a trip has no name"
+},
+"itemsLabel": "items",
+"@itemsLabel": {
+"description": "Label for the number of items in a trip"
 }
+}
+
+
+

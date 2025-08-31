@@ -24,27 +24,4 @@ class ItemEntity {
     required this.description,
     this.isCompleted = false,
   });
-
-  /// Creates an [ItemEntity] from a JSON map.
-  ///
-  /// Expects keys: 'id', 'title', 'description', 'isCompleted'.
-  factory ItemEntity.fromJson(Map<String, dynamic> json) {
-    return ItemEntity(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      isCompleted: json['isCompleted'] as bool,
-    );
-  }
-
-  /// Converts this [ItemEntity] into a JSON map.
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'isCompleted': isCompleted,
-      };
-
-  @override
-  String toString() => jsonEncode(toJson());
 }

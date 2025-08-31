@@ -15,5 +15,25 @@
   "@addPackingList": { "description": "Tooltip para FAB en Listas de empaque" },
 
   "addItem": "Agregar artículo",
-  "@addItem": { "description": "Tooltip para FAB en Todos los artículos" }
+  "@addItem": { "description": "Tooltip para FAB en Todos los artículos" },
+  "noTripsMessage": "No se encontraron listas de viaje. Toque + para agregar una.",
+  "@noTripsMessage": {
+    "description": "Mensaje cuando no hay listas de viaje"
+  },
+
+  "tripsLoadError": "Error al cargar las listas de viaje: {error}",
+  "@tripsLoadError": {
+    "description": "Mensaje de error cuando las listas de viaje no se pueden cargar",
+    "placeholders": { "error": {} }
+  },
+
+  "untitledTrip": "Viaje sin título",
+  "@untitledTrip": {
+    "description": "Título alternativo cuando un viaje no tiene nombre"
+  },
+
+  "itemsLabel": "elementos",
+  "@itemsLabel": {
+    "description": "Etiqueta para el número de elementos en un viaje"
+  }
 }
