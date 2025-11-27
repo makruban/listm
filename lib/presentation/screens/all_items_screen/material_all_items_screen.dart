@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,17 +10,20 @@ import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
+import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 
 /// Inline list widget for displaying and editing all items via ItemsBloc.
 /// No Scaffold or FAB—embed in a parent widget that provides ItemsBloc.
 class MaterialAllItemsScreen extends StatefulWidget {
   const MaterialAllItemsScreen({
-    Key? key,
+    super.key,
     required this.hideFab,
     required this.showFab,
-  }) : super(key: key);
+    required this.itemsBloc,
+  });
   final VoidCallback hideFab;
   final VoidCallback showFab;
+  final ItemsBloc itemsBloc;
 
   @override
   _MaterialAllItemsScreenState createState() => _MaterialAllItemsScreenState();
@@ -26,10 +31,10 @@ class MaterialAllItemsScreen extends StatefulWidget {
 
 class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
   late ItemsBloc _itemsBloc;
-  bool _isInitialized = false;
 
   /// Currently editing placeholder ID (only one at a time)
   Key? _editingId;
+  bool _isSubmitting = false;
 
   final _controllers = <Key, TextEditingController>{};
   final _focusNodes = <Key, FocusNode>{};
@@ -54,6 +59,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
   }
 
   void _submitOrCancel(Key id) {
+    _isSubmitting = true;
     final raw = _controllers[id]?.text ?? '';
     final trimmed = raw.trim();
     final entityId = (id as ValueKey<String>).value;
@@ -96,11 +102,13 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_isInitialized) {
-      _itemsBloc = BlocProvider.of<ItemsBloc>(context);
-      _itemsBloc.add(const LoadItems());
-      _isInitialized = true;
-    }
+  }
+
+  @override
+  void initState() {
+    _itemsBloc = widget.itemsBloc;
+    _itemsBloc.add(const LoadItems());
+    super.initState();
   }
 
   @override
@@ -145,14 +153,18 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
             // We only care about the refreshed list
             if (curr is! ItemsLoadSuccess) return false;
 
-            // 1. If we’re still editing, keep FAB hidden
-            if (_editingId != null) return false;
+            // 1. If we’re still editing AND NOT submitting, keep FAB hidden
+            if (_editingId != null && !_isSubmitting) return false;
             // 2. If the list still has an “empty-title” placeholder, keep FAB hidden
             final stillHasPlaceholder =
                 curr.items.any((e) => e.title.trim().isEmpty);
             return !stillHasPlaceholder;
           },
           listener: (context, state) {
+            if (_isSubmitting) {
+              setState(() => _editingId = null);
+              _isSubmitting = false;
+            }
             widget.showFab(); // bring back the FAB after the list is stable
           },
         ),
@@ -167,7 +179,9 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: _onBackgroundTap,
-              child: ListView.builder(
+              child: ListView.separated(
+                separatorBuilder: (context, index) =>
+                    const Divider(thickness: 0.4),
                 itemCount: state.items.length,
                 itemBuilder: (context, index) {
                   final ItemEntity item = state.items[index];
@@ -205,32 +219,80 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                     );
                   }
                   // Normal display mode
-                  return ListTile(
-                    title: Text(item.title),
-                    tileColor: Colors.grey,
-                    trailing: IconButton(
-                      onPressed: () {
-                        // cancel any leftover edit first
-                        if (_editingId != null) _submitOrCancel(_editingId!);
-
-                        // remove this item
-                        _itemsBloc.add(RemoveItemEvent(ItemId(item.id)));
-                      },
-                      icon: const Icon(Icons.delete),
-                      tooltip: 'Remove this item',
-                      color: Colors.blue,
-                      // iconSize: 40,
-                    ),
-                    onTap: () {
+                  final GlobalKey itemKey = GlobalKey();
+                  return AppSwipeableCard(
+                    key: key,
+                    onDelete: () {
                       // cancel any leftover edit first
                       if (_editingId != null) _submitOrCancel(_editingId!);
-                      if (item.title.isEmpty && _editingId == null) {
-                        _startEditing(key, initial: '');
-                      }
-
-                      // begin editing this one
-                      _startEditing(key, initial: item.title);
+                      _itemsBloc.add(RemoveItemEvent(ItemId(item.id)));
                     },
+                    actions: [
+                      SwipeAction(
+                        icon: Icons.info_outline,
+                        color: Colors.green,
+                        label: 'Info',
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Item Details'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Title: ${item.title}'),
+                                  Text('ID: ${item.id}'),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('Close'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      SwipeAction(
+                        icon: Icons.delete_outline,
+                        color: Colors.red,
+                        label: 'Delete',
+                        onTap: () {
+                          // cancel any leftover edit first
+                          if (_editingId != null) _submitOrCancel(_editingId!);
+                          _itemsBloc.add(RemoveItemEvent(ItemId(item.id)));
+                        },
+                      ),
+                    ],
+                    child: GestureDetector(
+                      onLongPress: () {
+                        /// TODO: Consider using a context menu or a more accessible way to show options
+                        /// TODO: or remove the long-press in favor of a trailing icon button
+                      },
+                      child: ListTile(
+                        leading: Text(item.title),
+                        // title: Text(item.title),
+                        title: Row(
+                          children: [
+                            Text('used: 2'),
+                            Spacer(),
+                            AddToTripButton(),
+                          ],
+                        ),
+                        onTap: () {
+                          // cancel any leftover edit first
+                          if (_editingId != null) _submitOrCancel(_editingId!);
+                          if (item.title.isEmpty && _editingId == null) {
+                            _startEditing(key, initial: '');
+                          }
+
+                          // begin editing this one
+                          _startEditing(key, initial: item.title);
+                        },
+                      ),
+                    ),
                   );
                 },
               ),
@@ -241,5 +303,33 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
         },
       ),
     );
+  }
+}
+
+class AddToTripButton extends StatelessWidget {
+  const AddToTripButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: () => _showDialog(context),
+        icon: Icon(
+          Icons.add,
+          color: Colors.green,
+        ));
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                title: const Text('Add to Trip'),
+                content: const Text('Select a trip to add this item to.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancel'),
+                  ),
+                ]));
   }
 }

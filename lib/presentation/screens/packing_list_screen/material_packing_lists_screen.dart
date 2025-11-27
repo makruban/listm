@@ -3,14 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listm/core/resources/app_routes.dart';
 import 'package:listm/domain/entities/trip_entity.dart';
+import 'package:listm/domain/value_objects/trip_id.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/packing_lists_view.dart';
+import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
 class MaterialPackingListsScreen extends StatefulWidget {
-  const MaterialPackingListsScreen({Key? key}) : super(key: key);
+  const MaterialPackingListsScreen({
+    super.key,
+    required this.tripsBloc,
+  });
+  final TripsBloc tripsBloc;
 
   @override
   State<MaterialPackingListsScreen> createState() =>
@@ -20,23 +26,16 @@ class MaterialPackingListsScreen extends StatefulWidget {
 class _MaterialPackingListsScreenState
     extends State<MaterialPackingListsScreen> {
   late TripsBloc _tripsBloc;
-  // Guard to ensure we only load trips once
-  bool _isInitialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    if (!_isInitialized) {
-      _tripsBloc = context.read<TripsBloc>();
-      // Trigger initial load of trips
-      _tripsBloc.add(const LoadTrips());
-      _isInitialized = true;
-    }
   }
 
   @override
   void initState() {
+    _tripsBloc = widget.tripsBloc;
+    _tripsBloc.add(const LoadTrips());
     super.initState();
   }
 
@@ -63,7 +62,11 @@ class _MaterialPackingListsScreenState
             itemCount: trips.length,
             itemBuilder: (context, index) {
               final trip = trips[index];
-              return _TripCard(key: ValueKey(trip.id), trip: trip);
+              return _TripCard(
+                key: ValueKey(trip.id),
+                trip: trip,
+                tripsBloc: _tripsBloc,
+              );
             },
           );
         } else if (state is TripsFailure) {
@@ -82,7 +85,12 @@ class _MaterialPackingListsScreenState
 ///
 class _TripCard extends StatelessWidget {
   final TripEntity trip;
-  const _TripCard({Key? key, required this.trip}) : super(key: key);
+  final Bloc tripsBloc;
+  const _TripCard({
+    super.key,
+    required this.trip,
+    required this.tripsBloc,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,19 +99,72 @@ class _TripCard extends StatelessWidget {
     if (loc == null) {
       return const SizedBox.shrink();
     }
-    return Card(
+
+    return AppSwipeableCard(
+      key: ValueKey(trip.id),
       margin: const EdgeInsets.symmetric(vertical: 6),
-      child: ListTile(
-        leading: trip.icon.isNotEmpty
-            ? Image.asset(trip.icon, width: 32, height: 32)
-            : const Icon(Icons.card_travel),
-        title: Text(trip.title.isEmpty ? loc.untitledTrip : trip.title),
-        subtitle: Text(
-          '${trip.itemCount} ${loc.itemsLabel}',
+      onDelete: () {
+        tripsBloc.add(RemoveTripEvent(TripId(trip.id)));
+      },
+      actions: [
+        SwipeAction(
+          icon: Icons.edit,
+          color: Colors.blue,
+          label: 'Rename',
+          onTap: () {
+            // TODO: handle rename action
+          },
         ),
-        onTap: () {
-          // context.go('${AppRoutes.packingLists}/${trip.id}');
-        },
+        SwipeAction(
+          icon: Icons.info_outline,
+          color: Colors.green,
+          label: 'Info',
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Item Details'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Title: ${trip.title}'),
+                    Text('ID: ${trip.id}'),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        SwipeAction(
+          icon: Icons.delete_outline,
+          color: Colors.red,
+          label: 'Delete',
+          onTap: () {
+            tripsBloc.add(RemoveTripEvent(TripId(trip.id)));
+          },
+        ),
+      ],
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        child: ListTile(
+          leading: trip.icon.isNotEmpty
+              ? Image.asset(trip.icon, width: 32, height: 32)
+              : const Icon(Icons.card_travel),
+          title: Text(trip.title.isEmpty ? loc.untitledTrip : trip.title),
+          subtitle: Text(
+            '${trip.itemCount} ${loc.itemsLabel}',
+          ),
+          onTap: () {
+            // context.go('${AppRoutes.packingLists}/${trip.id}');
+          },
+        ),
       ),
     );
   }

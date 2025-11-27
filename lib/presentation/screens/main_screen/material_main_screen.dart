@@ -5,9 +5,6 @@ import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/screens/all_items_screen/material_all_items_screen.dart';
 import 'package:listm/presentation/screens/packing_list_screen/material_packing_lists_screen.dart';
-import 'package:listm/presentation/screens/packing_list_screen/packing_lists_screen.dart';
-import 'package:listm/screens/all_items_screen.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Material version of the main screen with bottom tabs and FAB.
@@ -70,7 +67,9 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
       // 2️⃣ Build your tab info with the real `loc`
       _tabs = [
         _TabInfo(
-          page: const MaterialPackingListsScreen(),
+          page: MaterialPackingListsScreen(
+            tripsBloc: _tripsBloc,
+          ),
           appBarBuilder: (context) => AppBar(
             title: Text(_loc.packingLists),
             actions: [
@@ -83,7 +82,11 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
           ),
         ),
         _TabInfo(
-          page: MaterialAllItemsScreen(hideFab: _hideFab, showFab: _showFab),
+          page: MaterialAllItemsScreen(
+            hideFab: _hideFab,
+            showFab: _showFab,
+            itemsBloc: _itemsBloc,
+          ),
           appBarBuilder: (context) => AppBar(
             title: Text(_loc.allItems),
             actions: [

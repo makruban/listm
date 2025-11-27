@@ -1,3 +1,4 @@
+import 'package:listm/core/error/exceptions/repository_exception.dart';
 import 'package:listm/data/datasources/item_local_data_source.dart';
 import 'package:listm/data/models/item_model.dart';
 import 'package:listm/domain/entities/item_entity.dart';
@@ -13,40 +14,59 @@ class ItemRepositoryImpl implements ItemRepository {
 
   @override
   Future<List<ItemEntity>> getItems() async {
-    // Fetch models from the data source and convert to domain entities
-    final List<ItemModel> models = await localDataSource.getItemsFromCache();
-    return models.map((m) => m.toEntity()).toList();
+    try {
+      final List<ItemModel> models = await localDataSource.getItemsFromCache();
+      return models.map((m) => m.toEntity()).toList();
+    } catch (e) {
+      throw RepositoryLoadException('Failed to load items', e);
+    }
   }
 
   @override
   Future<ItemEntity> getItemById(ItemId id) async {
-    // Lookup in data source by ItemId
-    final ItemModel model = await localDataSource.getItemByIdFromCache(id);
-    return model.toEntity();
+    try {
+      final ItemModel model = await localDataSource.getItemByIdFromCache(id);
+      return model.toEntity();
+    } catch (e) {
+      throw RepositoryNotFoundException('Item not found with id: $id', e);
+    }
   }
 
   @override
   Future<void> addItem(ItemEntity item) async {
-    // Convert domain entity to data model
-    final ItemModel model = ItemModel.fromEntity(item);
-    await localDataSource.addItemToCache(model);
+    try {
+      final ItemModel model = ItemModel.fromEntity(item);
+      await localDataSource.addItemToCache(model);
+    } catch (e) {
+      throw RepositorySaveException('Failed to save item: $item', e);
+    }
   }
 
   @override
   Future<void> updateItem(ItemEntity item) async {
-    final ItemModel model = ItemModel.fromEntity(item);
-    await localDataSource.updateItemInCache(model);
+    try {
+      final ItemModel model = ItemModel.fromEntity(item);
+      await localDataSource.updateItemInCache(model);
+    } catch (e) {
+      throw RepositoryUpdateException('Failed to update item: $item', e);
+    }
   }
 
   @override
   Future<void> deleteItem(ItemId id) async {
-    // Delete by ItemId
-    await localDataSource.deleteItemFromCache(id);
+    try {
+      await localDataSource.deleteItemFromCache(id);
+    } catch (e) {
+      throw RepositoryDeleteException('Failed to delete item: $id', e);
+    }
   }
 
   @override
   Future<void> deleteAllItems() async {
-    // Remove all items from cache
-    await localDataSource.deleteAllItemsFromCache();
+    try {
+      await localDataSource.deleteAllItemsFromCache();
+    } catch (e) {
+      throw RepositoryDeleteException('Failed to delete all items', e);
+    }
   }
 }

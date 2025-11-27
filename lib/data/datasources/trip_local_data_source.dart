@@ -75,7 +75,7 @@ class TripLocalDataSourceImpl implements TripLocalDataSource {
   @override
   Future<void> deleteTripFromCache(TripId id) async {
     final trips = await getTripsFromCache();
-    trips.removeWhere((trip) => trip.id == id);
+    trips.removeWhere((trip) => trip.id == id.value);
     await _saveTripsToCache(trips);
   }
 

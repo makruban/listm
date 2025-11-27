@@ -7,4 +7,5 @@ abstract class ItemRepository {
   Future<void> addItem(ItemEntity item);
   Future<void> updateItem(ItemEntity item);
   Future<void> deleteItem(ItemId id);
+  Future<void> deleteAllItems();
 }
