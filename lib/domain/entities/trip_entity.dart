@@ -1,7 +1,3 @@
-// lib/domain/entities/trip_entity.dart
-
-import 'dart:convert';
-
 /// Represents a packing trip, containing its identifier, title, icon reference, and the count of items packed.
 class TripEntity {
   /// Unique identifier for the trip.

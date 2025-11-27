@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 /// Represents a single item in TripWise with its basic properties and JSON (de)serialization.
 class ItemEntity {
   /// Unique identifier for the item.
