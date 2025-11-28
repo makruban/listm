@@ -10,4 +10,5 @@ abstract class AppRoutes {
   // TODO: Add more route names as needed:
   // static const String packingLists = '/packingLists';
   // static const String specificList = '/packingLists/:id';
+  static const String tripDetail = 'trip/:id';
 }

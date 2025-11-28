@@ -162,7 +162,10 @@ class _TripCard extends StatelessWidget {
             '${trip.itemCount} ${loc.itemsLabel}',
           ),
           onTap: () {
-            // context.go('${AppRoutes.packingLists}/${trip.id}');
+            context.goNamed(
+              'tripDetail',
+              pathParameters: {'id': trip.id},
+            );
           },
         ),
       ),
