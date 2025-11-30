@@ -4,6 +4,8 @@ import 'package:listm/data/datasources/trip_local_data_source.dart';
 import 'package:listm/data/repositories/trip_repository_impl.dart';
 import 'package:listm/domain/repositories/item_repository.dart';
 import 'package:listm/domain/repositories/trip_repository.dart';
+import 'package:listm/domain/repositories/trip_item_relation_repository.dart';
+import 'package:listm/data/repositories/trip_item_relation_repository_impl.dart';
 import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/remove_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_usecase.dart';
@@ -49,6 +51,9 @@ Future<void> configureDependencies() async {
   // … TripRepositoryImpl …
   getIt.registerLazySingleton<TripRepository>(
     () => TripRepositoryImpl(localDataSource: getIt()),
+  );
+  getIt.registerLazySingleton<TripItemRelationRepository>(
+    () => TripItemRelationRepositoryImpl(),
   );
 
   // 4️⃣ Use-cases
