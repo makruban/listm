@@ -17,8 +17,10 @@ import 'package:listm/domain/usecases/trip_usecases/delete_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
+import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
+import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:listm/data/datasources/item_local_data_source.dart';
@@ -91,6 +93,12 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton(
     () => DeleteAllTripsUseCase(getIt()),
   );
+  getIt.registerLazySingleton(
+    () => GetItemsForTripUseCase(
+      relationRepository: getIt(),
+      itemRepository: getIt(),
+    ),
+  );
 
   // 5️⃣ Blocs / Cubits as factories (so you get a new instance each time)
   getIt.registerFactory(
@@ -110,6 +118,12 @@ Future<void> configureDependencies() async {
       updateTripUseCase: getIt<UpdateTripUseCase>(),
       deleteTripUseCase: getIt<DeleteTripUseCase>(),
       deleteAllTripsUseCase: getIt<DeleteAllTripsUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => TripDetailsBloc(
+      getTripByIdUseCase: getIt<GetTripByIdUseCase>(),
+      getItemsForTripUseCase: getIt<GetItemsForTripUseCase>(),
     ),
   );
   getIt.registerFactory(

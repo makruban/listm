@@ -92,6 +92,51 @@ class _TripCard extends StatelessWidget {
     required this.tripsBloc,
   });
 
+  void _navigateToTripDetails(BuildContext context) {
+    context.goNamed(
+      'tripDetail',
+      pathParameters: {'id': trip.id},
+    );
+  }
+
+  void _handleRenameAction() {
+    // TODO: handle rename action
+  }
+
+  void _handleShowInfoDialog(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+    if (loc == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.tripDetailsTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(loc.tripTitleLabel(trip.title)),
+            Text(loc.tripIdLabel(trip.id)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => _handleCloseDialog(context),
+            child: Text(loc.closeButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleDeleteTrip() {
+    tripsBloc.add(RemoveTripEvent(TripId(trip.id)));
+  }
+
+  void _handleCloseDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
@@ -103,52 +148,25 @@ class _TripCard extends StatelessWidget {
     return AppSwipeableCard(
       key: ValueKey(trip.id),
       margin: const EdgeInsets.symmetric(vertical: 6),
-      onDelete: () {
-        tripsBloc.add(RemoveTripEvent(TripId(trip.id)));
-      },
+      onDelete: _handleDeleteTrip,
       actions: [
         SwipeAction(
           icon: Icons.edit,
           color: Colors.blue,
-          label: 'Rename',
-          onTap: () {
-            // TODO: handle rename action
-          },
+          label: loc.renameAction,
+          onTap: _handleRenameAction,
         ),
         SwipeAction(
           icon: Icons.info_outline,
           color: Colors.green,
-          label: 'Info',
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Item Details'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Title: ${trip.title}'),
-                    Text('ID: ${trip.id}'),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Close'),
-                  ),
-                ],
-              ),
-            );
-          },
+          label: loc.infoAction,
+          onTap: () => _handleShowInfoDialog(context),
         ),
         SwipeAction(
           icon: Icons.delete_outline,
           color: Colors.red,
-          label: 'Delete',
-          onTap: () {
-            tripsBloc.add(RemoveTripEvent(TripId(trip.id)));
-          },
+          label: loc.deleteAction,
+          onTap: _handleDeleteTrip,
         ),
       ],
       child: Card(
@@ -161,12 +179,7 @@ class _TripCard extends StatelessWidget {
           subtitle: Text(
             '${trip.itemCount} ${loc.itemsLabel}',
           ),
-          onTap: () {
-            context.goNamed(
-              'tripDetail',
-              pathParameters: {'id': trip.id},
-            );
-          },
+          onTap: () => _navigateToTripDetails(context),
         ),
       ),
     );
