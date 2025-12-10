@@ -63,7 +63,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     try {
       final String title = event.name ?? '';
       final ItemEntity item = ItemEntity(
-        id: await UniqueIdService.instance.generateTripId(
+        id: await UniqueIdService.instance.generateItemId(
           strategy: IdGenerationStrategy.uuid,
         ),
         title: title,

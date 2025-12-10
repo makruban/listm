@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:listm/core/resources/app_routes.dart';
 import 'package:listm/presentation/screens/main_screen/main_screen.dart';
 import 'package:listm/presentation/screens/splash_screen.dart';
+import 'package:listm/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.splash,
@@ -18,6 +19,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.home,
       name: 'home',
       builder: (context, state) => const MainScreen(),
+      routes: [
+        GoRoute(
+          path: AppRoutes.tripDetail,
+          name: 'tripDetail',
+          builder: (context, state) {
+            final tripId = state.pathParameters['id']!;
+            return TripDetailScreen(tripId: tripId);
+          },
+        ),
+      ],
     ),
   ],
 );

@@ -35,5 +35,47 @@
   "itemsLabel": "elementos",
   "@itemsLabel": {
     "description": "Etiqueta para el número de elementos en un viaje"
+  },
+
+  "renameAction": "Renombrar",
+  "@renameAction": {
+    "description": "Etiqueta para la acción de renombrar en el menú deslizante"
+  },
+
+  "infoAction": "Info",
+  "@infoAction": {
+    "description": "Etiqueta para la acción de información en el menú deslizante"
+  },
+
+  "deleteAction": "Eliminar",
+  "@deleteAction": {
+    "description": "Etiqueta para la acción de eliminar en el menú deslizante"
+  },
+
+  "tripDetailsTitle": "Detalles del viaje",
+  "@tripDetailsTitle": {
+    "description": "Título para el diálogo de detalles del viaje"
+  },
+
+  "tripTitleLabel": "Título: {title}",
+  "@tripTitleLabel": {
+    "description": "Etiqueta que muestra el título del viaje en el diálogo",
+    "placeholders": { "title": {} }
+  },
+
+  "tripIdLabel": "ID: {id}",
+  "@tripIdLabel": {
+    "description": "Etiqueta que muestra el ID del viaje en el diálogo",
+    "placeholders": { "id": {} }
+  },
+
+  "closeButton": "Cerrar",
+  "@closeButton": {
+    "description": "Texto del botón cerrar"
+  },
+
+  "removeAction": "Quitar",
+  "@removeAction": {
+    "description": "Etiqueta para la acción de quitar"
   }
 }

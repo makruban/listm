@@ -35,5 +35,47 @@
   "itemsLabel": "Elemente",
   "@itemsLabel": {
     "description": "Bezeichnung für die Anzahl der Elemente in einer Reise"
+  },
+
+  "renameAction": "Umbenennen",
+  "@renameAction": {
+    "description": "Bezeichnung für die Aktion Umbenennen im Wischmenü"
+  },
+
+  "infoAction": "Info",
+  "@infoAction": {
+    "description": "Bezeichnung für die Aktion Info im Wischmenü"
+  },
+
+  "deleteAction": "Löschen",
+  "@deleteAction": {
+    "description": "Bezeichnung für die Aktion Löschen im Wischmenü"
+  },
+
+  "tripDetailsTitle": "Reisedetails",
+  "@tripDetailsTitle": {
+    "description": "Titel für das Reisedetails-Dialogfenster"
+  },
+
+  "tripTitleLabel": "Titel: {title}",
+  "@tripTitleLabel": {
+    "description": "Bezeichnung für den Reisetitel im Dialogfenster",
+    "placeholders": { "title": {} }
+  },
+
+  "tripIdLabel": "ID: {id}",
+  "@tripIdLabel": {
+    "description": "Bezeichnung für die Reise-ID im Dialogfenster",
+    "placeholders": { "id": {} }
+  },
+
+  "closeButton": "Schließen",
+  "@closeButton": {
+    "description": "Text für die Schließen-Schaltfläche"
+  },
+
+  "removeAction": "Entfernen",
+  "@removeAction": {
+    "description": "Bezeichnung für die Aktion Entfernen"
   }
 }

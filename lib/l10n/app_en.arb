@@ -36,8 +36,39 @@
 "itemsLabel": "items",
 "@itemsLabel": {
 "description": "Label for the number of items in a trip"
+},
+  "renameAction": "Rename",
+  "@renameAction": {
+    "description": "Label for rename action in swipe menu"
+  },
+  "infoAction": "Info",
+  "@infoAction": {
+    "description": "Label for info action in swipe menu"
+  },
+  "deleteAction": "Delete",
+  "@deleteAction": {
+    "description": "Label for delete action in swipe menu"
+  },
+  "tripDetailsTitle": "Trip Details",
+  "@tripDetailsTitle": {
+    "description": "Title for trip details dialog"
+  },
+  "tripTitleLabel": "Title: {title}",
+  "@tripTitleLabel": {
+    "description": "Label showing trip title in dialog",
+    "placeholders": { "title": {} }
+  },
+  "tripIdLabel": "ID: {id}",
+  "@tripIdLabel": {
+    "description": "Label showing trip ID in dialog",
+    "placeholders": { "id": {} }
+  },
+  "closeButton": "Close",
+  "@closeButton": {
+    "description": "Close button text"
+  },
+  "removeAction": "Remove",
+  "@removeAction": {
+    "description": "Label for remove action"
+  }
 }
-}
-
-
-

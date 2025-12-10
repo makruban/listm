@@ -50,7 +50,7 @@ class TripLocalDataSourceImpl implements TripLocalDataSource {
   @override
   Future<TripModel> getTripByIdFromCache(TripId id) async {
     final trips = await getTripsFromCache();
-    final trip = trips.firstWhere((trip) => trip.id == id,
+    final trip = trips.firstWhere((trip) => trip.id == id.value,
         orElse: () => throw Exception('Trip not found'));
     return trip;
   }
