@@ -59,7 +59,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                     key: ValueKey(item.id),
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     onDelete: () {
-                      // TODO: Implement remove item from trip
+                      _tripDetailsBloc.add(RemoveTripItem(item.id));
                     },
                     actions: [
                       SwipeAction(
@@ -67,7 +67,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                         color: Colors.red,
                         label: 'Remove',
                         onTap: () {
-                          // TODO: Implement remove item from trip
+                          _tripDetailsBloc.add(RemoveTripItem(item.id));
                         },
                       ),
                     ],
@@ -95,11 +95,89 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // TODO: Implement add item to trip
+            _showAddItemsBottomSheet(context);
           },
           child: const Icon(Icons.add),
         ),
       ),
+    );
+  }
+
+  void _showAddItemsBottomSheet(BuildContext context) {
+    _tripDetailsBloc.add(LoadAvailableItems());
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) {
+        return BlocProvider.value(
+          value: _tripDetailsBloc,
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.9,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (context, scrollController) {
+              return Column(
+                children: [
+                  AppBar(
+                    title: const Text('Add Items'),
+                    automaticallyImplyLeading: false,
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
+                      builder: (context, state) {
+                        if (state is TripDetailsLoaded) {
+                          if (state.availableItems.isEmpty) {
+                            return const Center(
+                              child: Text('No items available to add'),
+                            );
+                          }
+                          return ListView.builder(
+                            controller: scrollController,
+                            itemCount: state.availableItems.length,
+                            itemBuilder: (context, index) {
+                              final item = state.availableItems[index];
+                              // Check if item is already in the trip
+                              final isAlreadyAdded = state.items.any(
+                                (tripItem) => tripItem.id == item.id,
+                              );
+
+                              return CheckboxListTile(
+                                value: isAlreadyAdded,
+                                title: Text(item.title),
+                                subtitle: Text(item.description),
+                                onChanged: (bool? value) {
+                                  if (value == true) {
+                                    _tripDetailsBloc.add(AddTripItem(item.id));
+                                  } else {
+                                    _tripDetailsBloc
+                                        .add(RemoveTripItem(item.id));
+                                  }
+                                },
+                              );
+                            },
+                          );
+                        } else if (state is TripDetailsError) {
+                          return Center(child: Text('Error: ${state.message}'));
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

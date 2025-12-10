@@ -11,10 +11,12 @@ class TripDetailsLoading extends TripDetailsState {}
 class TripDetailsLoaded extends TripDetailsState {
   final TripEntity trip;
   final List<ItemEntity> items;
+  final List<ItemEntity> availableItems;
 
   const TripDetailsLoaded({
     required this.trip,
     required this.items,
+    this.availableItems = const [],
   });
 }
 

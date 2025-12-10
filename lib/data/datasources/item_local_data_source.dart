@@ -46,7 +46,7 @@ class ItemLocalDataSourceImpl implements ItemLocalDataSource {
   @override
   Future<ItemModel> getItemByIdFromCache(ItemId id) async {
     final items = await getItemsFromCache();
-    final item = items.firstWhere((item) => item.id == id,
+    final item = items.firstWhere((item) => item.id == id.value,
         orElse: () => throw Exception('Item not found'));
     return item;
   }

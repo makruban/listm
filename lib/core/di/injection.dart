@@ -6,6 +6,7 @@ import 'package:listm/domain/repositories/item_repository.dart';
 import 'package:listm/domain/repositories/trip_repository.dart';
 import 'package:listm/domain/repositories/trip_item_relation_repository.dart';
 import 'package:listm/data/repositories/trip_item_relation_repository_impl.dart';
+import 'package:listm/data/datasources/trip_item_relation_local_data_source.dart';
 import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/remove_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_usecase.dart';
@@ -18,6 +19,8 @@ import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart'
 import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
+import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
+import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
@@ -33,7 +36,11 @@ Future<void> configureDependencies() async {
   // 1️⃣ Core / third-party
   final prefs = await SharedPreferencesWithCache.create(
     cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: <String>{CacheKeys.items, CacheKeys.trips},
+      allowList: <String>{
+        CacheKeys.items,
+        CacheKeys.trips,
+        CacheKeys.tripItemRelations,
+      },
     ),
   );
   getIt.registerSingleton<SharedPreferencesWithCache>(prefs);
@@ -54,8 +61,11 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<TripRepository>(
     () => TripRepositoryImpl(localDataSource: getIt()),
   );
+  getIt.registerLazySingleton<TripItemRelationLocalDataSource>(
+    () => TripItemRelationLocalDataSourceImpl(prefsWithCache: prefs),
+  );
   getIt.registerLazySingleton<TripItemRelationRepository>(
-    () => TripItemRelationRepositoryImpl(),
+    () => TripItemRelationRepositoryImpl(localDataSource: getIt()),
   );
 
   // 4️⃣ Use-cases
@@ -99,6 +109,12 @@ Future<void> configureDependencies() async {
       itemRepository: getIt(),
     ),
   );
+  getIt.registerLazySingleton(
+    () => AddTripItemUseCase(getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => RemoveTripItemUseCase(getIt()),
+  );
 
   // 5️⃣ Blocs / Cubits as factories (so you get a new instance each time)
   getIt.registerFactory(
@@ -124,6 +140,9 @@ Future<void> configureDependencies() async {
     () => TripDetailsBloc(
       getTripByIdUseCase: getIt<GetTripByIdUseCase>(),
       getItemsForTripUseCase: getIt<GetItemsForTripUseCase>(),
+      getItemsUsecase: getIt<GetItemsUsecase>(),
+      addTripItemUseCase: getIt<AddTripItemUseCase>(),
+      removeTripItemUseCase: getIt<RemoveTripItemUseCase>(),
     ),
   );
   getIt.registerFactory(
