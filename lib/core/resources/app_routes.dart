@@ -4,6 +4,9 @@ abstract class AppRoutes {
   /// Initial splash screen route.
   static const String splash = '/';
 
+  /// Onboarding screen route.
+  static const String onboarding = '/onboarding';
+
   /// Main home screen route.
   static const String home = '/home';
 
