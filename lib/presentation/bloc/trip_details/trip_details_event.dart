@@ -20,3 +20,8 @@ class RemoveTripItem extends TripDetailsEvent {
   final String itemId;
   const RemoveTripItem(this.itemId);
 }
+
+class UpdateTripTitle extends TripDetailsEvent {
+  final String newTitle;
+  const UpdateTripTitle(this.newTitle);
+}

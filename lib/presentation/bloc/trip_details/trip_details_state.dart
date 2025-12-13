@@ -18,6 +18,18 @@ class TripDetailsLoaded extends TripDetailsState {
     required this.items,
     this.availableItems = const [],
   });
+
+  TripDetailsLoaded copyWith({
+    TripEntity? trip,
+    List<ItemEntity>? items,
+    List<ItemEntity>? availableItems,
+  }) {
+    return TripDetailsLoaded(
+      trip: trip ?? this.trip,
+      items: items ?? this.items,
+      availableItems: availableItems ?? this.availableItems,
+    );
+  }
 }
 
 class TripDetailsError extends TripDetailsState {

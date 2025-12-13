@@ -17,7 +17,10 @@ class GetTripByIdEvent extends TripsEvent {
 }
 
 /// Event to add a new trip.
-class AddTripEvent extends TripsEvent {}
+class AddTripEvent extends TripsEvent {
+  final String id;
+  const AddTripEvent({required this.id});
+}
 
 /// Event to update an existing trip.
 class UpdateTripEvent extends TripsEvent {
@@ -34,4 +37,9 @@ class RemoveTripEvent extends TripsEvent {
 /// Event to delete all trips.
 class DeleteAllTripsEvent extends TripsEvent {
   const DeleteAllTripsEvent();
+}
+
+/// Event to subscribe to the trips stream.
+class SubscribeToTrips extends TripsEvent {
+  const SubscribeToTrips();
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:listm/core/resources/app_key_constants.dart';
 import 'package:listm/data/models/item_model.dart';
@@ -18,14 +19,16 @@ abstract class TripLocalDataSource {
   Future<bool> isCacheEmpty();
   Future<bool> isCacheNotEmpty();
   Future<bool> tripsExistInCache();
+  Stream<List<TripModel>> getTripsStream();
 }
 
 class TripLocalDataSourceImpl implements TripLocalDataSource {
   static const String cacheKey = CacheKeys.trips;
 
   final SharedPreferencesWithCache prefsWithCache;
+  final _tripsStreamController = StreamController<List<TripModel>>.broadcast();
 
-  TripLocalDataSourceImpl({required this.prefsWithCache});
+  TripLocalDataSourceImpl({required this.prefsWithCache}) {}
 
   static Future<TripLocalDataSourceImpl> create() async {
     final prefsWithCache = await SharedPreferencesWithCache.create(
@@ -82,11 +85,18 @@ class TripLocalDataSourceImpl implements TripLocalDataSource {
   Future<void> _saveTripsToCache(List<TripModel> trips) async {
     final jsonString = json.encode(trips.map((trip) => trip.toJson()).toList());
     await prefsWithCache.setString(cacheKey, jsonString);
+    _tripsStreamController.add(trips);
+  }
+
+  @override
+  Stream<List<TripModel>> getTripsStream() {
+    return _tripsStreamController.stream;
   }
 
   /// Delete all trips from cache
   Future<void> deleteAllTripsFromCache() async {
     await prefsWithCache.remove(cacheKey);
+    _tripsStreamController.add([]);
   }
 
   /// Check if trips exist in cache
@@ -104,6 +114,7 @@ class TripLocalDataSourceImpl implements TripLocalDataSource {
   /// Clear the cache
   Future<void> clearCache() async {
     await prefsWithCache.clear();
+    _tripsStreamController.add([]);
   }
 
   /// Check if the cache is not empty

@@ -6,10 +6,12 @@ import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 
 class MaterialTripDetailScreen extends StatefulWidget {
   final String tripId;
+  final bool isNewTrip;
 
   const MaterialTripDetailScreen({
     super.key,
     required this.tripId,
+    this.isNewTrip = false,
   });
 
   @override
@@ -19,85 +21,139 @@ class MaterialTripDetailScreen extends StatefulWidget {
 
 class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
   late TripDetailsBloc _tripDetailsBloc;
+  late TextEditingController _titleController;
+  late FocusNode _titleFocusNode;
 
   @override
   void initState() {
     super.initState();
     _tripDetailsBloc = getIt<TripDetailsBloc>();
     _tripDetailsBloc.add(LoadTripDetails(widget.tripId));
+    _titleController = TextEditingController();
+    _titleFocusNode = FocusNode();
+
+    _titleFocusNode.addListener(() {
+      if (!_titleFocusNode.hasFocus) {
+        _tripDetailsBloc.add(UpdateTripTitle(_titleController.text));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _titleFocusNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => _tripDetailsBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: BlocBuilder<TripDetailsBloc, TripDetailsState>(
-            builder: (context, state) {
-              if (state is TripDetailsLoaded) {
-                return Text(state.trip.title);
-              }
-              return const Text('Trip Details');
-            },
-          ),
-        ),
-        body: BlocBuilder<TripDetailsBloc, TripDetailsState>(
-          builder: (context, state) {
-            if (state is TripDetailsLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is TripDetailsLoaded) {
-              if (state.items.isEmpty) {
-                return const Center(child: Text('No items in this trip'));
-              }
-              return ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: state.items.length,
-                itemBuilder: (context, index) {
-                  final item = state.items[index];
-                  return AppSwipeableCard(
-                    key: ValueKey(item.id),
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    onDelete: () {
-                      _tripDetailsBloc.add(RemoveTripItem(item.id));
-                    },
-                    actions: [
-                      SwipeAction(
-                        icon: Icons.delete_outline,
-                        color: Colors.red,
-                        label: 'Remove',
-                        onTap: () {
-                          _tripDetailsBloc.add(RemoveTripItem(item.id));
-                        },
-                      ),
-                    ],
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: ListTile(
-                        title: Text(item.title),
-                        subtitle: Text(item.description),
-                        trailing: Checkbox(
-                          value: item.isCompleted,
-                          onChanged: (value) {
-                            // TODO: Implement toggle completion
-                          },
-                        ),
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: BlocConsumer<TripDetailsBloc, TripDetailsState>(
+              listener: (context, state) {
+                if (state is TripDetailsLoaded) {
+                  // Only set text if not focused to avoid overwriting user input while typing
+                  if (!_titleFocusNode.hasFocus) {
+                    _titleController.text = state.trip.title;
+                  }
+                }
+              },
+              builder: (context, state) {
+                if (state is TripDetailsLoaded) {
+                  final theme = Theme.of(context);
+                  return TextField(
+                    controller: _titleController,
+                    focusNode: _titleFocusNode,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                          color: theme.appBarTheme.foregroundColor ??
+                              theme.colorScheme.onSurface,
+                        ) ??
+                        const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Trip Title',
+                      hintStyle: theme.textTheme.titleLarge?.copyWith(
+                        color: (theme.appBarTheme.foregroundColor ??
+                                theme.colorScheme.onSurface)
+                            .withOpacity(0.7),
                       ),
                     ),
+                    cursorColor: theme.appBarTheme.foregroundColor ??
+                        theme.colorScheme.onSurface,
+                    autofocus: widget.isNewTrip,
+                    onSubmitted: (value) {
+                      _tripDetailsBloc.add(UpdateTripTitle(value));
+                    },
                   );
-                },
-              );
-            } else if (state is TripDetailsError) {
-              return Center(child: Text('Error: ${state.message}'));
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _showAddItemsBottomSheet(context);
-          },
-          child: const Icon(Icons.add),
+                }
+                return const Text('Trip Details');
+              },
+            ),
+          ),
+          body: BlocBuilder<TripDetailsBloc, TripDetailsState>(
+            builder: (context, state) {
+              if (state is TripDetailsLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is TripDetailsLoaded) {
+                if (state.items.isEmpty) {
+                  return const Center(child: Text('No items in this trip'));
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: state.items.length,
+                  itemBuilder: (context, index) {
+                    final item = state.items[index];
+                    return AppSwipeableCard(
+                      key: ValueKey(item.id),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      onDelete: () {
+                        _tripDetailsBloc.add(RemoveTripItem(item.id));
+                      },
+                      actions: [
+                        SwipeAction(
+                          icon: Icons.delete_outline,
+                          color: Colors.red,
+                          label: 'Remove',
+                          onTap: () {
+                            _tripDetailsBloc.add(RemoveTripItem(item.id));
+                          },
+                        ),
+                      ],
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        child: ListTile(
+                          title: Text(item.title),
+                          subtitle: Text(item.description),
+                          trailing: Checkbox(
+                            value: item.isCompleted,
+                            onChanged: (value) {
+                              // TODO: Implement toggle completion
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else if (state is TripDetailsError) {
+                return Center(child: Text('Error: ${state.message}'));
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _showAddItemsBottomSheet(context);
+            },
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:listm/core/util/unique_id_service.dart';
+
 import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/usecases/trip_usecases/add_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/delete_all_trips_usecase.dart';
@@ -7,13 +7,13 @@ import 'package:listm/domain/usecases/trip_usecases/delete_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
+import 'package:listm/domain/usecases/trip_usecases/get_trips_stream_usecase.dart';
 import 'package:listm/domain/value_objects/no_params.dart';
 import 'package:listm/domain/value_objects/trip_id.dart';
 
 part 'trips_event.dart';
 part 'trips_state.dart';
 
-/// Business Logic Component for managing [TripEntity] objects.
 class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final GetTripsUseCase _getTripsUseCase;
   final GetTripByIdUseCase _getTripByIdUseCase;
@@ -21,6 +21,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final UpdateTripUseCase _updateTripUseCase;
   final DeleteTripUseCase _deleteTripUseCase;
   final DeleteAllTripsUseCase _deleteAllTripsUseCase;
+  final GetTripsStreamUseCase _getTripsStreamUseCase;
 
   TripsBloc({
     required GetTripsUseCase getTripsUseCase,
@@ -29,22 +30,41 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     required UpdateTripUseCase updateTripUseCase,
     required DeleteTripUseCase deleteTripUseCase,
     required DeleteAllTripsUseCase deleteAllTripsUseCase,
+    required GetTripsStreamUseCase getTripsStreamUseCase,
   })  : _getTripsUseCase = getTripsUseCase,
         _getTripByIdUseCase = getTripByIdUseCase,
         _addTripUseCase = addTripUseCase,
         _updateTripUseCase = updateTripUseCase,
         _deleteTripUseCase = deleteTripUseCase,
         _deleteAllTripsUseCase = deleteAllTripsUseCase,
+        _getTripsStreamUseCase = getTripsStreamUseCase,
         super(const TripsInitial()) {
     on<LoadTrips>(_onLoadTrips);
+    on<SubscribeToTrips>(_onSubscribeToTrips);
     on<GetTripByIdEvent>(_onGetTripById);
     on<AddTripEvent>(_onAddTrip);
     on<UpdateTripEvent>(_onUpdateTrip);
     on<RemoveTripEvent>(_onRemoveTrip);
     on<DeleteAllTripsEvent>(_onDeleteAllTrips);
+
+    add(const SubscribeToTrips());
+  }
+
+  Future<void> _onSubscribeToTrips(
+    SubscribeToTrips event,
+    Emitter<TripsState> emit,
+  ) async {
+    // Initial load to show loading state if needed, or just wait for stream
+    emit(const TripsLoadInProgress());
+    await emit.forEach(
+      _getTripsStreamUseCase(const NoParams()),
+      onData: (trips) => TripsLoadSuccess(trips),
+      onError: (error, stackTrace) => TripsFailure(error.toString()),
+    );
   }
 
   Future<void> _onLoadTrips(LoadTrips event, Emitter<TripsState> emit) async {
+    // Legacy support or manual refresh if needed, but stream should handle it
     emit(const TripsLoadInProgress());
     try {
       final trips = await _getTripsUseCase(const NoParams());
@@ -68,11 +88,11 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   Future<void> _onAddTrip(AddTripEvent event, Emitter<TripsState> emit) async {
     try {
       final trip = TripEntity(
-          id: await UniqueIdService.instance
-              .generateTripId(strategy: IdGenerationStrategy.uuid),
-          title: 'Trip',
-          itemCount: 0,
-          icon: '');
+        id: event.id,
+        title: 'New Trip',
+        itemCount: 0,
+        icon: '',
+      );
       await _addTripUseCase(trip);
       add(const LoadTrips());
     } catch (e) {
