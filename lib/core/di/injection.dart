@@ -18,6 +18,7 @@ import 'package:listm/domain/usecases/trip_usecases/delete_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
+import 'package:listm/domain/usecases/trip_usecases/get_trips_stream_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
@@ -104,6 +105,9 @@ Future<void> configureDependencies() async {
     () => DeleteAllTripsUseCase(getIt()),
   );
   getIt.registerLazySingleton(
+    () => GetTripsStreamUseCase(getIt()),
+  );
+  getIt.registerLazySingleton(
     () => GetItemsForTripUseCase(
       relationRepository: getIt(),
       itemRepository: getIt(),
@@ -134,6 +138,7 @@ Future<void> configureDependencies() async {
       updateTripUseCase: getIt<UpdateTripUseCase>(),
       deleteTripUseCase: getIt<DeleteTripUseCase>(),
       deleteAllTripsUseCase: getIt<DeleteAllTripsUseCase>(),
+      getTripsStreamUseCase: getIt<GetTripsStreamUseCase>(),
     ),
   );
   getIt.registerFactory(
@@ -143,6 +148,7 @@ Future<void> configureDependencies() async {
       getItemsUsecase: getIt<GetItemsUsecase>(),
       addTripItemUseCase: getIt<AddTripItemUseCase>(),
       removeTripItemUseCase: getIt<RemoveTripItemUseCase>(),
+      updateTripUseCase: getIt<UpdateTripUseCase>(),
     ),
   );
   getIt.registerFactory(

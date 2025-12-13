@@ -35,7 +35,6 @@ class _MaterialPackingListsScreenState
   @override
   void initState() {
     _tripsBloc = widget.tripsBloc;
-    _tripsBloc.add(const LoadTrips());
     super.initState();
   }
 
@@ -139,6 +138,8 @@ class _TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextStyle? titleTextStyle = theme.textTheme.titleLarge;
     final loc = AppLocalizations.of(context);
     // Handle missing localizations gracefully
     if (loc == null) {
@@ -175,9 +176,11 @@ class _TripCard extends StatelessWidget {
           leading: trip.icon.isNotEmpty
               ? Image.asset(trip.icon, width: 32, height: 32)
               : const Icon(Icons.card_travel),
-          title: Text(trip.title.isEmpty ? loc.untitledTrip : trip.title),
+          title: Text(trip.title.isEmpty ? loc.untitledTrip : trip.title,
+              style: titleTextStyle),
           subtitle: Text(
             '${trip.itemCount} ${loc.itemsLabel}',
+            style: theme.textTheme.bodyLarge,
           ),
           onTap: () => _navigateToTripDetails(context),
         ),

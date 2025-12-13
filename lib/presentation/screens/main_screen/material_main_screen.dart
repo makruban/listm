@@ -5,6 +5,9 @@ import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/screens/all_items_screen/material_all_items_screen.dart';
 import 'package:listm/presentation/screens/packing_list_screen/material_packing_lists_screen.dart';
+import 'package:listm/core/util/unique_id_service.dart';
+
+import 'package:listm/presentation/screens/trip_detail_screen/material_trip_detail_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Material version of the main screen with bottom tabs and FAB.
@@ -146,9 +149,26 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
     if (tab == NavigationTab.packingLists || tab == NavigationTab.allItems) {
       return FloatingActionButton(
         heroTag: 'fab_${tab.index}',
-        onPressed: () {
+        onPressed: () async {
           if (tab == NavigationTab.packingLists) {
-            _tripsBloc.add(AddTripEvent());
+            // Generate a new Trip ID
+            final newId = await UniqueIdService.instance
+                .generateTripId(strategy: IdGenerationStrategy.uuid);
+
+            // Dispatch event to add the trip with just the ID
+            _tripsBloc.add(AddTripEvent(id: newId));
+
+            // Navigate to the Trip Detail Page immediately
+            if (context.mounted) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => MaterialTripDetailScreen(
+                    tripId: newId,
+                    isNewTrip: true,
+                  ),
+                ),
+              );
+            }
           } else {
             // Hide FAB with animation
             _hideFab();

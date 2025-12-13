@@ -21,4 +21,18 @@ class TripEntity {
     required this.icon,
     required this.itemCount,
   });
+
+  TripEntity copyWith({
+    String? id,
+    String? title,
+    String? icon,
+    int? itemCount,
+  }) {
+    return TripEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      icon: icon ?? this.icon,
+      itemCount: itemCount ?? this.itemCount,
+    );
+  }
 }

@@ -71,4 +71,12 @@ class TripRepositoryImpl implements TripRepository {
       throw RepositoryDeleteException('Failed to delete all trips', e);
     }
   }
+
+  @override
+  Stream<List<TripEntity>> getTripsStream() async* {
+    yield await getTrips();
+    yield* localDataSource.getTripsStream().map(
+          (models) => models.map((model) => model.toEntity()).toList(),
+        );
+  }
 }

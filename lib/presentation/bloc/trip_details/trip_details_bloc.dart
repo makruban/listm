@@ -9,6 +9,7 @@ import 'package:listm/domain/value_objects/trip_id.dart';
 
 import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
+import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
 
 part 'trip_details_event.dart';
 part 'trip_details_state.dart';
@@ -19,6 +20,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   final GetItemsUsecase getItemsUsecase;
   final AddTripItemUseCase addTripItemUseCase;
   final RemoveTripItemUseCase removeTripItemUseCase;
+  final UpdateTripUseCase updateTripUseCase;
 
   TripDetailsBloc({
     required this.getTripByIdUseCase,
@@ -26,11 +28,29 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     required this.getItemsUsecase,
     required this.addTripItemUseCase,
     required this.removeTripItemUseCase,
+    required this.updateTripUseCase,
   }) : super(TripDetailsInitial()) {
     on<LoadTripDetails>(_onLoadTripDetails);
     on<LoadAvailableItems>(_onLoadAvailableItems);
     on<AddTripItem>(_onAddTripItem);
     on<RemoveTripItem>(_onRemoveTripItem);
+    on<UpdateTripTitle>(_onUpdateTripTitle);
+  }
+
+  Future<void> _onUpdateTripTitle(
+    UpdateTripTitle event,
+    Emitter<TripDetailsState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is TripDetailsLoaded) {
+      try {
+        final updatedTrip = currentState.trip.copyWith(title: event.newTitle);
+        await updateTripUseCase(updatedTrip);
+        emit(currentState.copyWith(trip: updatedTrip));
+      } catch (e) {
+        emit(TripDetailsError(e.toString()));
+      }
+    }
   }
 
   Future<void> _onLoadTripDetails(
@@ -81,8 +101,12 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
         final updatedItems = await getItemsForTripUseCase(currentState.trip.id);
 
+        final updatedTrip =
+            currentState.trip.copyWith(itemCount: updatedItems.length);
+        await updateTripUseCase(updatedTrip);
+
         emit(TripDetailsLoaded(
-          trip: currentState.trip,
+          trip: updatedTrip,
           items: updatedItems,
           availableItems: currentState.availableItems,
         ));
@@ -106,8 +130,12 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
         final updatedItems = await getItemsForTripUseCase(currentState.trip.id);
 
+        final updatedTrip =
+            currentState.trip.copyWith(itemCount: updatedItems.length);
+        await updateTripUseCase(updatedTrip);
+
         emit(TripDetailsLoaded(
-          trip: currentState.trip,
+          trip: updatedTrip,
           items: updatedItems,
           availableItems: currentState.availableItems,
         ));

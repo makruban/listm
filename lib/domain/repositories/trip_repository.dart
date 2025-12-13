@@ -8,4 +8,5 @@ abstract class TripRepository {
   Future<void> updateTrip(TripEntity trip);
   Future<void> deleteTrip(TripId id);
   Future<void> deleteAllTrips();
+  Stream<List<TripEntity>> getTripsStream();
 }
