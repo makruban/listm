@@ -69,4 +69,11 @@ class ItemRepositoryImpl implements ItemRepository {
       throw RepositoryDeleteException('Failed to delete all items', e);
     }
   }
+
+  @override
+  Stream<List<ItemEntity>> getItemsStream() {
+    return localDataSource.getItemsStream().map((models) {
+      return models.map((m) => m.toEntity()).toList();
+    });
+  }
 }

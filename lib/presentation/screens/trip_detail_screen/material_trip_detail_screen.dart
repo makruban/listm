@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/core/di/injection.dart';
 import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
+import 'package:listm/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 
 class MaterialTripDetailScreen extends StatefulWidget {
@@ -160,15 +161,14 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
   }
 
   void _showAddItemsBottomSheet(BuildContext context) {
-    _tripDetailsBloc.add(LoadAvailableItems());
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) {
-        return BlocProvider.value(
-          value: _tripDetailsBloc,
+        return BlocProvider(
+          create: (context) => getIt<TripItemSelectorBloc>()
+            ..add(LoadTripItemSelector(widget.tripId)),
           child: DraggableScrollableSheet(
             initialChildSize: 0.9,
             minChildSize: 0.5,
@@ -183,14 +183,27 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                     actions: [
                       IconButton(
                         icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          // Trigger a reload on the main bloc when closing to ensure sync
+                          _tripDetailsBloc.add(LoadTripDetails(widget.tripId));
+                          Navigator.pop(context);
+                        },
                       ),
                     ],
                   ),
+                  ListTile(
+                    leading: const Icon(Icons.add),
+                    title: const Text('Create New Item'),
+                    onTap: () {
+                      _showCreateItemDialog(context);
+                    },
+                  ),
+                  const Divider(),
                   Expanded(
-                    child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
+                    child: BlocBuilder<TripItemSelectorBloc,
+                        TripItemSelectorState>(
                       builder: (context, state) {
-                        if (state is TripDetailsLoaded) {
+                        if (state is TripItemSelectorLoaded) {
                           if (state.availableItems.isEmpty) {
                             return const Center(
                               child: Text('No items available to add'),
@@ -201,27 +214,23 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                             itemCount: state.availableItems.length,
                             itemBuilder: (context, index) {
                               final item = state.availableItems[index];
-                              // Check if item is already in the trip
-                              final isAlreadyAdded = state.items.any(
-                                (tripItem) => tripItem.id == item.id,
-                              );
+                              final isSelected =
+                                  state.selectedItemIds.contains(item.id);
 
                               return CheckboxListTile(
-                                value: isAlreadyAdded,
+                                value: isSelected,
                                 title: Text(item.title),
                                 subtitle: Text(item.description),
                                 onChanged: (bool? value) {
-                                  if (value == true) {
-                                    _tripDetailsBloc.add(AddTripItem(item.id));
-                                  } else {
-                                    _tripDetailsBloc
-                                        .add(RemoveTripItem(item.id));
-                                  }
+                                  context.read<TripItemSelectorBloc>().add(
+                                        ToggleItemSelection(
+                                            item.id, value ?? false),
+                                      );
                                 },
                               );
                             },
                           );
-                        } else if (state is TripDetailsError) {
+                        } else if (state is TripItemSelectorError) {
                           return Center(child: Text('Error: ${state.message}'));
                         }
                         return const Center(child: CircularProgressIndicator());
@@ -232,6 +241,54 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
               );
             },
           ),
+        );
+      },
+    ).whenComplete(() {
+      // Also refresh when dismissed by dragging or tapping outside
+      _tripDetailsBloc.add(LoadTripDetails(widget.tripId));
+    });
+  }
+
+  void _showCreateItemDialog(BuildContext parentContext) {
+    // We need to access the Bloc from the bottom sheet context
+    // But since the dialog is a new route, it can't see the bottom sheet's provider easily
+    // unless we pass the bloc or wrap the dialog.
+    // However, the _showCreateItemDialog is called FROM the bottom sheet structure.
+    // Let's change the signature or usage to pass the context containing the bloc.
+    final bloc = BlocProvider.of<TripItemSelectorBloc>(parentContext);
+    final TextEditingController nameController = TextEditingController();
+
+    showDialog(
+      context: parentContext,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Create New Item'),
+          content: TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              labelText: 'Item Name',
+              hintText: 'e.g., Toothbrush',
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final name = nameController.text.trim();
+                if (name.isNotEmpty) {
+                  bloc.add(CreateAndSelectNewItem(name));
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Create'),
+            ),
+          ],
         );
       },
     );

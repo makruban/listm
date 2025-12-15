@@ -9,13 +9,6 @@ class LoadTripDetails extends TripDetailsEvent {
   const LoadTripDetails(this.tripId);
 }
 
-class LoadAvailableItems extends TripDetailsEvent {}
-
-class AddTripItem extends TripDetailsEvent {
-  final String itemId;
-  const AddTripItem(this.itemId);
-}
-
 class RemoveTripItem extends TripDetailsEvent {
   final String itemId;
   const RemoveTripItem(this.itemId);
