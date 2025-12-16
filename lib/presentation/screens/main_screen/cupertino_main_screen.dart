@@ -5,7 +5,7 @@ import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/screens/packing_list_screen/cupertino_packing_lists_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:listm/l10n/app_localizations.dart';
 
 /// iOS-styled main screen with bottom tabs and add-actions in the navigation bar.
 class CupertinoMainScreen extends StatefulWidget {

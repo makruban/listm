@@ -7,7 +7,7 @@ import 'package:listm/domain/value_objects/trip_id.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/packing_lists_view.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:listm/l10n/app_localizations.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
