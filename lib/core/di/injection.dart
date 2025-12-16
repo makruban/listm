@@ -22,9 +22,11 @@ import 'package:listm/domain/usecases/trip_usecases/get_trips_stream_usecase.dar
 import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
+import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
+import 'package:listm/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:listm/data/datasources/item_local_data_source.dart';
@@ -75,6 +77,9 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton(
     () => AddItemUseCase(getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => GetItemsStreamUseCase(getIt()),
   );
   // … all your other UseCases …
   getIt.registerLazySingleton(
@@ -128,6 +133,7 @@ Future<void> configureDependencies() async {
       addItemUseCase: getIt<AddItemUseCase>(),
       updateItemUseCase: getIt<UpdateItemUseCase>(),
       removeItemUseCase: getIt<RemoveItemUseCase>(),
+      getItemsStreamUseCase: getIt<GetItemsStreamUseCase>(),
     ),
   );
   getIt.registerFactory(
@@ -148,6 +154,20 @@ Future<void> configureDependencies() async {
       getItemsUsecase: getIt<GetItemsUsecase>(),
       addTripItemUseCase: getIt<AddTripItemUseCase>(),
       removeTripItemUseCase: getIt<RemoveTripItemUseCase>(),
+      updateTripUseCase: getIt<UpdateTripUseCase>(),
+      addItemUseCase: getIt<AddItemUseCase>(),
+      getItemsStreamUseCase: getIt<GetItemsStreamUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => TripItemSelectorBloc(
+      getItemsStreamUseCase: getIt<GetItemsStreamUseCase>(),
+      getItemsForTripUseCase: getIt<GetItemsForTripUseCase>(),
+      addTripItemUseCase: getIt<AddTripItemUseCase>(),
+      removeTripItemUseCase: getIt<RemoveTripItemUseCase>(),
+      addItemUseCase: getIt<AddItemUseCase>(),
+      getItemsUseCase: getIt<GetItemsUsecase>(),
+      getTripByIdUseCase: getIt<GetTripByIdUseCase>(),
       updateTripUseCase: getIt<UpdateTripUseCase>(),
     ),
   );

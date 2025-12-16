@@ -8,4 +8,5 @@ abstract class ItemRepository {
   Future<void> updateItem(ItemEntity item);
   Future<void> deleteItem(ItemId id);
   Future<void> deleteAllItems();
+  Stream<List<ItemEntity>> getItemsStream();
 }

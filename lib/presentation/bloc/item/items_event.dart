@@ -13,6 +13,11 @@ class LoadItems extends ItemsEvent {
   const LoadItems();
 }
 
+class ItemsUpdated extends ItemsEvent {
+  final List<ItemEntity> items;
+  const ItemsUpdated(this.items);
+}
+
 /// Event to load a single item by its [id].
 class GetItemByIdEvent extends ItemsEvent {
   final ItemId id;

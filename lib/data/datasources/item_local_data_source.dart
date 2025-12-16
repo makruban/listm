@@ -2,6 +2,7 @@ import 'package:listm/core/resources/app_key_constants.dart';
 import 'package:listm/data/models/item_model.dart';
 import 'package:listm/domain/value_objects/item_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 import 'dart:convert';
 
 abstract class ItemLocalDataSource {
@@ -14,6 +15,7 @@ abstract class ItemLocalDataSource {
   Future<void> deleteAllItemsFromCache();
   Future<bool> isCacheEmpty();
   Future<bool> isCacheNotEmpty();
+  Stream<List<ItemModel>> getItemsStream();
 }
 
 class ItemLocalDataSourceImpl implements ItemLocalDataSource {
@@ -21,7 +23,14 @@ class ItemLocalDataSourceImpl implements ItemLocalDataSource {
 
   final SharedPreferencesWithCache prefsWithCache;
 
-  ItemLocalDataSourceImpl({required this.prefsWithCache});
+  final _itemStreamController = StreamController<List<ItemModel>>.broadcast();
+
+  ItemLocalDataSourceImpl({required this.prefsWithCache}) {
+    // Initialize stream with current data
+    getItemsFromCache().then((items) {
+      _itemStreamController.add(items);
+    });
+  }
 
   static Future<ItemLocalDataSourceImpl> create() async {
     final prefsWithCache = await SharedPreferencesWithCache.create(
@@ -80,7 +89,11 @@ class ItemLocalDataSourceImpl implements ItemLocalDataSource {
   Future<void> _saveItemsToCache(List<ItemModel> items) async {
     final jsonString = json.encode(items.map((item) => item.toJson()).toList());
     await prefsWithCache.setString(cacheKey, jsonString);
+    _itemStreamController.add(items);
   }
+
+  @override
+  Stream<List<ItemModel>> getItemsStream() => _itemStreamController.stream;
 
   Future<void> clearCache() async {
     await prefsWithCache.clear();
