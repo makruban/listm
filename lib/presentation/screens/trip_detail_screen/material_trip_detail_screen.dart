@@ -5,6 +5,8 @@ import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
 import 'package:listm/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 
+import '../../widgets/checklist_painter.dart';
+
 class MaterialTripDetailScreen extends StatefulWidget {
   final String tripId;
   final bool isNewTrip;

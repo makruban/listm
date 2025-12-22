@@ -8,6 +8,8 @@ import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/packing_lists_view.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/l10n/app_localizations.dart';
+import 'package:listm/presentation/widgets/arrow_painter.dart';
+import 'package:listm/presentation/widgets/suitcase_painter.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
@@ -23,9 +25,10 @@ class MaterialPackingListsScreen extends StatefulWidget {
       _MaterialPackingListsScreenState();
 }
 
-class _MaterialPackingListsScreenState
-    extends State<MaterialPackingListsScreen> {
+class _MaterialPackingListsScreenState extends State<MaterialPackingListsScreen>
+    with SingleTickerProviderStateMixin {
   late TripsBloc _tripsBloc;
+  late AnimationController _arrowController;
 
   @override
   void didChangeDependencies() {
@@ -35,7 +38,18 @@ class _MaterialPackingListsScreenState
   @override
   void initState() {
     _tripsBloc = widget.tripsBloc;
+    // Animation for the arrow shimmer
+    _arrowController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _arrowController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,8 +66,8 @@ class _MaterialPackingListsScreenState
         } else if (state is TripsLoadSuccess) {
           final trips = state.trips;
           if (trips.isEmpty) {
-            return Center(
-              child: Text(loc.noTripsMessage),
+            return _PackingListEmptyState(
+              arrowController: _arrowController,
             );
           }
           return ListView.builder(
@@ -185,6 +199,65 @@ class _TripCard extends StatelessWidget {
           onTap: () => _navigateToTripDetails(context),
         ),
       ),
+    );
+  }
+}
+
+class _PackingListEmptyState extends StatelessWidget {
+  const _PackingListEmptyState({
+    super.key,
+    required this.arrowController,
+  });
+  final AnimationController arrowController;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Suitcase in the top half of the screen
+        Positioned(
+          top: 40,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: SizedBox(
+              width: 700,
+              height: 500,
+              child: CustomPaint(
+                painter: SuitcasePainter(
+                  color: Colors.grey.shade300.withOpacity(0.3),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // Arrow and text positioned near the FAB (bottom-right)
+        Positioned(
+          bottom: 80,
+          right: 36,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 140,
+                height: 140,
+                child: AnimatedBuilder(
+                  animation: arrowController,
+                  builder: (context, child) {
+                    return CustomPaint(
+                      painter: ArrowPainter(
+                        color: Colors.grey.shade700,
+                        scale: 1,
+                        shimmerValue: arrowController.value,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

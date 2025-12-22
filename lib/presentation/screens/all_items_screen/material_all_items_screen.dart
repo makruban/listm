@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
+import 'package:listm/presentation/widgets/checklist_painter.dart';
 
 /// Inline list widget for displaying and editing all items via ItemsBloc.
 /// No Scaffold or FAB—embed in a parent widget that provides ItemsBloc.
@@ -176,6 +177,9 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
           } else if (state is ItemsFailure) {
             return Center(child: Text('Error: ${state.error}'));
           } else if (state is ItemsLoadSuccess) {
+            if (state.items.isEmpty) {
+              return _AllItemsEmptyState();
+            }
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: _onBackgroundTap,
@@ -331,5 +335,31 @@ class AddToTripButton extends StatelessWidget {
                     child: const Text('Cancel'),
                   ),
                 ]));
+  }
+}
+
+class _AllItemsEmptyState extends StatelessWidget {
+  const _AllItemsEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: 40,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: SizedBox(
+                height: 500,
+                width: 700,
+                child: CustomPaint(
+                    painter: ChecklistPainter(
+                        baseColor: Colors.grey.shade300.withOpacity(0.3)))),
+          ),
+        ),
+      ],
+    );
+    ;
   }
 }
