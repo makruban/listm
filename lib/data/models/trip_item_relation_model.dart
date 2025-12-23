@@ -4,12 +4,14 @@ class TripItemRelationModel extends TripItemRelationEntity {
   const TripItemRelationModel({
     required super.tripId,
     required super.itemId,
+    super.isCompleted,
   });
 
   factory TripItemRelationModel.fromJson(Map<String, dynamic> json) {
     return TripItemRelationModel(
       tripId: json['tripId'] as String,
       itemId: json['itemId'] as String,
+      isCompleted: json['isCompleted'] as bool? ?? false,
     );
   }
 
@@ -17,6 +19,7 @@ class TripItemRelationModel extends TripItemRelationEntity {
     return {
       'tripId': tripId,
       'itemId': itemId,
+      'isCompleted': isCompleted,
     };
   }
 
@@ -24,6 +27,7 @@ class TripItemRelationModel extends TripItemRelationEntity {
     return TripItemRelationModel(
       tripId: entity.tripId,
       itemId: entity.itemId,
+      isCompleted: entity.isCompleted,
     );
   }
 }

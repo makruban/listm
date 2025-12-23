@@ -59,7 +59,7 @@ class TripItemSelectorBloc
     try {
       // Load initial selected items for this trip
       final tripItems = await getItemsForTripUseCase(event.tripId);
-      final selectedIds = tripItems.map((e) => e.id).toSet();
+      final selectedIds = tripItems.map((e) => e.item.id).toSet();
 
       // Subscribe to available items stream
       _itemsSubscription?.cancel();
