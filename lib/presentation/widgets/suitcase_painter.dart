@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
 
 class SuitcasePainter extends CustomPainter {
+  final Color? color;
+
+  const SuitcasePainter({this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     // Styles
+    // Use provided color or default blue
+    final Color baseColor = color ?? const Color(0xFF5D9CEC);
+
+    // Derive palette
+    // If we have a custom grey (like usually passed for arrow), we want shades.
+    // Assuming baseColor is the main body color.
+
     final bodyPaint = Paint()
-      ..color = const Color(0xFF5D9CEC) // Light Blue
+      ..color = baseColor
       ..style = PaintingStyle.fill;
 
+    // Use a darker shade for border/handle
+    final Color darkColor =
+        color ?? HSVColor.fromColor(baseColor).withValue(0.4).toColor();
+    // For specific grey gradient match, we might want to be smarter, but darkening is safe.
+
     final borderPaint = Paint()
-      ..color = const Color(0xFF34495E)
+      ..color = darkColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
 
     final handlePaint = Paint()
-      ..color = const Color(0xFF2C3E50)
+      ..color = darkColor
       ..style = PaintingStyle.fill;
 
     final wheelPaint = Paint()
-      ..color = const Color(0xFF2C3E50)
+      ..color = darkColor
       ..style = PaintingStyle.fill;
 
     final ribPaint = Paint()

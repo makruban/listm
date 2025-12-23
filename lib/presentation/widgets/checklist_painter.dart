@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ChecklistPainter extends CustomPainter {
+  final Color? baseColor;
+  ChecklistPainter({this.baseColor});
   @override
   void paint(Canvas canvas, Size size) {
     // Colors
-    final boardColor = const Color(0xFF8D6E63); // Brown
-    final paperColor = Colors.white;
-    final clipColor = const Color(0xFF757575); // Grey
-    final textColor = const Color(0xFFBDBDBD); // Light Grey for lines
-    final checkColor = const Color(0xFF4CAF50); // Green
+    final boardColor = baseColor ?? const Color(0xFF8D6E63); // Brown
+    final paperColor = baseColor ?? Colors.white;
+    final clipColor = baseColor ?? const Color(0xFF757575); // Grey
+    final textColor =
+        baseColor ?? const Color(0xFFBDBDBD); // Light Grey for lines
+    final checkColor = baseColor ?? const Color(0xFF4CAF50); // Green
+    final circleColor = baseColor ?? const Color(0xFF424242); // Grey
 
     // Dimensions
     final double w = size.width;
@@ -92,8 +96,7 @@ class ChecklistPainter extends CustomPainter {
     canvas.drawRRect(clipRRect, Paint()..color = clipColor);
 
     // Tiny metallic hole in clip
-    canvas.drawCircle(
-        Offset(w / 2, top + 15), 5, Paint()..color = const Color(0xFF424242));
+    canvas.drawCircle(Offset(w / 2, top + 15), 5, Paint()..color = circleColor);
   }
 
   @override

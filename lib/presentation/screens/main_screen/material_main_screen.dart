@@ -8,7 +8,7 @@ import 'package:listm/presentation/screens/packing_list_screen/material_packing_
 import 'package:listm/core/util/unique_id_service.dart';
 
 import 'package:listm/presentation/screens/trip_detail_screen/material_trip_detail_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:listm/l10n/app_localizations.dart';
 
 /// Material version of the main screen with bottom tabs and FAB.
 class MaterialMainScreen extends StatefulWidget {
