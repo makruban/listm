@@ -18,3 +18,8 @@ class UpdateTripTitle extends TripDetailsEvent {
   final String newTitle;
   const UpdateTripTitle(this.newTitle);
 }
+
+class ToggleTripItemCompletion extends TripDetailsEvent {
+  final String itemId;
+  const ToggleTripItemCompletion(this.itemId);
+}

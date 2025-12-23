@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class TripItemRelationLocalDataSource {
   List<TripItemRelationEntity> getRelations();
   Future<void> addRelation(TripItemRelationEntity relation);
+  Future<void> updateRelation(TripItemRelationEntity relation);
   Future<void> removeRelation(TripItemRelationEntity relation);
 }
 
@@ -25,6 +26,7 @@ class TripItemRelationLocalDataSourceImpl
           .map((json) => TripItemRelationEntity(
                 tripId: json['tripId'] as String,
                 itemId: json['itemId'] as String,
+                isCompleted: json['isCompleted'] as bool? ?? false,
               ))
           .toList();
     } else {
@@ -44,6 +46,19 @@ class TripItemRelationLocalDataSourceImpl
   }
 
   @override
+  Future<void> updateRelation(TripItemRelationEntity relation) async {
+    final relations = getRelations();
+    final index = relations.indexWhere(
+      (r) => r.tripId == relation.tripId && r.itemId == relation.itemId,
+    );
+
+    if (index != -1) {
+      relations[index] = relation;
+      await _saveRelationsToCache(relations);
+    }
+  }
+
+  @override
   Future<void> removeRelation(TripItemRelationEntity relation) async {
     final relations = getRelations();
     relations.removeWhere(
@@ -58,6 +73,7 @@ class TripItemRelationLocalDataSourceImpl
         .map((r) => {
               'tripId': r.tripId,
               'itemId': r.itemId,
+              'isCompleted': r.isCompleted,
             })
         .toList();
     await prefsWithCache.setString(cacheKey, json.encode(jsonList));

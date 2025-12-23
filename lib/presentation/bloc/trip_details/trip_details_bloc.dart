@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/domain/entities/item_entity.dart';
+import 'package:listm/domain/entities/trip_detail_item.dart';
 import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
@@ -9,6 +9,7 @@ import 'package:listm/domain/value_objects/trip_id.dart';
 
 import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
+import 'package:listm/domain/usecases/trip_item_usecases/toggle_trip_item_completion_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
@@ -27,6 +28,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   final UpdateTripUseCase updateTripUseCase;
   final AddItemUseCase addItemUseCase;
   final GetItemsStreamUseCase getItemsStreamUseCase;
+  final ToggleTripItemCompletionUseCase toggleTripItemCompletionUseCase;
 
   TripDetailsBloc({
     required this.getTripByIdUseCase,
@@ -37,10 +39,12 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     required this.updateTripUseCase,
     required this.addItemUseCase,
     required this.getItemsStreamUseCase,
+    required this.toggleTripItemCompletionUseCase,
   }) : super(TripDetailsInitial()) {
     on<LoadTripDetails>(_onLoadTripDetails);
     on<RemoveTripItem>(_onRemoveTripItem);
     on<UpdateTripTitle>(_onUpdateTripTitle);
+    on<ToggleTripItemCompletion>(_onToggleTripItemCompletion);
   }
 
   @override
@@ -107,6 +111,27 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
           trip: updatedTrip,
           items: updatedItems,
         ));
+      } catch (e) {
+        emit(TripDetailsError(e.toString()));
+      }
+    }
+  }
+
+  Future<void> _onToggleTripItemCompletion(
+    ToggleTripItemCompletion event,
+    Emitter<TripDetailsState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is TripDetailsLoaded) {
+      try {
+        await toggleTripItemCompletionUseCase(ToggleTripItemCompletionParams(
+          tripId: currentState.trip.id,
+          itemId: event.itemId,
+        ));
+
+        // Reload items to get updated status and sort order
+        final updatedItems = await getItemsForTripUseCase(currentState.trip.id);
+        emit(currentState.copyWith(items: updatedItems));
       } catch (e) {
         emit(TripDetailsError(e.toString()));
       }

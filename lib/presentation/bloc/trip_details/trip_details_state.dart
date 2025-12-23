@@ -10,7 +10,7 @@ class TripDetailsLoading extends TripDetailsState {}
 
 class TripDetailsLoaded extends TripDetailsState {
   final TripEntity trip;
-  final List<ItemEntity> items;
+  final List<TripDetailItem> items;
 
   const TripDetailsLoaded({
     required this.trip,
@@ -19,7 +19,7 @@ class TripDetailsLoaded extends TripDetailsState {
 
   TripDetailsLoaded copyWith({
     TripEntity? trip,
-    List<ItemEntity>? items,
+    List<TripDetailItem>? items,
   }) {
     return TripDetailsLoaded(
       trip: trip ?? this.trip,

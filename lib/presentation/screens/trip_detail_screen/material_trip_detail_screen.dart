@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/core/di/injection.dart';
+import 'package:listm/domain/entities/trip_detail_item.dart';
 import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
 import 'package:listm/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
-
-import '../../widgets/checklist_painter.dart';
+import 'package:listm/core/util/list_diff_util.dart';
 
 class MaterialTripDetailScreen extends StatefulWidget {
   final String tripId;
@@ -24,6 +24,9 @@ class MaterialTripDetailScreen extends StatefulWidget {
 
 class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
   late TripDetailsBloc _tripDetailsBloc;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final List<TripDetailItem> _listData = [];
+  bool _allCompleted = false;
   late TextEditingController _titleController;
   late FocusNode _titleFocusNode;
 
@@ -53,109 +56,214 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => _tripDetailsBloc,
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: BlocConsumer<TripDetailsBloc, TripDetailsState>(
-              listener: (context, state) {
-                if (state is TripDetailsLoaded) {
-                  // Only set text if not focused to avoid overwriting user input while typing
-                  if (!_titleFocusNode.hasFocus) {
-                    _titleController.text = state.trip.title;
+      child: BlocListener<TripDetailsBloc, TripDetailsState>(
+        listener: (context, state) {
+          if (state is TripDetailsLoaded) {
+            // Handle List Diffing
+            if (_listData.isEmpty &&
+                state.items.isNotEmpty &&
+                _listKey.currentState == null) {
+              // Initial load (before list is attached) or first data
+              // If _listKey.currentState is null, we can't animate yet.
+              // Just populate data. The AnimatedList will read it on build.
+              _listData.clear();
+              _listData.addAll(state.items);
+            } else {
+              // List is likely active, or we have updates.
+              // Calculate Diff
+              final operations = ListDiffUtil.calculateDiff<TripDetailItem>(
+                _listData,
+                state.items,
+                (item) => item.item.id,
+              );
+
+              for (final op in operations) {
+                if (op is RemoveOperation<TripDetailItem>) {
+                  final removedItem = op.item;
+                  // Ensure index is valid
+                  if (op.index < _listData.length) {
+                    _listData.removeAt(op.index);
+                    _listKey.currentState?.removeItem(
+                      op.index,
+                      (context, animation) =>
+                          _buildItem(removedItem, animation),
+                    );
+                  }
+                } else if (op is InsertOperation<TripDetailItem>) {
+                  if (op.index <= _listData.length) {
+                    _listData.insert(op.index, op.item);
+                    _listKey.currentState?.insertItem(op.index);
                   }
                 }
-              },
-              builder: (context, state) {
-                if (state is TripDetailsLoaded) {
-                  final theme = Theme.of(context);
-                  return TextField(
-                    controller: _titleController,
-                    focusNode: _titleFocusNode,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                          color: theme.appBarTheme.foregroundColor ??
-                              theme.colorScheme.onSurface,
-                        ) ??
-                        const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Trip Title',
-                      hintStyle: theme.textTheme.titleLarge?.copyWith(
-                        color: (theme.appBarTheme.foregroundColor ??
-                                theme.colorScheme.onSurface)
-                            .withOpacity(0.7),
+              }
+
+              // Sync data content for items that didn't move or were just moved
+              // This is crucial because ListDiffUtil logic might skip updates for ID matches
+              for (int i = 0; i < state.items.length; i++) {
+                if (i < _listData.length) {
+                  _listData[i] = state.items[i];
+                }
+              }
+
+              // Force UI rebuild to reflect data changes (like checkboxes)
+              setState(() {});
+
+              // Check for all completed
+              final isAllCompleted = state.items.isNotEmpty &&
+                  state.items.every((i) => i.isCompleted);
+
+              if (isAllCompleted && !_allCompleted) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _showCongratulationsDialog();
+                });
+              }
+              _allCompleted = isAllCompleted;
+            }
+          }
+        },
+        child: GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: BlocConsumer<TripDetailsBloc, TripDetailsState>(
+                listener: (context, state) {
+                  if (state is TripDetailsLoaded) {
+                    if (!_titleFocusNode.hasFocus) {
+                      _titleController.text = state.trip.title;
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  if (state is TripDetailsLoaded) {
+                    final theme = Theme.of(context);
+                    return TextField(
+                      controller: _titleController,
+                      focusNode: _titleFocusNode,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.appBarTheme.foregroundColor ??
+                                theme.colorScheme.onSurface,
+                          ) ??
+                          const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Trip Title',
+                        hintStyle: theme.textTheme.titleLarge?.copyWith(
+                          color: (theme.appBarTheme.foregroundColor ??
+                                  theme.colorScheme.onSurface)
+                              .withOpacity(0.7),
+                        ),
                       ),
-                    ),
-                    cursorColor: theme.appBarTheme.foregroundColor ??
-                        theme.colorScheme.onSurface,
-                    autofocus: widget.isNewTrip,
-                    onSubmitted: (value) {
-                      _tripDetailsBloc.add(UpdateTripTitle(value));
+                      cursorColor: theme.appBarTheme.foregroundColor ??
+                          theme.colorScheme.onSurface,
+                      autofocus: widget.isNewTrip,
+                      onSubmitted: (value) {
+                        _tripDetailsBloc.add(UpdateTripTitle(value));
+                      },
+                    );
+                  }
+                  return const Text('Trip Details');
+                },
+              ),
+            ),
+            body: BlocBuilder<TripDetailsBloc, TripDetailsState>(
+              builder: (context, state) {
+                if (state is TripDetailsLoading) {
+                  // Only show loading if we have no data?
+                  // If we have _listData, we might want to stay visible?
+                  // But standard pattern is:
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is TripDetailsLoaded) {
+                  // If list data is not synced yet (e.g. first build), sync it validly
+                  if (_listData.isEmpty && state.items.isNotEmpty) {
+                    // This happens if listener didn't fire or fired before build?
+                    // Safe sync to ensure viewing
+                    _listData.clear();
+                    _listData.addAll(state.items);
+                  }
+
+                  if (_listData.isEmpty) {
+                    return const Center(child: Text('No items in this trip'));
+                  }
+
+                  return AnimatedList(
+                    key: _listKey,
+                    padding: const EdgeInsets.all(8),
+                    initialItemCount: _listData.length,
+                    itemBuilder: (context, index, animation) {
+                      if (index >= _listData.length) {
+                        return const SizedBox.shrink();
+                      }
+                      return _buildItem(_listData[index], animation);
                     },
                   );
+                } else if (state is TripDetailsError) {
+                  return Center(child: Text('Error: ${state.message}'));
                 }
-                return const Text('Trip Details');
+                return const SizedBox.shrink();
               },
             ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                _showAddItemsBottomSheet(context);
+              },
+              child: const Icon(Icons.add),
+            ),
           ),
-          body: BlocBuilder<TripDetailsBloc, TripDetailsState>(
-            builder: (context, state) {
-              if (state is TripDetailsLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is TripDetailsLoaded) {
-                if (state.items.isEmpty) {
-                  return const Center(child: Text('No items in this trip'));
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: state.items.length,
-                  itemBuilder: (context, index) {
-                    final item = state.items[index];
-                    return AppSwipeableCard(
-                      key: ValueKey(item.id),
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      onDelete: () {
-                        _tripDetailsBloc.add(RemoveTripItem(item.id));
-                      },
-                      actions: [
-                        SwipeAction(
-                          icon: Icons.delete_outline,
-                          color: Colors.red,
-                          label: 'Remove',
-                          onTap: () {
-                            _tripDetailsBloc.add(RemoveTripItem(item.id));
-                          },
-                        ),
-                      ],
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        child: ListTile(
-                          title: Text(item.title),
-                          subtitle: Text(item.description),
-                          trailing: Checkbox(
-                            value: item.isCompleted,
-                            onChanged: (value) {
-                              // TODO: Implement toggle completion
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItem(TripDetailItem item, Animation<double> animation) {
+    return SizeTransition(
+      sizeFactor: animation,
+      child: FadeTransition(
+        opacity: animation,
+        child: AppSwipeableCard(
+          key: ValueKey(item.item.id),
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          onDelete: () {
+            _tripDetailsBloc.add(RemoveTripItem(item.item.id));
+          },
+          actions: [
+            SwipeAction(
+              icon: Icons.delete_outline,
+              color: Colors.red,
+              label: 'Remove',
+              onTap: () {
+                _tripDetailsBloc.add(RemoveTripItem(item.item.id));
+              },
+            ),
+          ],
+          child: Card(
+            margin: const EdgeInsets.symmetric(
+                vertical: 1), // Margin handled by AppSwipeableCard or wrapper
+            child: ListTile(
+              onTap: () {
+                _tripDetailsBloc.add(
+                  ToggleTripItemCompletion(item.item.id),
                 );
-              } else if (state is TripDetailsError) {
-                return Center(child: Text('Error: ${state.message}'));
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _showAddItemsBottomSheet(context);
-            },
-            child: const Icon(Icons.add),
+              },
+              title: Text(
+                item.item.title,
+                style: item.isCompleted
+                    ? const TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey,
+                      )
+                    : Theme.of(context).textTheme.titleLarge,
+              ),
+              trailing: Checkbox(
+                value: item.isCompleted,
+                onChanged: (value) {
+                  _tripDetailsBloc.add(
+                    ToggleTripItemCompletion(item.item.id),
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),
@@ -293,6 +401,22 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
           ],
         );
       },
+    );
+  }
+
+  void _showCongratulationsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Congratulations!'),
+        content: const Text('All items are packed! You are ready to go!'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 }

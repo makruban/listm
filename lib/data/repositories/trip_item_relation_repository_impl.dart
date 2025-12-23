@@ -17,12 +17,25 @@ class TripItemRelationRepositoryImpl implements TripItemRelationRepository {
   }
 
   @override
+  List<TripItemRelationEntity> getRelationsForTrip(String tripId) {
+    return localDataSource
+        .getRelations()
+        .where((r) => r.tripId == tripId)
+        .toList();
+  }
+
+  @override
   List<String> getTripsForItem(String itemId) {
     return localDataSource
         .getRelations()
         .where((r) => r.itemId == itemId)
         .map((r) => r.tripId)
         .toList();
+  }
+
+  @override
+  void updateRelation(TripItemRelationEntity relation) {
+    localDataSource.updateRelation(relation);
   }
 
   @override
