@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,8 +5,6 @@ import 'package:listm/domain/entities/item_entity.dart';
 import 'package:listm/domain/value_objects/item_id.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/presentation/widgets/checklist_painter.dart';
