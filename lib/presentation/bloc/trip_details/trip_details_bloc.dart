@@ -4,7 +4,6 @@ import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
 import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_usecase.dart';
-import 'package:listm/domain/value_objects/no_params.dart';
 import 'package:listm/domain/value_objects/trip_id.dart';
 
 import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
@@ -13,7 +12,6 @@ import 'package:listm/domain/usecases/trip_item_usecases/toggle_trip_item_comple
 import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
-import 'package:listm/core/util/unique_id_service.dart';
 import 'dart:async';
 
 part 'trip_details_event.dart';

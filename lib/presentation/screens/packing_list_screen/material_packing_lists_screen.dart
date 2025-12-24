@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listm/core/resources/app_routes.dart';
 import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/value_objects/trip_id.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
-import 'package:listm/presentation/screens/packing_list_screen/widgets/packing_lists_view.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/l10n/app_localizations.dart';
 import 'package:listm/presentation/widgets/arrow_painter.dart';

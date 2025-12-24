@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:listm/presentation/screens/packing_list_screen/widgets/packing_lists_view.dart';
 import 'package:listm/l10n/app_localizations.dart';
 
 class CupertinoPackingListsScreen extends StatelessWidget {
