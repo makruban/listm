@@ -138,7 +138,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        // 1️⃣ If the user navigates away from the AllItems tab, cancel editing:
+        // ️If the user navigates away from the AllItems tab, cancel editing:
         BlocListener<NavigationCubit, NavigationTab>(
           listener: (context, tab) {
             if (tab != NavigationTab.allItems && _editingId != null) {
@@ -147,8 +147,8 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
           },
         ),
 
-        // 2️⃣ Once the bloc finishes loading the new state (after Add/Remove/Update),
-        //     show the FAB again.
+        // Once the bloc finishes loading the new state (after Add/Remove/Update),
+        // show the FAB again.
         BlocListener<ItemsBloc, ItemsState>(
           listenWhen: (prev, curr) {
             // We only care about the refreshed list
@@ -223,7 +223,6 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                     );
                   }
                   // Normal display mode
-                  final GlobalKey itemKey = GlobalKey();
                   return AppSwipeableCard(
                     key: key,
                     onDelete: () {
@@ -276,13 +275,16 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                         /// TODO: or remove the long-press in favor of a trailing icon button
                       },
                       child: ListTile(
-                        leading: Text(item.title),
+                        leading: Text(
+                          item.title,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         // title: Text(item.title),
                         title: Row(
                           children: [
-                            Text('used: 2'),
-                            Spacer(),
-                            AddToTripButton(),
+                            // Text('used: 2'),
+                            // Spacer(),
+                            // AddToTripButton(),
                           ],
                         ),
                         onTap: () {
@@ -310,33 +312,33 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
   }
 }
 
-class AddToTripButton extends StatelessWidget {
-  const AddToTripButton({super.key});
+// class AddToTripButton extends StatelessWidget {
+//   const AddToTripButton({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-        onPressed: () => _showDialog(context),
-        icon: Icon(
-          Icons.add,
-          color: Colors.green,
-        ));
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return IconButton(
+//         onPressed: () => _showDialog(context),
+//         icon: Icon(
+//           Icons.add,
+//           color: Colors.green,
+//         ));
+//   }
 
-  void _showDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-                title: const Text('Add to Trip'),
-                content: const Text('Select a trip to add this item to.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                ]));
-  }
-}
+//   void _showDialog(BuildContext context) {
+//     showDialog(
+//         context: context,
+//         builder: (context) => AlertDialog(
+//                 title: const Text('Add to Trip'),
+//                 content: const Text('Select a trip to add this item to.'),
+//                 actions: [
+//                   TextButton(
+//                     onPressed: () => Navigator.of(context).pop(),
+//                     child: const Text('Cancel'),
+//                   ),
+//                 ]));
+//   }
+// }
 
 class _AllItemsEmptyState extends StatelessWidget {
   const _AllItemsEmptyState({super.key});
