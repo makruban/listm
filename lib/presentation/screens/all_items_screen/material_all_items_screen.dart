@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide showAdaptiveDialog;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/domain/entities/item_entity.dart';
 import 'package:listm/domain/value_objects/item_id.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 
+import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/presentation/widgets/checklist_painter.dart';
@@ -23,7 +25,7 @@ class MaterialAllItemsScreen extends StatefulWidget {
   final ItemsBloc itemsBloc;
 
   @override
-  _MaterialAllItemsScreenState createState() => _MaterialAllItemsScreenState();
+  State<MaterialAllItemsScreen> createState() => _MaterialAllItemsScreenState();
 }
 
 class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
@@ -117,15 +119,6 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
     super.dispose();
   }
 
-  /// Checks if the given entityId exists in the current ItemsLoadSuccess state.
-  bool _isExistingItemId(String id) {
-    final currentState = _itemsBloc.state;
-    if (currentState is ItemsLoadSuccess) {
-      return currentState.items.any((item) => item.id == id);
-    }
-    return false;
-  }
-
   void _onBackgroundTap() {
     if (_editingId != null) _submitOrCancel(_editingId!);
   }
@@ -169,7 +162,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
       child: BlocBuilder<ItemsBloc, ItemsState>(
         builder: (context, state) {
           if (state is ItemsLoadInProgress) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: AdaptiveSpinner());
           } else if (state is ItemsFailure) {
             return Center(child: Text('Error: ${state.error}'));
           } else if (state is ItemsLoadSuccess) {
@@ -232,9 +225,9 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                         color: Colors.green,
                         label: 'Info',
                         onTap: () {
-                          showDialog(
+                          showAdaptiveDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
+                            builder: (context) => AdaptiveAlertDialog(
                               title: const Text('Item Details'),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -245,7 +238,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                                 ],
                               ),
                               actions: [
-                                TextButton(
+                                AdaptiveDialogAction(
                                   onPressed: () => Navigator.of(context).pop(),
                                   child: const Text('Close'),
                                 ),
@@ -337,7 +330,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
 // }
 
 class _AllItemsEmptyState extends StatelessWidget {
-  const _AllItemsEmptyState({super.key});
+  const _AllItemsEmptyState();
 
   @override
   Widget build(BuildContext context) {
@@ -353,11 +346,11 @@ class _AllItemsEmptyState extends StatelessWidget {
                 width: 700,
                 child: CustomPaint(
                     painter: ChecklistPainter(
-                        baseColor: Colors.grey.shade300.withOpacity(0.3)))),
+                        baseColor:
+                            Colors.grey.shade300.withValues(alpha: 0.3)))),
           ),
         ),
       ],
     );
-    ;
   }
 }

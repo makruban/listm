@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide showAdaptiveDialog;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/value_objects/trip_id.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/l10n/app_localizations.dart';
@@ -60,7 +62,7 @@ class _MaterialPackingListsScreenState extends State<MaterialPackingListsScreen>
     return BlocBuilder<TripsBloc, TripsState>(
       builder: (context, state) {
         if (state is TripsLoadInProgress) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: AdaptiveSpinner());
         } else if (state is TripsLoadSuccess) {
           final trips = state.trips;
           if (trips.isEmpty) {
@@ -118,9 +120,9 @@ class _TripCard extends StatelessWidget {
     final loc = AppLocalizations.of(context);
     if (loc == null) return;
 
-    showDialog(
+    showAdaptiveDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => AdaptiveAlertDialog(
         title: Text(loc.tripDetailsTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -131,7 +133,7 @@ class _TripCard extends StatelessWidget {
           ],
         ),
         actions: [
-          TextButton(
+          AdaptiveDialogAction(
             onPressed: () => _handleCloseDialog(context),
             child: Text(loc.closeButton),
           ),
@@ -203,7 +205,6 @@ class _TripCard extends StatelessWidget {
 
 class _PackingListEmptyState extends StatelessWidget {
   const _PackingListEmptyState({
-    super.key,
     required this.arrowController,
   });
   final AnimationController arrowController;
@@ -222,7 +223,7 @@ class _PackingListEmptyState extends StatelessWidget {
               height: 500,
               child: CustomPaint(
                 painter: SuitcasePainter(
-                  color: Colors.grey.shade300.withOpacity(0.3),
+                  color: Colors.grey.shade300.withValues(alpha: 0.3),
                 ),
               ),
             ),

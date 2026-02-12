@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
+
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
@@ -73,14 +76,26 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
           page: MaterialPackingListsScreen(
             tripsBloc: _tripsBloc,
           ),
-          appBarBuilder: (context) => AppBar(
+          materialAppBarBuilder: (context) => AppBar(
             title: Text(_loc.packingLists),
             actions: [
               IconButton(icon: const Icon(Icons.search), onPressed: () {})
             ],
           ),
+          cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
+            middle: Text(_loc.packingLists),
+            trailing: CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: const Icon(CupertinoIcons.search),
+              onPressed: () {},
+            ),
+          ),
           navBarItem: BottomNavigationBarItem(
             icon: const Icon(Icons.list),
+            label: _loc.packingLists,
+          ),
+          cupertinoTabBarItem: BottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.list_bullet),
             label: _loc.packingLists,
           ),
         ),
@@ -90,14 +105,26 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
             showFab: _showFab,
             itemsBloc: _itemsBloc,
           ),
-          appBarBuilder: (context) => AppBar(
+          materialAppBarBuilder: (context) => AppBar(
             title: Text(_loc.allItems),
             actions: [
               IconButton(icon: const Icon(Icons.settings), onPressed: () {})
             ],
           ),
+          cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
+            middle: Text(_loc.allItems),
+            trailing: CupertinoButton(
+              padding: EdgeInsets.zero,
+              child: const Icon(CupertinoIcons.settings),
+              onPressed: () {},
+            ),
+          ),
           navBarItem: BottomNavigationBarItem(
             icon: const Icon(Icons.all_inbox),
+            label: _loc.allItems,
+          ),
+          cupertinoTabBarItem: BottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.tray_full),
             label: _loc.allItems,
           ),
         ),
@@ -115,30 +142,43 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
 
   @override
   Widget build(BuildContext context) {
-    // final _TabInfo currentTab = _tabs[_navigationCubit.state.index];
     return BlocBuilder<NavigationCubit, NavigationTab>(
       builder: (context, tab) {
         final _TabInfo currentTab = _tabs[tab.index];
-        return Scaffold(
-          appBar: currentTab.appBarBuilder(context),
+        final platform = Theme.of(context).platform;
+        final isIOS =
+            platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+        return AdaptiveScaffold(
+          materialAppBar: currentTab.materialAppBarBuilder,
+          cupertinoNavigationBar: currentTab.cupertinoNavigationBarBuilder,
           body: IndexedStack(
             index: tab.index,
             children: _tabs.map((tabInfo) => tabInfo.page).toList(),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: tab.index,
-            items: _tabs.map((tabInfo) => tabInfo.navBarItem).toList(),
-            onTap: (i) {
-              // If leaving the AllItems tab, cancel any in-progress edit
-              // if (_navigationCubit.state == NavigationTab.allItems) {}
-              _navigationCubit.setTab(NavigationTab.values[i]);
-            },
-          ),
+          bottomNavigationBar: isIOS
+              ? CupertinoTabBar(
+                  currentIndex: tab.index,
+                  items: _tabs
+                      .map((tabInfo) => tabInfo.cupertinoTabBarItem)
+                      .toList(),
+                  onTap: (i) {
+                    _navigationCubit.setTab(NavigationTab.values[i]);
+                  },
+                )
+              : BottomNavigationBar(
+                  currentIndex: tab.index,
+                  items: _tabs.map((tabInfo) => tabInfo.navBarItem).toList(),
+                  onTap: (i) {
+                    // If leaving the AllItems tab, cancel any in-progress edit
+                    // if (_navigationCubit.state == NavigationTab.allItems) {}
+                    _navigationCubit.setTab(NavigationTab.values[i]);
+                  },
+                ),
           floatingActionButton: ScaleTransition(
             scale: _fabScaleAnimation,
             child: _buildFab(context, tab),
           ),
-          // floatingActionButton: _buildFab(context, tab),
         );
       },
     );
@@ -195,12 +235,17 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
 // Helper class to encapsulate tab content and metadata
 class _TabInfo {
   final Widget page;
-  final PreferredSizeWidget Function(BuildContext) appBarBuilder;
+  final PreferredSizeWidget Function(BuildContext) materialAppBarBuilder;
+  final ObstructingPreferredSizeWidget Function(BuildContext)
+      cupertinoNavigationBarBuilder;
   final BottomNavigationBarItem navBarItem;
+  final BottomNavigationBarItem cupertinoTabBarItem;
 
   const _TabInfo({
     required this.page,
-    required this.appBarBuilder,
+    required this.materialAppBarBuilder,
+    required this.cupertinoNavigationBarBuilder,
     required this.navBarItem,
+    required this.cupertinoTabBarItem,
   });
 }

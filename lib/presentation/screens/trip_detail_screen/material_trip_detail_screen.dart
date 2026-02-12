@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide showAdaptiveDialog;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:listm/core/di/injection.dart';
 import 'package:listm/domain/entities/trip_detail_item.dart';
@@ -6,6 +7,9 @@ import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
 import 'package:listm/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/core/util/list_diff_util.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 
 class MaterialTripDetailScreen extends StatefulWidget {
   final String tripId;
@@ -125,8 +129,8 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
           },
-          child: Scaffold(
-            appBar: AppBar(
+          child: AdaptiveScaffold(
+            materialAppBar: (context) => AppBar(
               title: BlocConsumer<TripDetailsBloc, TripDetailsState>(
                 listener: (context, state) {
                   if (state is TripDetailsLoaded) {
@@ -152,7 +156,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                         hintStyle: theme.textTheme.titleLarge?.copyWith(
                           color: (theme.appBarTheme.foregroundColor ??
                                   theme.colorScheme.onSurface)
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                       ),
                       cursorColor: theme.appBarTheme.foregroundColor ??
@@ -167,13 +171,49 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                 },
               ),
             ),
+            cupertinoNavigationBar: (context) => CupertinoNavigationBar(
+              middle: BlocConsumer<TripDetailsBloc, TripDetailsState>(
+                listener: (context, state) {
+                  if (state is TripDetailsLoaded) {
+                    if (!_titleFocusNode.hasFocus) {
+                      _titleController.text = state.trip.title;
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  if (state is TripDetailsLoaded) {
+                    return CupertinoTextField(
+                      controller: _titleController,
+                      focusNode: _titleFocusNode,
+                      style: CupertinoTheme.of(context)
+                          .textTheme
+                          .navTitleTextStyle,
+                      placeholder: 'Trip Title',
+                      decoration: null, // No border for cleaner look in nav bar
+                      autofocus: widget.isNewTrip,
+                      onSubmitted: (value) {
+                        _tripDetailsBloc.add(UpdateTripTitle(value));
+                      },
+                    );
+                  }
+                  return const Text('Trip Details');
+                },
+              ),
+              trailing: CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Icon(CupertinoIcons.add),
+                onPressed: () {
+                  _showAddItemsBottomSheet(context);
+                },
+              ),
+            ),
             body: BlocBuilder<TripDetailsBloc, TripDetailsState>(
               builder: (context, state) {
                 if (state is TripDetailsLoading) {
                   // Only show loading if we have no data?
                   // If we have _listData, we might want to stay visible?
                   // But standard pattern is:
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: AdaptiveSpinner());
                 } else if (state is TripDetailsLoaded) {
                   // If list data is not synced yet (e.g. first build), sync it validly
                   if (_listData.isEmpty && state.items.isNotEmpty) {
@@ -368,27 +408,30 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
     final bloc = BlocProvider.of<TripItemSelectorBloc>(parentContext);
     final TextEditingController nameController = TextEditingController();
 
-    showDialog(
+    showAdaptiveDialog(
       context: parentContext,
       builder: (context) {
-        return AlertDialog(
+        return AdaptiveAlertDialog(
           title: const Text('Create New Item'),
-          content: TextField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              labelText: 'Item Name',
-              hintText: 'e.g., Toothbrush',
+          content: Material(
+            color: Colors.transparent,
+            child: TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Item Name',
+                hintText: 'e.g., Toothbrush',
+              ),
+              autofocus: true,
             ),
-            autofocus: true,
           ),
           actions: [
-            TextButton(
+            AdaptiveDialogAction(
               onPressed: () {
                 Navigator.pop(context);
               },
               child: const Text('Cancel'),
             ),
-            TextButton(
+            AdaptiveDialogAction(
               onPressed: () {
                 final name = nameController.text.trim();
                 if (name.isNotEmpty) {
@@ -405,13 +448,13 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
   }
 
   void _showCongratulationsDialog() {
-    showDialog(
+    showAdaptiveDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => AdaptiveAlertDialog(
         title: const Text('Congratulations!'),
         content: const Text('All items are packed! You are ready to go!'),
         actions: [
-          TextButton(
+          AdaptiveDialogAction(
             onPressed: () => Navigator.pop(context),
             child: const Text('OK'),
           ),
