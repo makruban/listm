@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listm/core/resources/app_routes.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:listm/core/widgets/adaptive/adaptive_text_button.dart';
 import 'package:listm/presentation/widgets/checklist_painter.dart';
 import 'package:listm/presentation/widgets/globe_painter.dart';
 import 'package:listm/presentation/widgets/suitcase_painter.dart';
@@ -40,7 +42,7 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AdaptiveScaffold(
       body: Stack(
         children: [
           PageView(
@@ -186,9 +188,9 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
+                AdaptiveTextButton(
                   onPressed: _onSkip,
-                  child: const Text('Skip'),
+                  text: 'Skip',
                 ),
                 Row(
                   children: List.generate(3, (index) {
@@ -205,9 +207,9 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                     );
                   }),
                 ),
-                TextButton(
+                AdaptiveTextButton(
                   onPressed: _onNext,
-                  child: Text(_currentPage == 2 ? 'Done' : 'Next'),
+                  text: _currentPage == 2 ? 'Done' : 'Next',
                 ),
               ],
             ),
