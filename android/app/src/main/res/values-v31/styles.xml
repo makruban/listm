@@ -3,7 +3,7 @@
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <!-- Android 12+ Splash Screen API -->
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/transparent_icon</item>
         
         <!-- Maintain compatibility for legacy behavior/fallback -->
         <item name="android:windowBackground">@drawable/launch_background</item>
