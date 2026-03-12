@@ -91,6 +91,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
         id: event.id,
         title: 'New Trip',
         itemCount: 0,
+        completedItemCount: 0,
         icon: '',
       );
       await _addTripUseCase(trip);

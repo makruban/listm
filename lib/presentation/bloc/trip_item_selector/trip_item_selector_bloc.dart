@@ -132,7 +132,11 @@ class TripItemSelectorBloc
         // Sync trip item count
         final updatedItems = await getItemsForTripUseCase(currentState.tripId);
         final trip = await getTripByIdUseCase(TripId(currentState.tripId));
-        final updatedTrip = trip.copyWith(itemCount: updatedItems.length);
+        final completedCount = updatedItems.where((i) => i.isCompleted).length;
+        final updatedTrip = trip.copyWith(
+          itemCount: updatedItems.length,
+          completedItemCount: completedCount,
+        );
         await updateTripUseCase(updatedTrip);
       } catch (e) {
         // Revert on failure
@@ -171,6 +175,16 @@ class TripItemSelectorBloc
           tripId: currentState.tripId,
           itemId: newItemId,
         ));
+
+        // Sync trip item count
+        final updatedItems = await getItemsForTripUseCase(currentState.tripId);
+        final trip = await getTripByIdUseCase(TripId(currentState.tripId));
+        final completedCount = updatedItems.where((i) => i.isCompleted).length;
+        final updatedTrip = trip.copyWith(
+          itemCount: updatedItems.length,
+          completedItemCount: completedCount,
+        );
+        await updateTripUseCase(updatedTrip);
 
         // Optimistically update selection
         final currentSelectedIds =

@@ -75,9 +75,14 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       var trip = await getTripByIdUseCase(TripId(event.tripId));
       final items = await getItemsForTripUseCase(event.tripId);
 
-      // Self-healing: Update item count if out of sync
-      if (trip.itemCount != items.length) {
-        trip = trip.copyWith(itemCount: items.length);
+      // Self-healing: Update item count and completed count if out of sync
+      final completedCount = items.where((i) => i.isCompleted).length;
+      if (trip.itemCount != items.length ||
+          trip.completedItemCount != completedCount) {
+        trip = trip.copyWith(
+          itemCount: items.length,
+          completedItemCount: completedCount,
+        );
         await updateTripUseCase(trip);
       }
 
@@ -101,8 +106,11 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
         final updatedItems = await getItemsForTripUseCase(currentState.trip.id);
 
-        final updatedTrip =
-            currentState.trip.copyWith(itemCount: updatedItems.length);
+        final completedCount = updatedItems.where((i) => i.isCompleted).length;
+        final updatedTrip = currentState.trip.copyWith(
+          itemCount: updatedItems.length,
+          completedItemCount: completedCount,
+        );
         await updateTripUseCase(updatedTrip);
 
         emit(TripDetailsLoaded(
@@ -129,7 +137,15 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
         // Reload items to get updated status and sort order
         final updatedItems = await getItemsForTripUseCase(currentState.trip.id);
-        emit(currentState.copyWith(items: updatedItems));
+
+        final completedCount = updatedItems.where((i) => i.isCompleted).length;
+        final updatedTrip = currentState.trip.copyWith(
+          itemCount: updatedItems.length,
+          completedItemCount: completedCount,
+        );
+        await updateTripUseCase(updatedTrip);
+
+        emit(currentState.copyWith(trip: updatedTrip, items: updatedItems));
       } catch (e) {
         emit(TripDetailsError(e.toString()));
       }

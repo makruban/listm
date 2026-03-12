@@ -10,6 +10,8 @@ import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/l10n/app_localizations.dart';
 import 'package:listm/presentation/widgets/arrow_painter.dart';
 import 'package:listm/presentation/widgets/suitcase_painter.dart';
+import 'package:listm/presentation/screens/packing_list_screen/widgets/trip_progress_indicator.dart';
+import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
@@ -187,15 +189,32 @@ class _TripCard extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 6),
         child: ListTile(
-          leading: trip.icon.isNotEmpty
-              ? Image.asset(trip.icon, width: 32, height: 32)
-              : const Icon(Icons.card_travel),
+          leading: Container(
+            width: 56, // Increased to allow bigger icons
+            height: 56,
+            decoration: const BoxDecoration(
+              color: Color(0xFFEFF3F8), // Soft rounded background
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: trip.icon.isNotEmpty
+                ? Image.asset(trip.icon, width: 32, height: 32)
+                // Let the SimpleSuitcaseIcon draw slightly smaller than the box
+                // or just use the user-defined size
+                : const SimpleSuitcaseIcon(size: 48),
+          ),
           title: Text(trip.title.isEmpty ? loc.untitledTrip : trip.title,
               style: titleTextStyle),
           subtitle: Text(
             '${trip.itemCount} ${loc.itemsLabel}',
             style: theme.textTheme.bodyLarge,
           ),
+          trailing: trip.itemCount > 0
+              ? TripProgressIndicator(
+                  progress: trip.completedItemCount / trip.itemCount,
+                  progressColor: Colors.green,
+                )
+              : null,
           onTap: () => _navigateToTripDetails(context),
         ),
       ),
