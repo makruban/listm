@@ -8,6 +8,7 @@ class TripModel extends TripEntity {
     required super.title,
     required super.icon,
     required super.itemCount,
+    super.completedItemCount = 0,
   });
   factory TripModel.fromJson(Map<String, dynamic> json) {
     return TripModel(
@@ -15,6 +16,7 @@ class TripModel extends TripEntity {
       title: json['title'] as String,
       icon: json['icon'] as String,
       itemCount: json['itemCount'] as int,
+      completedItemCount: (json['completedItemCount'] as int?) ?? 0,
     );
   }
   Map<String, dynamic> toJson() => {
@@ -22,6 +24,7 @@ class TripModel extends TripEntity {
         'title': title,
         'icon': icon,
         'itemCount': itemCount,
+        'completedItemCount': completedItemCount,
       };
 
   /// Convert a domain entity into a data model
@@ -30,6 +33,7 @@ class TripModel extends TripEntity {
         title: entity.title,
         icon: entity.icon,
         itemCount: entity.itemCount,
+        completedItemCount: entity.completedItemCount,
       );
 
   /// Convert this model (which extends ItemEntity) back into a pure entity
@@ -38,12 +42,13 @@ class TripModel extends TripEntity {
         title: title,
         icon: icon,
         itemCount: itemCount,
+        completedItemCount: completedItemCount,
       );
 
   @override
   String toString() => jsonEncode(toJson());
   @override
-  List<Object?> get props => [id, title, icon, itemCount];
+  List<Object?> get props => [id, title, icon, itemCount, completedItemCount];
   @override
   bool? get stringify => true;
   @override

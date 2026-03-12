@@ -10,6 +10,8 @@ import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/l10n/app_localizations.dart';
 import 'package:listm/presentation/widgets/arrow_painter.dart';
 import 'package:listm/presentation/widgets/suitcase_painter.dart';
+import 'package:listm/presentation/screens/packing_list_screen/widgets/trip_progress_indicator.dart';
+import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
@@ -184,19 +186,72 @@ class _TripCard extends StatelessWidget {
           onTap: _handleDeleteTrip,
         ),
       ],
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        child: ListTile(
-          leading: trip.icon.isNotEmpty
-              ? Image.asset(trip.icon, width: 32, height: 32)
-              : const Icon(Icons.card_travel),
-          title: Text(trip.title.isEmpty ? loc.untitledTrip : trip.title,
-              style: titleTextStyle),
-          subtitle: Text(
-            '${trip.itemCount} ${loc.itemsLabel}',
-            style: theme.textTheme.bodyLarge,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(12),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => _navigateToTripDetails(context),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFEFF3F8), // Soft rounded background
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: trip.icon.isNotEmpty
+                        ? Image.asset(trip.icon, width: 36, height: 36)
+                        : const SimpleSuitcaseIcon(size: 44),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          trip.title.isEmpty ? loc.untitledTrip : trip.title,
+                          style: titleTextStyle?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          '${trip.itemCount} ${loc.itemsLabel}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (trip.itemCount > 0) ...[
+                    const SizedBox(width: 12),
+                    TripProgressIndicator(
+                      size: 60, // Exact match with the suitcase container width/height
+                      progress: trip.completedItemCount / trip.itemCount,
+                      progressColor: const Color(0xFF2CB567), // Vibrant modern green
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
-          onTap: () => _navigateToTripDetails(context),
         ),
       ),
     );
