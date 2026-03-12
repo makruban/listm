@@ -37,9 +37,10 @@ class TripProgressIndicator extends StatelessWidget {
             '$percentage%',
             style: textStyle ??
                 TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: size * 0.32,
-                  color: Colors.black87,
+                  fontWeight: FontWeight.w800,
+                  fontSize: size * 0.28,
+                  letterSpacing: -0.5,
+                  color: progress > 0 ? progressColor : Colors.grey.shade600,
                 ),
           ),
         ),
@@ -62,7 +63,7 @@ class _ProgressArcPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // Determine the geometric properties
-    final strokeWidth = size.width * 0.08;
+    final strokeWidth = size.width * 0.12; // Thicker stroke for modern look
     final center = Offset(size.width / 2, size.height / 2);
     // Draw inside the bounds by subtracting half the stroke width
     final radius = (size.width - strokeWidth) / 2;
@@ -77,7 +78,7 @@ class _ProgressArcPainter extends CustomPainter {
 
     // 1. Draw the gray track background
     final trackPaint = Paint()
-      ..color = trackColor
+      ..color = trackColor.withAlpha(150)
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -92,13 +93,24 @@ class _ProgressArcPainter extends CustomPainter {
 
     // 2. Draw the colored progress foreground
     if (progress > 0) {
+      final currentSweep = sweepAngle * progress;
+
+      // Soft glow shadow behind the progress path
+      final shadowPaint = Paint()
+        ..color = progressColor.withAlpha(100)
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6.0);
+      
+      canvas.drawArc(rect, startAngle, currentSweep, false, shadowPaint);
+
       final progressPaint = Paint()
         ..color = progressColor
         ..strokeWidth = strokeWidth
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round;
 
-      final currentSweep = sweepAngle * progress;
       canvas.drawArc(
         rect,
         startAngle,
