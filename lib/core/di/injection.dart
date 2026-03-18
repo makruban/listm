@@ -23,6 +23,7 @@ import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usec
 import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/toggle_trip_item_completion_usecase.dart';
+import 'package:listm/domain/usecases/trip_item_usecases/get_trips_for_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
@@ -128,6 +129,9 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton(
     () => ToggleTripItemCompletionUseCase(getIt()),
   );
+  getIt.registerLazySingleton(
+    () => GetTripsForItemUseCase(getIt()),
+  );
 
   // 5️⃣ Blocs / Cubits as factories (so you get a new instance each time)
   getIt.registerFactory(
@@ -138,6 +142,8 @@ Future<void> configureDependencies() async {
       updateItemUseCase: getIt<UpdateItemUseCase>(),
       removeItemUseCase: getIt<RemoveItemUseCase>(),
       getItemsStreamUseCase: getIt<GetItemsStreamUseCase>(),
+      getTripsForItemUseCase: getIt<GetTripsForItemUseCase>(),
+      getTripsUseCase: getIt<GetTripsUseCase>(),
     ),
   );
   getIt.registerFactory(

@@ -43,6 +43,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     on<RemoveTripItem>(_onRemoveTripItem);
     on<UpdateTripTitle>(_onUpdateTripTitle);
     on<ToggleTripItemCompletion>(_onToggleTripItemCompletion);
+    on<UnselectAllTripItems>(_onUnselectAllTripItems);
   }
 
   @override
@@ -142,6 +143,35 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         final updatedTrip = currentState.trip.copyWith(
           itemCount: updatedItems.length,
           completedItemCount: completedCount,
+        );
+        await updateTripUseCase(updatedTrip);
+
+        emit(currentState.copyWith(trip: updatedTrip, items: updatedItems));
+      } catch (e) {
+        emit(TripDetailsError(e.toString()));
+      }
+    }
+  }
+
+  Future<void> _onUnselectAllTripItems(
+    UnselectAllTripItems event,
+    Emitter<TripDetailsState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is TripDetailsLoaded) {
+      try {
+        final completedItems = currentState.items.where((i) => i.isCompleted).toList();
+        for (final item in completedItems) {
+          await toggleTripItemCompletionUseCase(ToggleTripItemCompletionParams(
+            tripId: currentState.trip.id,
+            itemId: item.item.id,
+          ));
+        }
+
+        final updatedItems = await getItemsForTripUseCase(currentState.trip.id);
+        final updatedTrip = currentState.trip.copyWith(
+          itemCount: updatedItems.length,
+          completedItemCount: 0,
         );
         await updateTripUseCase(updatedTrip);
 
