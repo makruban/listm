@@ -93,8 +93,25 @@ class TripItemSelectorBloc
     Emitter<TripItemSelectorState> emit,
   ) {
     if (state is TripItemSelectorLoaded) {
-      emit((state as TripItemSelectorLoaded).copyWith(
-        availableItems: event.items,
+      final currentState = state as TripItemSelectorLoaded;
+
+      final sortedItems = List<ItemEntity>.from(event.items);
+      sortedItems.sort((a, b) {
+        final indexA = currentState.recentlyCreatedItemIds.indexOf(a.id);
+        final indexB = currentState.recentlyCreatedItemIds.indexOf(b.id);
+
+        if (indexA != -1 && indexB != -1) {
+          return indexA.compareTo(indexB);
+        } else if (indexA != -1) {
+          return -1;
+        } else if (indexB != -1) {
+          return 1;
+        }
+        return 0;
+      });
+
+      emit(currentState.copyWith(
+        availableItems: sortedItems,
       ));
     }
   }
@@ -167,6 +184,25 @@ class TripItemSelectorBloc
           description: '',
         );
 
+        // Optimistically update selection and availableItems before async work
+        final currentSelectedIds =
+            Set<String>.from(currentState.selectedItemIds);
+        currentSelectedIds.add(newItemId);
+
+        final currentRecentlyCreated =
+            List<String>.from(currentState.recentlyCreatedItemIds);
+        currentRecentlyCreated.insert(0, newItemId);
+
+        final currentAvailableItems =
+            List<ItemEntity>.from(currentState.availableItems);
+        currentAvailableItems.insert(0, newItem);
+
+        emit(currentState.copyWith(
+          selectedItemIds: currentSelectedIds,
+          availableItems: currentAvailableItems,
+          recentlyCreatedItemIds: currentRecentlyCreated,
+        ));
+
         // 1. Add item globally
         await addItemUseCase(newItem);
 
@@ -185,14 +221,6 @@ class TripItemSelectorBloc
           completedItemCount: completedCount,
         );
         await updateTripUseCase(updatedTrip);
-
-        // Optimistically update selection
-        final currentSelectedIds =
-            Set<String>.from(currentState.selectedItemIds);
-        currentSelectedIds.add(newItemId);
-
-        // Stream will update availableItems, but we update selection manually
-        emit(currentState.copyWith(selectedItemIds: currentSelectedIds));
       } catch (e) {
         emit(TripItemSelectorError(e.toString()));
       }

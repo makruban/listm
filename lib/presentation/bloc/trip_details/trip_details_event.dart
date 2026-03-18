@@ -23,3 +23,7 @@ class ToggleTripItemCompletion extends TripDetailsEvent {
   final String itemId;
   const ToggleTripItemCompletion(this.itemId);
 }
+
+class UnselectAllTripItems extends TripDetailsEvent {
+  const UnselectAllTripItems();
+}

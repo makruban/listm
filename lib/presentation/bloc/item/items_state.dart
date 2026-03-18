@@ -20,7 +20,8 @@ class ItemsLoadInProgress extends ItemsState {
 
 /// State when a list of items has been successfully loaded.
 class ItemsLoadSuccess extends ItemsState {
-  final List<ItemEntity> items;
+  final List<ItemViewModel> items;
+
   const ItemsLoadSuccess(this.items);
 
   @override

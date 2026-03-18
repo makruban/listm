@@ -10,6 +10,8 @@ import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/presentation/widgets/checklist_painter.dart';
+import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
+import 'package:listm/presentation/bloc/item/item_view_model.dart';
 
 /// Inline list widget for displaying and editing all items via ItemsBloc.
 /// No Scaffold or FAB—embed in a parent widget that provides ItemsBloc.
@@ -95,7 +97,49 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
 
   bool _isExisting(String id) {
     final st = _itemsBloc.state;
-    return st is ItemsLoadSuccess && st.items.any((e) => e.id == id);
+    return st is ItemsLoadSuccess && st.items.any((e) => e.item.id == id);
+  }
+
+  void _confirmDelete(BuildContext context, ItemViewModel uiModel) {
+    showAdaptiveDialog(
+      context: context,
+      builder: (dialogContext) => AdaptiveAlertDialog(
+        title: const Text('Delete Item'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Are you sure you want to delete "${uiModel.item.title}"?'),
+            if (uiModel.tripNames.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              const Text(
+                'Attention! This item is used in Trip(s):',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...uiModel.tripNames.map((tripName) => Text('• $tripName')),
+            ],
+          ],
+        ),
+        actions: [
+          AdaptiveDialogAction(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          AdaptiveDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              _itemsBloc.add(RemoveItemEvent(ItemId(uiModel.item.id)));
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -147,7 +191,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
             if (_editingId != null && !_isSubmitting) return false;
             // 2. If the list still has an “empty-title” placeholder, keep FAB hidden
             final stillHasPlaceholder =
-                curr.items.any((e) => e.title.trim().isEmpty);
+                curr.items.any((e) => e.item.title.trim().isEmpty);
             return !stillHasPlaceholder;
           },
           listener: (context, state) {
@@ -173,11 +217,15 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
               behavior: HitTestBehavior.translucent,
               onTap: _onBackgroundTap,
               child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 separatorBuilder: (context, index) =>
-                    const Divider(thickness: 0.4),
+                    const SizedBox(height: 12),
                 itemCount: state.items.length,
                 itemBuilder: (context, index) {
-                  final ItemEntity item = state.items[index];
+                  final uiModel = state.items[index];
+                  final ItemEntity item = uiModel.item;
+                  final tripNames = uiModel.tripNames;
+                  final tripCount = tripNames.length;
                   final Key key = ValueKey<String>(item.id);
                   if (item.title.isEmpty) {
                     // Create with start editing mode if the title is empty
@@ -197,17 +245,37 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                           .addPostFrameCallback((_) => node.requestFocus());
                       return node;
                     });
-                    return ListTile(
-                      title: TextField(
-                        controller: controller,
-                        focusNode: focusNode,
-                        autofocus: true,
-                        maxLength: 15,
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                            labelText: 'Item ${index + 1}',
-                            border: InputBorder.none,
-                            counterText: ''),
+                    final theme = Theme.of(context);
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: theme.colorScheme.primary
+                                .withValues(alpha: 0.5),
+                            width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 16),
+                        title: TextField(
+                          controller: controller,
+                          focusNode: focusNode,
+                          autofocus: true,
+                          maxLength: 15,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                              labelText: 'Item ${index + 1}',
+                              border: InputBorder.none,
+                              counterText: ''),
+                        ),
                       ),
                     );
                   }
@@ -217,7 +285,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                     onDelete: () {
                       // cancel any leftover edit first
                       if (_editingId != null) _submitOrCancel(_editingId!);
-                      _itemsBloc.add(RemoveItemEvent(ItemId(item.id)));
+                      _confirmDelete(context, uiModel);
                     },
                     actions: [
                       SwipeAction(
@@ -254,7 +322,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                         onTap: () {
                           // cancel any leftover edit first
                           if (_editingId != null) _submitOrCancel(_editingId!);
-                          _itemsBloc.add(RemoveItemEvent(ItemId(item.id)));
+                          _confirmDelete(context, uiModel);
                         },
                       ),
                     ],
@@ -263,29 +331,79 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                         /// TODO: Consider using a context menu or a more accessible way to show options
                         /// TODO: or remove the long-press in favor of a trailing icon button
                       },
-                      child: ListTile(
-                        leading: Text(
-                          item.title,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        // title: Text(item.title),
-                        title: Row(
-                          children: [
-                            // Text('used: 2'),
-                            // Spacer(),
-                            // AddToTripButton(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outlineVariant
+                                  .withValues(alpha: 0.3)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.03),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
                           ],
                         ),
-                        onTap: () {
-                          // cancel any leftover edit first
-                          if (_editingId != null) _submitOrCancel(_editingId!);
-                          if (item.title.isEmpty && _editingId == null) {
-                            _startEditing(key, initial: '');
-                          }
+                        child: ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                          leading: Text(
+                            item.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                          title: Row(
+                            children: [
+                              const Spacer(),
+                              if (tripCount > 0) ...[
+                                const SimpleSuitcaseIcon(
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '$tripCount',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.grey.shade600,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ] else ...[
+                                Text(
+                                  'Not packed',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: Colors.grey.shade400,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          onTap: () {
+                            // cancel any leftover edit first
+                            if (_editingId != null) _submitOrCancel(_editingId!);
+                            if (item.title.isEmpty && _editingId == null) {
+                              _startEditing(key, initial: '');
+                            }
 
-                          // begin editing this one
-                          _startEditing(key, initial: item.title);
-                        },
+                            // begin editing this one
+                            _startEditing(key, initial: item.title);
+                          },
+                        ),
                       ),
                     ),
                   );
@@ -334,6 +452,7 @@ class _AllItemsEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Stack(
       children: [
         Positioned(
@@ -347,7 +466,41 @@ class _AllItemsEmptyState extends StatelessWidget {
                 child: CustomPaint(
                     painter: ChecklistPainter(
                         baseColor:
-                            Colors.grey.shade300.withValues(alpha: 0.3)))),
+                            theme.colorScheme.outlineVariant.withValues(alpha: 0.2)))),
+          ),
+        ),
+        Positioned.fill(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.inventory_2_outlined,
+                  size: 64,
+                  color: theme.colorScheme.primary.withValues(alpha: 0.8),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Your inventory is empty',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Tap + to start adding items',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ),
       ],
