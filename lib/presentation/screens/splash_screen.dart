@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listm/core/resources/app_routes.dart';
 import 'package:listm/core/resources/asset_paths.dart';
+import 'package:listm/presentation/bloc/app/app_bloc.dart';
+import 'package:listm/presentation/bloc/app/app_state.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Timer(
-      const Duration(seconds: 2),
-      () => GoRouter.of(context).go(AppRoutes.onboarding),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SplashBackground(),
+    return BlocListener<AppBloc, AppState>(
+      listener: (context, state) {
+        if (state is AppReady) {
+          if (state.hasSeenOnboarding) {
+            context.go(AppRoutes.home);
+          } else {
+            context.go(AppRoutes.onboarding);
+          }
+        }
+      },
+      child: const Scaffold(
+        body: SplashBackground(),
+      ),
     );
   }
 }

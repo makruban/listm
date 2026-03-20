@@ -7,6 +7,8 @@ import 'package:listm/domain/repositories/trip_repository.dart';
 import 'package:listm/domain/repositories/trip_item_relation_repository.dart';
 import 'package:listm/data/repositories/trip_item_relation_repository_impl.dart';
 import 'package:listm/data/datasources/trip_item_relation_local_data_source.dart';
+import 'package:listm/domain/repositories/onboarding_repository.dart';
+import 'package:listm/data/repositories/onboarding_repository_impl.dart';
 import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/remove_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_usecase.dart';
@@ -25,6 +27,9 @@ import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecas
 import 'package:listm/domain/usecases/trip_item_usecases/toggle_trip_item_completion_usecase.dart';
 import 'package:listm/domain/usecases/trip_item_usecases/get_trips_for_item_usecase.dart';
 import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
+import 'package:listm/domain/usecases/onboarding_usecases/check_onboarding_status_usecase.dart';
+import 'package:listm/domain/usecases/onboarding_usecases/complete_onboarding_usecase.dart';
+import 'package:listm/presentation/bloc/app/app_bloc.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
@@ -45,6 +50,7 @@ Future<void> configureDependencies() async {
         CacheKeys.items,
         CacheKeys.trips,
         CacheKeys.tripItemRelations,
+        CacheKeys.hasSeenOnboarding,
       },
     ),
   );
@@ -71,6 +77,9 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<TripItemRelationRepository>(
     () => TripItemRelationRepositoryImpl(localDataSource: getIt()),
+  );
+  getIt.registerLazySingleton<OnboardingRepository>(
+    () => OnboardingRepositoryImpl(prefsWithCache: prefs),
   );
 
   // 4️⃣ Use-cases
@@ -132,8 +141,20 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton(
     () => GetTripsForItemUseCase(getIt()),
   );
+  getIt.registerLazySingleton(
+    () => CheckOnboardingStatusUseCase(getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => CompleteOnboardingUseCase(getIt()),
+  );
 
   // 5️⃣ Blocs / Cubits as factories (so you get a new instance each time)
+  getIt.registerFactory(
+    () => AppBloc(
+      checkOnboardingStatusUseCase: getIt<CheckOnboardingStatusUseCase>(),
+      completeOnboardingUseCase: getIt<CompleteOnboardingUseCase>(),
+    ),
+  );
   getIt.registerFactory(
     () => ItemsBloc(
       getItemByIdUsecase: getIt<GetItemByIdUsecase>(),

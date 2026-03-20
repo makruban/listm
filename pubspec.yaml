@@ -66,6 +66,9 @@ flutter:
   assets:
     - assets/images/splash.png
     - assets/images/trip_card_icon_transparent.png
+    - assets/images/onboarding_suitcase.png
+    - assets/images/onboarding_checklist.png
+    - assets/images/onboarding_globe.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
