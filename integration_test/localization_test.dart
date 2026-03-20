@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:listm/main.dart' as app;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:listm/l10n/app_localizations.dart';
 import 'helpers/test_helpers.dart';
 
 void main() {

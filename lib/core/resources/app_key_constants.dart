@@ -8,4 +8,7 @@ abstract class CacheKeys {
 
   /// Key under which we store the list of trip item relations.
   static const String tripItemRelations = 'CACHED_TRIP_ITEM_RELATIONS';
+
+  /// Key under which we store the has seen onboarding flag.
+  static const String hasSeenOnboarding = 'HAS_SEEN_ONBOARDING';
 }

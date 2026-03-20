@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart' hide showAdaptiveDialog;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -263,52 +264,118 @@ class _PackingListEmptyState extends StatelessWidget {
     required this.arrowController,
   });
   final AnimationController arrowController;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
+
+    // Split the message if possible, or use defaults
+    final fullMessage = loc?.noTripsMessage ?? 'No packing lists found. Tap + to add one.';
+    final parts = fullMessage.split('. ');
+    final mainMessage = parts.isNotEmpty ? parts.first : 'No packing lists found';
+    final subMessage = parts.length > 1 ? parts.last : 'Tap + to add one.';
+
     return Stack(
       children: [
-        // Suitcase in the top half of the screen
-        Positioned(
-          top: 40,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: SizedBox(
-              width: 700,
-              height: 500,
-              child: CustomPaint(
-                painter: SuitcasePainter(
-                  color: Colors.grey.shade300.withValues(alpha: 0.3),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Animated floating suitcase
+                AnimatedBuilder(
+                  animation: arrowController,
+                  builder: (context, child) {
+                    // Use a sine wave for smooth floating up and down
+                    final offsetY = math.sin(arrowController.value * 2 * math.pi) * 8.0;
+
+                    return Transform.translate(
+                      offset: Offset(0, offsetY),
+                      child: child,
+                    );
+                  },
+                  child: Container(
+                    width: 220,
+                    height: 220,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                          blurRadius: 40,
+                          spreadRadius: 10,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: SizedBox(
+                        width: 160,
+                        height: 200,
+                        child: CustomPaint(
+                          painter: SuitcasePainter(
+                            color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 48),
+                Text(
+                  mainMessage,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  subMessage,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 80), // Space to avoid arrow overlap
+              ],
             ),
           ),
         ),
-        // Arrow and text positioned near the FAB (bottom-right)
+        // Arrow pointing to lower right FAB area
         Positioned(
-          bottom: 80,
-          right: 36,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: 140,
-                height: 140,
-                child: AnimatedBuilder(
-                  animation: arrowController,
-                  builder: (context, child) {
-                    return CustomPaint(
+          bottom: 100,
+          right: 48,
+          child: AnimatedBuilder(
+            animation: arrowController,
+            builder: (context, child) {
+              // Smooth downward pointing animation
+              final offsetY = math.sin(arrowController.value * math.pi) * 12.0;
+
+              return Transform.translate(
+                offset: Offset(0, offsetY),
+                child: Opacity(
+                  opacity: 0.6 + (0.4 * math.sin(arrowController.value * math.pi)),
+                  child: SizedBox(
+                    width: 80,
+                    height: 100,
+                    child: CustomPaint(
                       painter: ArrowPainter(
-                        color: Colors.grey.shade700,
-                        scale: 1,
+                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                        scale: 0.8,
                         shimmerValue: arrowController.value,
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ],
