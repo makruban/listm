@@ -59,6 +59,9 @@ app.*.map.json
 key.properties
 .gradle/
 android/app/.cxx/
+*.jks
+*.keystore
+android/key.properties
 
 # iOS/XCode related
 ios/Podfile.lock
