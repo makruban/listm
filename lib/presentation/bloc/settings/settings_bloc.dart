@@ -17,6 +17,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }) : super(SettingsInitial()) {
     on<LoadSettings>(_onLoadSettings);
     on<UpdateLanguage>(_onUpdateLanguage);
+    on<UpdateThemeMode>(_onUpdateThemeMode);
   }
 
   Future<void> _onLoadSettings(LoadSettings event, Emitter<SettingsState> emit) async {
@@ -32,6 +33,19 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Future<void> _onUpdateLanguage(UpdateLanguage event, Emitter<SettingsState> emit) async {
     try {
       final updatedSettings = state.settings.copyWith(languageCode: event.languageCode);
+      emit(SettingsLoaded(updatedSettings));
+      await saveAppSettingsUseCase(updatedSettings);
+    } catch (e) {
+      emit(SettingsError(state.settings, e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateThemeMode(UpdateThemeMode event, Emitter<SettingsState> emit) async {
+    try {
+      final updatedSettings = state.settings.copyWith(
+        themeMode: event.themeMode,
+        clearThemeMode: event.themeMode == null,
+      );
       emit(SettingsLoaded(updatedSettings));
       await saveAppSettingsUseCase(updatedSettings);
     } catch (e) {

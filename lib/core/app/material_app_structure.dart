@@ -16,6 +16,17 @@ class MaterialAppStructure extends StatelessWidget {
       builder: (context, state) {
         final langCode = state.settings.languageCode;
         final locale = langCode != null ? Locale(langCode) : null;
+
+        final themeModeCode = state.settings.themeMode;
+        ThemeMode themeMode;
+        if (themeModeCode == 'light') {
+          themeMode = ThemeMode.light;
+        } else if (themeModeCode == 'dark') {
+          themeMode = ThemeMode.dark;
+        } else {
+          themeMode = ThemeMode.system;
+        }
+
         return MaterialApp.router(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -32,6 +43,8 @@ class MaterialAppStructure extends StatelessWidget {
           },
           title: 'TripWise',
           theme: MaterialThemeManager.getMaterialAppTheme(),
+          darkTheme: MaterialThemeManager.getMaterialAppDarkTheme(),
+          themeMode: themeMode,
           routerDelegate: appRouter.routerDelegate,
           routeInformationParser: appRouter.routeInformationParser,
           routeInformationProvider: appRouter.routeInformationProvider,

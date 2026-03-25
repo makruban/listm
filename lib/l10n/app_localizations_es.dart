@@ -220,4 +220,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Seleccionar Idioma';
+
+  @override
+  String get themeMode => 'Theme Mode';
+
+  @override
+  String get selectThemeMode => 'Select Theme Mode';
+
+  @override
+  String get themeSystem => 'System Default';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
 }

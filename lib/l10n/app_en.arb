@@ -158,5 +158,10 @@
   "settings": "Settings",
   "preferences": "Preferences",
   "language": "Language",
-  "selectLanguage": "Select Language"
+  "selectLanguage": "Select Language",
+  "themeMode": "Theme Mode",
+  "selectThemeMode": "Select Theme Mode",
+  "themeSystem": "System Default",
+  "themeLight": "Light",
+  "themeDark": "Dark"
 }
