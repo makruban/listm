@@ -12,6 +12,7 @@ import 'package:listm/presentation/widgets/app_swipeable_card.dart';
 import 'package:listm/presentation/widgets/checklist_painter.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
 import 'package:listm/presentation/bloc/item/item_view_model.dart';
+import 'package:listm/core/util/build_context_ext.dart';
 
 /// Inline list widget for displaying and editing all items via ItemsBloc.
 /// No Scaffold or FAB—embed in a parent widget that provides ItemsBloc.
@@ -104,17 +105,17 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
     showAdaptiveDialog(
       context: context,
       builder: (dialogContext) => AdaptiveAlertDialog(
-        title: const Text('Delete Item'),
+        title: Text(context.loc.deleteItemTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Are you sure you want to delete "${uiModel.item.title}"?'),
+            Text(context.loc.deleteItemConfirmation(uiModel.item.title)),
             if (uiModel.tripNames.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Text(
-                'Attention! This item is used in Trip(s):',
-                style: TextStyle(
+              Text(
+                context.loc.itemUsedInTripsWarning,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.orange,
                 ),
@@ -127,7 +128,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
         actions: [
           AdaptiveDialogAction(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.loc.cancelButton),
           ),
           AdaptiveDialogAction(
             isDestructiveAction: true,
@@ -135,7 +136,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
               Navigator.of(dialogContext).pop();
               _itemsBloc.add(RemoveItemEvent(ItemId(uiModel.item.id)));
             },
-            child: const Text('Delete'),
+            child: Text(context.loc.deleteButton),
           ),
         ],
       ),
@@ -208,7 +209,9 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
           if (state is ItemsLoadInProgress) {
             return const Center(child: AdaptiveSpinner());
           } else if (state is ItemsFailure) {
-            return Center(child: Text('Error: ${state.error}'));
+            return Center(
+                child:
+                    Text(context.loc.itemsLoadError(state.error.toString())));
           } else if (state is ItemsLoadSuccess) {
             if (state.items.isEmpty) {
               return _AllItemsEmptyState();
@@ -217,7 +220,8 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
               behavior: HitTestBehavior.translucent,
               onTap: _onBackgroundTap,
               child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 12),
                 itemCount: state.items.length,
@@ -272,7 +276,8 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                           maxLength: 15,
                           maxLines: 1,
                           decoration: InputDecoration(
-                              labelText: 'Item ${index + 1}',
+                              labelText:
+                                  context.loc.itemCounterLabel(index + 1),
                               border: InputBorder.none,
                               counterText: ''),
                         ),
@@ -291,24 +296,26 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                       SwipeAction(
                         icon: Icons.info_outline,
                         color: Colors.green,
-                        label: 'Info',
+                        label: context.loc.infoAction,
                         onTap: () {
                           showAdaptiveDialog(
                             context: context,
-                            builder: (context) => AdaptiveAlertDialog(
-                              title: const Text('Item Details'),
+                            builder: (dialogContext) => AdaptiveAlertDialog(
+                              title: Text(dialogContext.loc.itemDetailsTitle),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Title: ${item.title}'),
-                                  Text('ID: ${item.id}'),
+                                  Text(dialogContext.loc
+                                      .itemTitleLabel(item.title)),
+                                  Text(dialogContext.loc.itemIdLabel(item.id)),
                                 ],
                               ),
                               actions: [
                                 AdaptiveDialogAction(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('Close'),
+                                  onPressed: () =>
+                                      Navigator.of(dialogContext).pop(),
+                                  child: Text(dialogContext.loc.closeButton),
                                 ),
                               ],
                             ),
@@ -318,7 +325,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                       SwipeAction(
                         icon: Icons.delete_outline,
                         color: Colors.red,
-                        label: 'Delete',
+                        label: context.loc.deleteAction,
                         onTap: () {
                           // cancel any leftover edit first
                           if (_editingId != null) _submitOrCancel(_editingId!);
@@ -381,7 +388,7 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                                 ),
                               ] else ...[
                                 Text(
-                                  'Not packed',
+                                  context.loc.notPackedLabel,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -395,7 +402,8 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                           ),
                           onTap: () {
                             // cancel any leftover edit first
-                            if (_editingId != null) _submitOrCancel(_editingId!);
+                            if (_editingId != null)
+                              _submitOrCancel(_editingId!);
                             if (item.title.isEmpty && _editingId == null) {
                               _startEditing(key, initial: '');
                             }
@@ -465,8 +473,8 @@ class _AllItemsEmptyState extends StatelessWidget {
                 width: 700,
                 child: CustomPaint(
                     painter: ChecklistPainter(
-                        baseColor:
-                            theme.colorScheme.outlineVariant.withValues(alpha: 0.2)))),
+                        baseColor: theme.colorScheme.outlineVariant
+                            .withValues(alpha: 0.2)))),
           ),
         ),
         Positioned.fill(
@@ -476,7 +484,8 @@ class _AllItemsEmptyState extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: theme.colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -487,7 +496,7 @@ class _AllItemsEmptyState extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Your inventory is empty',
+                context.loc.emptyInventoryTitle,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: -0.5,
@@ -495,7 +504,7 @@ class _AllItemsEmptyState extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Tap + to start adding items',
+                context.loc.emptyInventorySub,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

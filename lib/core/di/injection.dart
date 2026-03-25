@@ -38,6 +38,12 @@ import 'package:listm/presentation/cubit/navigation_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:listm/data/datasources/item_local_data_source.dart';
 import 'package:listm/data/repositories/item_repository_impl.dart';
+import 'package:listm/data/datasources/app_settings_local_data_source.dart';
+import 'package:listm/data/repositories/app_settings_repository_impl.dart';
+import 'package:listm/domain/repositories/app_settings_repository.dart';
+import 'package:listm/domain/usecases/app_settings_usecases/get_app_settings_usecase.dart';
+import 'package:listm/domain/usecases/app_settings_usecases/save_app_settings_usecase.dart';
+import 'package:listm/presentation/bloc/settings/settings_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -51,6 +57,7 @@ Future<void> configureDependencies() async {
         CacheKeys.trips,
         CacheKeys.tripItemRelations,
         CacheKeys.hasSeenOnboarding,
+        CacheKeys.appSettings,
       },
     ),
   );
@@ -60,6 +67,9 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<ItemLocalDataSource>(
     () => ItemLocalDataSourceImpl(prefsWithCache: prefs),
   );
+  getIt.registerLazySingleton<AppSettingsLocalDataSource>(
+    () => AppSettingsLocalDataSourceImpl(prefsWithCache: prefs),
+  );
   getIt.registerLazySingleton<TripLocalDataSource>(
     () => TripLocalDataSourceImpl(prefsWithCache: prefs),
   );
@@ -67,6 +77,9 @@ Future<void> configureDependencies() async {
   // 3️⃣ Repositories
   getIt.registerLazySingleton<ItemRepository>(
     () => ItemRepositoryImpl(localDataSource: getIt()),
+  );
+  getIt.registerLazySingleton<AppSettingsRepository>(
+    () => AppSettingsRepositoryImpl(localDataSource: getIt()),
   );
   // … TripRepositoryImpl …
   getIt.registerLazySingleton<TripRepository>(
@@ -85,6 +98,12 @@ Future<void> configureDependencies() async {
   // 4️⃣ Use-cases
   getIt.registerLazySingleton(
     () => GetItemsUsecase(getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => GetAppSettingsUseCase(getIt()),
+  );
+  getIt.registerLazySingleton(
+    () => SaveAppSettingsUseCase(getIt()),
   );
   getIt.registerLazySingleton(
     () => AddItemUseCase(getIt()),
@@ -153,6 +172,12 @@ Future<void> configureDependencies() async {
     () => AppBloc(
       checkOnboardingStatusUseCase: getIt<CheckOnboardingStatusUseCase>(),
       completeOnboardingUseCase: getIt<CompleteOnboardingUseCase>(),
+    ),
+  );
+  getIt.registerFactory(
+    () => SettingsBloc(
+      getAppSettingsUseCase: getIt<GetAppSettingsUseCase>(),
+      saveAppSettingsUseCase: getIt<SaveAppSettingsUseCase>(),
     ),
   );
   getIt.registerFactory(

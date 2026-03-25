@@ -8,11 +8,11 @@ import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
-import 'package:listm/l10n/app_localizations.dart';
 import 'package:listm/presentation/widgets/arrow_painter.dart';
 import 'package:listm/presentation/widgets/suitcase_painter.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/trip_progress_indicator.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
+import 'package:listm/core/util/build_context_ext.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
@@ -57,11 +57,7 @@ class _MaterialPackingListsScreenState extends State<MaterialPackingListsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
-// Handle case where localizations might not be available
-    if (loc == null) {
-      return const Center(child: Text('Localizations not available'));
-    }
+    final loc = context.loc;
     return BlocBuilder<TripsBloc, TripsState>(
       builder: (context, state) {
         if (state is TripsLoadInProgress) {
@@ -120,8 +116,7 @@ class _TripCard extends StatelessWidget {
   }
 
   void _handleShowInfoDialog(BuildContext context) {
-    final loc = AppLocalizations.of(context);
-    if (loc == null) return;
+    final loc = context.loc;
 
     showAdaptiveDialog(
       context: context,
@@ -157,11 +152,7 @@ class _TripCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle? titleTextStyle = theme.textTheme.titleLarge;
-    final loc = AppLocalizations.of(context);
-    // Handle missing localizations gracefully
-    if (loc == null) {
-      return const SizedBox.shrink();
-    }
+    final loc = context.loc;
 
     return AppSwipeableCard(
       key: ValueKey(trip.id),
@@ -268,13 +259,10 @@ class _PackingListEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final loc = AppLocalizations.of(context);
+    final loc = context.loc;
 
-    // Split the message if possible, or use defaults
-    final fullMessage = loc?.noTripsMessage ?? 'No packing lists found. Tap + to add one.';
-    final parts = fullMessage.split('. ');
-    final mainMessage = parts.isNotEmpty ? parts.first : 'No packing lists found';
-    final subMessage = parts.length > 1 ? parts.last : 'Tap + to add one.';
+    final mainMessage = loc.noTripsMessageTitle;
+    final subMessage = loc.noTripsMessageSub;
 
     return Stack(
       children: [

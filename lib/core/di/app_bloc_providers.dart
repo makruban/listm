@@ -7,6 +7,7 @@ import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
+import 'package:listm/presentation/bloc/settings/settings_bloc.dart';
 
 class AppBlocProviders extends StatelessWidget {
   final Widget child;
@@ -23,6 +24,7 @@ class AppBlocProviders extends StatelessWidget {
         BlocProvider(create: (_) => getIt<TripsBloc>()..add(const LoadTrips())),
         BlocProvider(create: (_) => getIt<NavigationCubit>()),
         BlocProvider(create: (_) => getIt<TripDetailsBloc>()),
+        BlocProvider(create: (_) => getIt<SettingsBloc>()..add(const LoadSettings())),
         // …add more providers here…
       ],
       child: child,

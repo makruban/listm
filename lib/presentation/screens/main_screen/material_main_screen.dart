@@ -11,7 +11,10 @@ import 'package:listm/presentation/screens/packing_list_screen/material_packing_
 import 'package:listm/core/util/unique_id_service.dart';
 
 import 'package:listm/presentation/screens/trip_detail_screen/material_trip_detail_screen.dart';
+import 'package:listm/core/util/build_context_ext.dart';
 import 'package:listm/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:listm/core/resources/app_routes.dart';
 
 /// Material version of the main screen with bottom tabs and FAB.
 class MaterialMainScreen extends StatefulWidget {
@@ -64,74 +67,82 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
     super.didChangeDependencies();
 
     if (!_isInitialized) {
-      // 1️⃣ Grab your injected blocs and localizations
+      // 1️⃣ Grab your injected blocs
       _navigationCubit = context.read<NavigationCubit>();
       _itemsBloc = context.read<ItemsBloc>();
       _tripsBloc = context.read<TripsBloc>();
-      _loc = AppLocalizations.of(context)!;
-
-      // 2️⃣ Build your tab info with the real `loc`
-      _tabs = [
-        _TabInfo(
-          page: MaterialPackingListsScreen(
-            tripsBloc: _tripsBloc,
-          ),
-          materialAppBarBuilder: (context) => AppBar(
-            title: Text(_loc.packingLists),
-            actions: [
-              IconButton(icon: const Icon(Icons.search), onPressed: () {})
-            ],
-          ),
-          cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
-            middle: Text(_loc.packingLists),
-            trailing: CupertinoButton(
-              padding: EdgeInsets.zero,
-              child: const Icon(CupertinoIcons.search),
-              onPressed: () {},
-            ),
-          ),
-          navBarItem: BottomNavigationBarItem(
-            icon: const Icon(Icons.list),
-            label: _loc.packingLists,
-          ),
-          cupertinoTabBarItem: BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.list_bullet),
-            label: _loc.packingLists,
-          ),
-        ),
-        _TabInfo(
-          page: MaterialAllItemsScreen(
-            hideFab: _hideFab,
-            showFab: _showFab,
-            itemsBloc: _itemsBloc,
-          ),
-          materialAppBarBuilder: (context) => AppBar(
-            title: Text(_loc.allItems),
-            actions: [
-              IconButton(icon: const Icon(Icons.settings), onPressed: () {})
-            ],
-          ),
-          cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
-            middle: Text(_loc.allItems),
-            trailing: CupertinoButton(
-              padding: EdgeInsets.zero,
-              child: const Icon(CupertinoIcons.settings),
-              onPressed: () {},
-            ),
-          ),
-          navBarItem: BottomNavigationBarItem(
-            icon: const Icon(Icons.all_inbox),
-            label: _loc.allItems,
-          ),
-          cupertinoTabBarItem: BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.tray_full),
-            label: _loc.allItems,
-          ),
-        ),
-      ];
-
       _isInitialized = true;
     }
+
+    // Always grab the latest localization and rebuild the tab titles dynamically
+    // whenever dependencies (like Locale) change.
+    _loc = context.loc;
+
+    // 2️⃣ Build your tab info with the real `loc`
+    _tabs = [
+      _TabInfo(
+        page: MaterialPackingListsScreen(
+          tripsBloc: _tripsBloc,
+        ),
+        materialAppBarBuilder: (context) => AppBar(
+          title: Text(_loc.packingLists),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings), 
+              onPressed: () => context.push(AppRoutes.settings)
+            )
+          ],
+        ),
+        cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
+          middle: Text(_loc.packingLists),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.settings),
+            onPressed: () => context.push(AppRoutes.settings),
+          ),
+        ),
+        navBarItem: BottomNavigationBarItem(
+          icon: const Icon(Icons.list),
+          label: _loc.packingLists,
+        ),
+        cupertinoTabBarItem: BottomNavigationBarItem(
+          icon: const Icon(CupertinoIcons.list_bullet),
+          label: _loc.packingLists,
+        ),
+      ),
+      _TabInfo(
+        page: MaterialAllItemsScreen(
+          hideFab: _hideFab,
+          showFab: _showFab,
+          itemsBloc: _itemsBloc,
+        ),
+        materialAppBarBuilder: (context) => AppBar(
+          title: Text(_loc.allItems),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings), 
+              onPressed: () => context.push(AppRoutes.settings)
+            )
+          ],
+        ),
+        cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
+          middle: Text(_loc.allItems),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.settings),
+            onPressed: () => context.push(AppRoutes.settings),
+          ),
+        ),
+        navBarItem: BottomNavigationBarItem(
+          icon: const Icon(Icons.all_inbox),
+          label: _loc.allItems,
+        ),
+        cupertinoTabBarItem: BottomNavigationBarItem(
+          icon: const Icon(CupertinoIcons.tray_full),
+          label: _loc.allItems,
+        ),
+      ),
+    ];
   }
 
   @override
@@ -195,8 +206,8 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
             final newId = await UniqueIdService.instance
                 .generateTripId(strategy: IdGenerationStrategy.uuid);
 
-            // Dispatch event to add the trip with just the ID
-            _tripsBloc.add(AddTripEvent(id: newId));
+            // Dispatch event to add the trip with just the ID and localized title
+            _tripsBloc.add(AddTripEvent(id: newId, title: context.loc.newTripTitle));
 
             // Navigate to the Trip Detail Page immediately
             if (context.mounted) {
