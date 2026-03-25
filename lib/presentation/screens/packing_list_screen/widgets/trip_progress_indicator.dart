@@ -102,7 +102,7 @@ class _ProgressArcPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6.0);
-      
+
       canvas.drawArc(rect, startAngle, currentSweep, false, shadowPaint);
 
       final progressPaint = Paint()

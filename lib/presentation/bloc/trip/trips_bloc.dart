@@ -89,7 +89,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     try {
       final trip = TripEntity(
         id: event.id,
-        title: 'New Trip',
+        title: event.title,
         itemCount: 0,
         completedItemCount: 0,
         icon: '',

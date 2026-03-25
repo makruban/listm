@@ -19,7 +19,8 @@ class GetTripByIdEvent extends TripsEvent {
 /// Event to add a new trip.
 class AddTripEvent extends TripsEvent {
   final String id;
-  const AddTripEvent({required this.id});
+  final String title;
+  const AddTripEvent({required this.id, required this.title});
 }
 
 /// Event to update an existing trip.

@@ -11,4 +11,7 @@ abstract class CacheKeys {
 
   /// Key under which we store the has seen onboarding flag.
   static const String hasSeenOnboarding = 'HAS_SEEN_ONBOARDING';
+
+  /// Key under which we store generic app settings.
+  static const String appSettings = 'APP_SETTINGS';
 }

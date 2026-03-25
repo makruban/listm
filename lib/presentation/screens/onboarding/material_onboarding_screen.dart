@@ -11,6 +11,7 @@ import 'package:listm/core/widgets/adaptive/adaptive_button.dart';
 import 'package:listm/presentation/widgets/checklist_painter.dart';
 import 'package:listm/presentation/widgets/globe_painter.dart';
 import 'package:listm/presentation/widgets/suitcase_painter.dart';
+import 'package:listm/core/util/build_context_ext.dart';
 
 class MaterialOnboardingScreen extends StatefulWidget {
   const MaterialOnboardingScreen({super.key});
@@ -83,7 +84,7 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'Plan your trips',
+                            context.loc.onboardingTitle1,
                             style: Theme.of(context).textTheme.headlineMedium,
                             textAlign: TextAlign.center,
                           ),
@@ -92,9 +93,9 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                             alignment: WrapAlignment.center,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              const Text(
-                                'Create a trip by clicking the ',
-                                style: TextStyle(fontSize: 16),
+                              Text(
+                                context.loc.onboardingDesc1Part1,
+                                style: const TextStyle(fontSize: 16),
                               ),
                               Container(
                                 decoration: BoxDecoration(
@@ -108,9 +109,9 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                                   size: 20,
                                 ),
                               ),
-                              const Text(
-                                ' button',
-                                style: TextStyle(fontSize: 16),
+                              Text(
+                                context.loc.onboardingDesc1Part2,
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ],
                           ),
@@ -143,15 +144,15 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'Never forget an item',
+                            context.loc.onboardingTitle2,
                             style: Theme.of(context).textTheme.headlineMedium,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
-                          const Text(
-                            'Keep track of your items and ensure you have everything you need for your journey.',
+                          Text(
+                            context.loc.onboardingDesc2,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -182,15 +183,15 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'Ready for takeoff',
+                            context.loc.onboardingTitle3,
                             style: Theme.of(context).textTheme.headlineMedium,
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
-                          const Text(
-                            'Enjoy your trip with peace of mind knowing you are fully prepared.',
+                          Text(
+                            context.loc.onboardingDesc3,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -209,7 +210,7 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
               children: [
                 AdaptiveTextButton(
                   onPressed: _onSkip,
-                  text: 'Skip',
+                  text: context.loc.skipButton,
                 ),
                 Row(
                   children: List.generate(3, (index) {
@@ -228,7 +229,9 @@ class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
                 ),
                 AdaptiveButton(
                   onPressed: _onNext,
-                  text: _currentPage == 2 ? 'Done' : 'Next',
+                  text: _currentPage == 2
+                      ? context.loc.doneButton
+                      : context.loc.nextButton,
                 ),
               ],
             ),

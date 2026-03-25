@@ -5,9 +5,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
+import 'app_localizations_nl.dart';
+import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_uk.dart';
 
 // ignore_for_file: type=lint
 
@@ -95,9 +104,18 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('de'),
     Locale('en'),
-    Locale('es')
+    Locale('es'),
+    Locale('fr'),
+    Locale('hi'),
+    Locale('it'),
+    Locale('ja'),
+    Locale('nl'),
+    Locale('pl'),
+    Locale('pt'),
+    Locale('uk')
   ];
 
   /// The name of the application
@@ -207,6 +225,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove'**
   String get removeAction;
+
+  /// Title for onboarding page 1
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your trips'**
+  String get onboardingTitle1;
+
+  /// No description provided for @onboardingDesc1Part1.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a trip by clicking the '**
+  String get onboardingDesc1Part1;
+
+  /// No description provided for @onboardingDesc1Part2.
+  ///
+  /// In en, this message translates to:
+  /// **' button'**
+  String get onboardingDesc1Part2;
+
+  /// No description provided for @onboardingTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Never forget an item'**
+  String get onboardingTitle2;
+
+  /// No description provided for @onboardingDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep track of your items and ensure you have everything you need for your journey.'**
+  String get onboardingDesc2;
+
+  /// No description provided for @onboardingTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for takeoff'**
+  String get onboardingTitle3;
+
+  /// No description provided for @onboardingDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy your trip with peace of mind knowing you are fully prepared.'**
+  String get onboardingDesc3;
+
+  /// No description provided for @skipButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipButton;
+
+  /// No description provided for @nextButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextButton;
+
+  /// No description provided for @doneButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneButton;
+
+  /// No description provided for @noTripsMessageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No packing lists found'**
+  String get noTripsMessageTitle;
+
+  /// No description provided for @noTripsMessageSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add one.'**
+  String get noTripsMessageSub;
+
+  /// No description provided for @deleteItemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Item'**
+  String get deleteItemTitle;
+
+  /// No description provided for @deleteItemConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{title}\"?'**
+  String deleteItemConfirmation(Object title);
+
+  /// No description provided for @itemUsedInTripsWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Attention! This item is used in Trip(s):'**
+  String get itemUsedInTripsWarning;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
+  /// No description provided for @itemsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String itemsLoadError(Object error);
+
+  /// No description provided for @itemCounterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Item {index}'**
+  String itemCounterLabel(Object index);
+
+  /// No description provided for @itemDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Details'**
+  String get itemDetailsTitle;
+
+  /// No description provided for @itemTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title: {title}'**
+  String itemTitleLabel(Object title);
+
+  /// No description provided for @itemIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ID: {id}'**
+  String itemIdLabel(Object id);
+
+  /// No description provided for @notPackedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Not packed'**
+  String get notPackedLabel;
+
+  /// No description provided for @emptyInventoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your inventory is empty'**
+  String get emptyInventoryTitle;
+
+  /// No description provided for @emptyInventorySub.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to start adding items'**
+  String get emptyInventorySub;
+
+  /// No description provided for @tripTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Title'**
+  String get tripTitleHint;
+
+  /// No description provided for @tripDetailsNavTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Details'**
+  String get tripDetailsNavTitle;
+
+  /// No description provided for @clearAllButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get clearAllButton;
+
+  /// No description provided for @clearButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearButton;
+
+  /// No description provided for @noItemsInTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'No items in this trip'**
+  String get noItemsInTrip;
+
+  /// No description provided for @addItemsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Items'**
+  String get addItemsTitle;
+
+  /// No description provided for @createNewItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Item'**
+  String get createNewItem;
+
+  /// No description provided for @noItemsAvailableToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'No items available to add'**
+  String get noItemsAvailableToAdd;
+
+  /// No description provided for @tripDetailsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String tripDetailsError(Object error);
+
+  /// No description provided for @itemNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Name'**
+  String get itemNameLabel;
+
+  /// No description provided for @itemNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Toothbrush'**
+  String get itemNameHint;
+
+  /// No description provided for @createButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get createButton;
+
+  /// No description provided for @congratulationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get congratulationsTitle;
+
+  /// No description provided for @congratulationsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All items are packed! You are ready to go!'**
+  String get congratulationsMessage;
+
+  /// No description provided for @okButton.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okButton;
+
+  /// No description provided for @newTripTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Trip'**
+  String get newTripTitle;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
 }
 
 class _AppLocalizationsDelegate
@@ -219,8 +507,20 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+        'ar',
+        'de',
+        'en',
+        'es',
+        'fr',
+        'hi',
+        'it',
+        'ja',
+        'nl',
+        'pl',
+        'pt',
+        'uk'
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -229,12 +529,30 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
     case 'de':
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'nl':
+      return AppLocalizationsNl();
+    case 'pl':
+      return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'uk':
+      return AppLocalizationsUk();
   }
 
   throw FlutterError(

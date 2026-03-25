@@ -10,6 +10,7 @@ import 'package:listm/core/util/list_diff_util.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
+import 'package:listm/core/util/build_context_ext.dart';
 
 class MaterialTripDetailScreen extends StatefulWidget {
   final String tripId;
@@ -151,7 +152,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                               color: Colors.white, fontWeight: FontWeight.w600),
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Trip Title',
+                        hintText: context.loc.tripTitleHint,
                         hintStyle: theme.textTheme.titleLarge?.copyWith(
                           color: (theme.appBarTheme.foregroundColor ??
                                   theme.colorScheme.onSurface)
@@ -168,8 +169,8 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                       },
                     );
                   }
-                  return const Text('Trip Details',
-                      style: TextStyle(
+                  return Text(context.loc.tripDetailsNavTitle,
+                      style: const TextStyle(
                           fontWeight: FontWeight.w600, letterSpacing: -0.5));
                 },
               ),
@@ -182,7 +183,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                         _showClearAllButton = false;
                       });
                     },
-                    child: const Text('Clear all'),
+                    child: Text(context.loc.clearAllButton),
                   ),
               ],
               elevation: 0,
@@ -206,7 +207,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navTitleTextStyle,
-                      placeholder: 'Trip Title',
+                      placeholder: context.loc.tripTitleHint,
                       decoration: null, // No border for cleaner look in nav bar
                       autofocus: widget.isNewTrip,
                       onSubmitted: (value) {
@@ -214,7 +215,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                       },
                     );
                   }
-                  return const Text('Trip Details');
+                  return Text(context.loc.tripDetailsNavTitle);
                 },
               ),
               trailing: Row(
@@ -223,7 +224,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                   if (_showClearAllButton)
                     CupertinoButton(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text('Clear'),
+                      child: Text(context.loc.clearButton),
                       onPressed: () {
                         _tripDetailsBloc.add(const UnselectAllTripItems());
                         setState(() {
@@ -238,7 +239,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                       final state = _tripDetailsBloc.state;
                       final title = state is TripDetailsLoaded
                           ? state.trip.title
-                          : 'Trip';
+                          : context.loc.untitledTrip;
                       _showAddItemsBottomSheet(context, title);
                     },
                   ),
@@ -288,7 +289,8 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                     },
                   );
                 } else if (state is TripDetailsError) {
-                  return Center(child: Text('Error: ${state.message}'));
+                  return Center(
+                      child: Text(context.loc.tripDetailsError(state.message)));
                 }
                 return const SizedBox.shrink();
               },
@@ -301,7 +303,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                           final state = _tripDetailsBloc.state;
                           final title = state is TripDetailsLoaded
                               ? state.trip.title
-                              : 'Trip';
+                              : context.loc.untitledTrip;
                           _showAddItemsBottomSheet(context, title);
                         },
                         elevation: 2,
@@ -316,7 +318,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
   }
 
   Widget _buildEmptyState() {
-    return const Center(child: Text('No items in this trip'));
+    return Center(child: Text(context.loc.noItemsInTrip));
   }
 
   Widget _buildItem(TripDetailItem item, Animation<double> animation,
@@ -342,7 +344,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
               SwipeAction(
                 icon: Icons.delete_outline,
                 color: Colors.red,
-                label: 'Remove',
+                label: context.loc.removeAction,
                 onTap: () {
                   _tripDetailsBloc.add(RemoveTripItem(item.item.id));
                 },
@@ -438,7 +440,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Add Items',
+                            context.loc.addItemsTitle,
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.5,
@@ -484,7 +486,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                                     color: theme.colorScheme.primary),
                                 const SizedBox(width: 16),
                                 Text(
-                                  'Create New Item',
+                                  context.loc.createNewItem,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     color: theme.colorScheme.primary,
                                     fontWeight: FontWeight.w600,
@@ -506,7 +508,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                             if (state.availableItems.isEmpty) {
                               return Center(
                                 child: Text(
-                                  'No items available to add',
+                                  context.loc.noItemsAvailableToAdd,
                                   style: TextStyle(
                                       color:
                                           theme.colorScheme.onSurfaceVariant),
@@ -558,7 +560,8 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                             );
                           } else if (state is TripItemSelectorError) {
                             return Center(
-                                child: Text('Error: ${state.message}'));
+                                child: Text(context.loc
+                                    .tripDetailsError(state.message)));
                           }
                           return const Center(child: AdaptiveSpinner());
                         },
@@ -584,14 +587,14 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
       context: parentContext,
       builder: (context) {
         return AdaptiveAlertDialog(
-          title: const Text('Create New Item'),
+          title: Text(context.loc.createNewItem),
           content: Material(
             color: Colors.transparent,
             child: TextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Item Name',
-                hintText: 'e.g., Toothbrush',
+              decoration: InputDecoration(
+                labelText: context.loc.itemNameLabel,
+                hintText: context.loc.itemNameHint,
               ),
               autofocus: true,
             ),
@@ -601,7 +604,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(context.loc.cancelButton),
             ),
             AdaptiveDialogAction(
               onPressed: () {
@@ -611,7 +614,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Create'),
+              child: Text(context.loc.createButton),
             ),
           ],
         );
@@ -623,8 +626,8 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
     showAdaptiveDialog(
       context: context,
       builder: (context) => AdaptiveAlertDialog(
-        title: const Text('Congratulations!'),
-        content: const Text('All items are packed! You are ready to go!'),
+        title: Text(context.loc.congratulationsTitle),
+        content: Text(context.loc.congratulationsMessage),
         actions: [
           AdaptiveDialogAction(
             onPressed: () {
@@ -633,7 +636,7 @@ class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
                 _showClearAllButton = true;
               });
             },
-            child: const Text('OK'),
+            child: Text(context.loc.okButton),
           ),
         ],
       ),
