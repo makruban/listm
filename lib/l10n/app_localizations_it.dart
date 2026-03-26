@@ -222,17 +222,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectLanguage => 'Seleziona la Lingua';
 
   @override
-  String get themeMode => 'Theme Mode';
+  String get themeMode => 'Modalità Tema';
 
   @override
-  String get selectThemeMode => 'Select Theme Mode';
+  String get selectThemeMode => 'Seleziona la Modalità Tema';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'Predefinito di sistema';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Chiaro';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Scuro';
 }

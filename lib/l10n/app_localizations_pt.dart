@@ -221,17 +221,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get selectLanguage => 'Selecionar Idioma';
 
   @override
-  String get themeMode => 'Theme Mode';
+  String get themeMode => 'Modo de Tema';
 
   @override
-  String get selectThemeMode => 'Select Theme Mode';
+  String get selectThemeMode => 'Selecionar Modo de Tema';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'Padrão do sistema';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Claro';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Escuro';
 }

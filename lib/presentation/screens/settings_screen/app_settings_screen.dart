@@ -7,16 +7,44 @@ import 'package:listm/l10n/app_localizations.dart';
 import 'package:listm/presentation/bloc/settings/settings_bloc.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
 
-class MaterialAppSettingsScreen extends StatelessWidget {
-  const MaterialAppSettingsScreen({super.key});
+class AppSettingsScreen extends StatelessWidget {
+  const AppSettingsScreen({super.key});
+
+  /// Returns [AppLocalizations.supportedLocales] sorted by [_preferredOrder].
+  /// Any locale not in the preferred order list is appended at the end.
+  static List<Locale> _orderedSupportedLocales() {
+    const preferredOrder = [
+      'en',
+      'de',
+      'fr',
+      'es',
+      'it',
+      'pt',
+      'nl',
+      'pl',
+      'uk',
+      'ar',
+      'hi',
+      'ja',
+    ];
+    final all = List<Locale>.from(AppLocalizations.supportedLocales);
+    all.sort((a, b) {
+      final ai = preferredOrder.indexOf(a.languageCode);
+      final bi = preferredOrder.indexOf(b.languageCode);
+      final aRank = ai == -1 ? preferredOrder.length : ai;
+      final bRank = bi == -1 ? preferredOrder.length : bi;
+      return aRank.compareTo(bRank);
+    });
+    return all;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = context.loc;
 
-    // We get supported locales dynamically from generated localization
-    final supportedLocales = AppLocalizations.supportedLocales;
+    // Locales ordered by preference; unknown locales appended at the end
+    final supportedLocales = _orderedSupportedLocales();
 
     // Simple helper to get localized theme mode name
     String getThemeModeName(String? code) {

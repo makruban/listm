@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
 import 'package:listm/core/resources/app_routes.dart';
-import 'package:listm/presentation/screens/main_screen/material_main_screen.dart';
-import 'package:listm/presentation/screens/onboarding/material_onboarding_screen.dart';
+import 'package:listm/presentation/screens/main_screen/main_screen.dart';
+import 'package:listm/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:listm/presentation/screens/splash_screen.dart';
-import 'package:listm/presentation/screens/trip_detail_screen/material_trip_detail_screen.dart';
-import 'package:listm/presentation/screens/settings_screen/material_app_settings_screen.dart';
+import 'package:listm/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
+import 'package:listm/presentation/screens/settings_screen/app_settings_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.splash,
@@ -20,19 +20,19 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.onboarding,
       name: 'onboarding',
-      builder: (context, state) => const MaterialOnboardingScreen(),
+      builder: (context, state) => const OnboardingScreen(),
     ),
     GoRoute(
       path: AppRoutes.home,
       name: 'home',
-      builder: (context, state) => const MaterialMainScreen(),
+      builder: (context, state) => const MainScreen(),
       routes: [
         GoRoute(
           path: AppRoutes.tripDetail,
           name: 'tripDetail',
           builder: (context, state) {
             final tripId = state.pathParameters['id']!;
-            return MaterialTripDetailScreen(tripId: tripId);
+            return TripDetailScreen(tripId: tripId);
           },
         ),
       ],
@@ -40,7 +40,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.settings,
       name: 'settings',
-      builder: (context, state) => const MaterialAppSettingsScreen(),
+      builder: (context, state) => const AppSettingsScreen(),
     ),
   ],
 );

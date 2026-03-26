@@ -220,17 +220,17 @@ class AppLocalizationsUk extends AppLocalizations {
   String get selectLanguage => 'Вибрати мову';
 
   @override
-  String get themeMode => 'Theme Mode';
+  String get themeMode => 'Режим теми';
 
   @override
-  String get selectThemeMode => 'Select Theme Mode';
+  String get selectThemeMode => 'Вибрати режим теми';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'За замовчуванням системи';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Світлий';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Темний';
 }

@@ -67,5 +67,10 @@
   "settings": "Налаштування",
   "preferences": "Уподобання",
   "language": "Мова",
-  "selectLanguage": "Вибрати мову"
+  "selectLanguage": "Вибрати мову",
+  "themeMode": "Режим теми",
+  "selectThemeMode": "Вибрати режим теми",
+  "themeSystem": "За замовчуванням системи",
+  "themeLight": "Світлий",
+  "themeDark": "Темний"
 }

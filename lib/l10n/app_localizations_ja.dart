@@ -216,17 +216,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectLanguage => '言語を選択';
 
   @override
-  String get themeMode => 'Theme Mode';
+  String get themeMode => 'テーマモード';
 
   @override
-  String get selectThemeMode => 'Select Theme Mode';
+  String get selectThemeMode => 'テーマモードを選択';
 
   @override
-  String get themeSystem => 'System Default';
+  String get themeSystem => 'システムデフォルト';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'ライト';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'ダーク';
 }
