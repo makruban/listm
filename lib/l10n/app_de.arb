@@ -130,5 +130,10 @@
   "settings": "Einstellungen",
   "preferences": "Präferenzen",
   "language": "Sprache",
-  "selectLanguage": "Sprache auswählen"
+  "selectLanguage": "Sprache auswählen",
+  "themeMode": "Darstellungsmodus",
+  "selectThemeMode": "Darstellungsmodus auswählen",
+  "themeSystem": "Systemstandard",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel"
 }

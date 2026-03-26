@@ -67,5 +67,10 @@
   "settings": "Impostazioni",
   "preferences": "Preferenze",
   "language": "Lingua",
-  "selectLanguage": "Seleziona la Lingua"
+  "selectLanguage": "Seleziona la Lingua",
+  "themeMode": "Modalità Tema",
+  "selectThemeMode": "Seleziona la Modalità Tema",
+  "themeSystem": "Predefinito di sistema",
+  "themeLight": "Chiaro",
+  "themeDark": "Scuro"
 }

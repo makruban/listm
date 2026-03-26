@@ -67,5 +67,10 @@
   "settings": "Instellingen",
   "preferences": "Voorkeuren",
   "language": "Taal",
-  "selectLanguage": "Selecteer Taal"
+  "selectLanguage": "Selecteer Taal",
+  "themeMode": "Theamamodus",
+  "selectThemeMode": "Selecteer Theamamodus",
+  "themeSystem": "Systeemstandaard",
+  "themeLight": "Licht",
+  "themeDark": "Donker"
 }

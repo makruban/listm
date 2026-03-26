@@ -12,3 +12,8 @@ class UpdateLanguage extends SettingsEvent {
   final String languageCode;
   const UpdateLanguage(this.languageCode);
 }
+
+class UpdateThemeMode extends SettingsEvent {
+  final String? themeMode;
+  const UpdateThemeMode(this.themeMode);
+}

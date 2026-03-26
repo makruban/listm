@@ -6,29 +6,25 @@ import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
 import 'package:listm/presentation/bloc/item/items_bloc.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/cubit/navigation_cubit.dart';
-import 'package:listm/presentation/screens/all_items_screen/material_all_items_screen.dart';
-import 'package:listm/presentation/screens/packing_list_screen/material_packing_lists_screen.dart';
+import 'package:listm/presentation/screens/all_items_screen/all_items_screen.dart';
+import 'package:listm/presentation/screens/packing_list_screen/packing_lists_screen.dart';
 import 'package:listm/core/util/unique_id_service.dart';
 
-import 'package:listm/presentation/screens/trip_detail_screen/material_trip_detail_screen.dart';
+import 'package:listm/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
 import 'package:listm/core/util/build_context_ext.dart';
 import 'package:listm/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listm/core/resources/app_routes.dart';
 
 /// Material version of the main screen with bottom tabs and FAB.
-class MaterialMainScreen extends StatefulWidget {
-  const MaterialMainScreen({Key? key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<MaterialMainScreen> createState() => _MaterialMainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MaterialMainScreenState extends State<MaterialMainScreen>
-    with TickerProviderStateMixin {
-// Guard so we only show the tooltip once
-  bool _tooltipScheduled = false;
-
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   /// Cubit to manage navigation state
   late NavigationCubit _navigationCubit;
   late ItemsBloc _itemsBloc;
@@ -81,16 +77,15 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
     // 2️⃣ Build your tab info with the real `loc`
     _tabs = [
       _TabInfo(
-        page: MaterialPackingListsScreen(
+        page: PackingListsScreen(
           tripsBloc: _tripsBloc,
         ),
         materialAppBarBuilder: (context) => AppBar(
           title: Text(_loc.packingLists),
           actions: [
             IconButton(
-              icon: const Icon(Icons.settings), 
-              onPressed: () => context.push(AppRoutes.settings)
-            )
+                icon: const Icon(Icons.settings),
+                onPressed: () => context.push(AppRoutes.settings))
           ],
         ),
         cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
@@ -111,7 +106,7 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
         ),
       ),
       _TabInfo(
-        page: MaterialAllItemsScreen(
+        page: AllItemsScreen(
           hideFab: _hideFab,
           showFab: _showFab,
           itemsBloc: _itemsBloc,
@@ -120,9 +115,8 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
           title: Text(_loc.allItems),
           actions: [
             IconButton(
-              icon: const Icon(Icons.settings), 
-              onPressed: () => context.push(AppRoutes.settings)
-            )
+                icon: const Icon(Icons.settings),
+                onPressed: () => context.push(AppRoutes.settings))
           ],
         ),
         cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
@@ -207,13 +201,14 @@ class _MaterialMainScreenState extends State<MaterialMainScreen>
                 .generateTripId(strategy: IdGenerationStrategy.uuid);
 
             // Dispatch event to add the trip with just the ID and localized title
-            _tripsBloc.add(AddTripEvent(id: newId, title: context.loc.newTripTitle));
+            _tripsBloc
+                .add(AddTripEvent(id: newId, title: context.loc.newTripTitle));
 
             // Navigate to the Trip Detail Page immediately
             if (context.mounted) {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MaterialTripDetailScreen(
+                  builder: (_) => TripDetailScreen(
                     tripId: newId,
                     isNewTrip: true,
                   ),

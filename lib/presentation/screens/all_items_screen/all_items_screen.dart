@@ -16,8 +16,8 @@ import 'package:listm/core/util/build_context_ext.dart';
 
 /// Inline list widget for displaying and editing all items via ItemsBloc.
 /// No Scaffold or FAB—embed in a parent widget that provides ItemsBloc.
-class MaterialAllItemsScreen extends StatefulWidget {
-  const MaterialAllItemsScreen({
+class AllItemsScreen extends StatefulWidget {
+  const AllItemsScreen({
     super.key,
     required this.hideFab,
     required this.showFab,
@@ -28,10 +28,10 @@ class MaterialAllItemsScreen extends StatefulWidget {
   final ItemsBloc itemsBloc;
 
   @override
-  State<MaterialAllItemsScreen> createState() => _MaterialAllItemsScreenState();
+  State<AllItemsScreen> createState() => _AllItemsScreenState();
 }
 
-class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
+class _AllItemsScreenState extends State<AllItemsScreen> {
   late ItemsBloc _itemsBloc;
 
   /// Currently editing placeholder ID (only one at a time)
@@ -402,8 +402,9 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
                           ),
                           onTap: () {
                             // cancel any leftover edit first
-                            if (_editingId != null)
+                            if (_editingId != null) {
                               _submitOrCancel(_editingId!);
+                            }
                             if (item.title.isEmpty && _editingId == null) {
                               _startEditing(key, initial: '');
                             }
@@ -426,34 +427,6 @@ class _MaterialAllItemsScreenState extends State<MaterialAllItemsScreen> {
     );
   }
 }
-
-// class AddToTripButton extends StatelessWidget {
-//   const AddToTripButton({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return IconButton(
-//         onPressed: () => _showDialog(context),
-//         icon: Icon(
-//           Icons.add,
-//           color: Colors.green,
-//         ));
-//   }
-
-//   void _showDialog(BuildContext context) {
-//     showDialog(
-//         context: context,
-//         builder: (context) => AlertDialog(
-//                 title: const Text('Add to Trip'),
-//                 content: const Text('Select a trip to add this item to.'),
-//                 actions: [
-//                   TextButton(
-//                     onPressed: () => Navigator.of(context).pop(),
-//                     child: const Text('Cancel'),
-//                   ),
-//                 ]));
-//   }
-// }
 
 class _AllItemsEmptyState extends StatelessWidget {
   const _AllItemsEmptyState();

@@ -219,4 +219,19 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Wybierz Język';
+
+  @override
+  String get themeMode => 'Tryb Motywu';
+
+  @override
+  String get selectThemeMode => 'Wybierz Tryb Motywu';
+
+  @override
+  String get themeSystem => 'Domyślny systemu';
+
+  @override
+  String get themeLight => 'Jasny';
+
+  @override
+  String get themeDark => 'Ciemny';
 }

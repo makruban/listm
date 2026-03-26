@@ -219,4 +219,19 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get selectLanguage => 'भाषा चुनें';
+
+  @override
+  String get themeMode => 'थीम मोड';
+
+  @override
+  String get selectThemeMode => 'थीम मोड चुनें';
+
+  @override
+  String get themeSystem => 'सिस्टम डिफ़ॉल्ट';
+
+  @override
+  String get themeLight => 'हल्का';
+
+  @override
+  String get themeDark => 'गहरा';
 }

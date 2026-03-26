@@ -214,4 +214,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get selectLanguage => '言語を選択';
+
+  @override
+  String get themeMode => 'テーマモード';
+
+  @override
+  String get selectThemeMode => 'テーマモードを選択';
+
+  @override
+  String get themeSystem => 'システムデフォルト';
+
+  @override
+  String get themeLight => 'ライト';
+
+  @override
+  String get themeDark => 'ダーク';
 }

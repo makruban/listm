@@ -220,4 +220,19 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Selecteer Taal';
+
+  @override
+  String get themeMode => 'Theamamodus';
+
+  @override
+  String get selectThemeMode => 'Selecteer Theamamodus';
+
+  @override
+  String get themeSystem => 'Systeemstandaard';
+
+  @override
+  String get themeLight => 'Licht';
+
+  @override
+  String get themeDark => 'Donker';
 }

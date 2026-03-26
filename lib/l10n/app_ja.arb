@@ -67,5 +67,10 @@
   "settings": "設定",
   "preferences": "環境設定",
   "language": "言語",
-  "selectLanguage": "言語を選択"
+  "selectLanguage": "言語を選択",
+  "themeMode": "テーマモード",
+  "selectThemeMode": "テーマモードを選択",
+  "themeSystem": "システムデフォルト",
+  "themeLight": "ライト",
+  "themeDark": "ダーク"
 }

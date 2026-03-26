@@ -67,5 +67,10 @@
   "settings": "الإعدادات",
   "preferences": "التفضيلات",
   "language": "اللغة",
-  "selectLanguage": "اختر اللغة"
+  "selectLanguage": "اختر اللغة",
+  "themeMode": "وضع الألوان",
+  "selectThemeMode": "اختر وضع الألوان",
+  "themeSystem": "افتراضي النظام",
+  "themeLight": "فاتح",
+  "themeDark": "داكن"
 }

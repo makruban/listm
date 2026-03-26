@@ -12,22 +12,21 @@ import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 import 'package:listm/core/util/build_context_ext.dart';
 
-class MaterialTripDetailScreen extends StatefulWidget {
+class TripDetailScreen extends StatefulWidget {
   final String tripId;
   final bool isNewTrip;
 
-  const MaterialTripDetailScreen({
+  const TripDetailScreen({
     super.key,
     required this.tripId,
     this.isNewTrip = false,
   });
 
   @override
-  State<MaterialTripDetailScreen> createState() =>
-      _MaterialTripDetailScreenState();
+  State<TripDetailScreen> createState() => _TripDetailScreenState();
 }
 
-class _MaterialTripDetailScreenState extends State<MaterialTripDetailScreen> {
+class _TripDetailScreenState extends State<TripDetailScreen> {
   late TripDetailsBloc _tripDetailsBloc;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<TripDetailItem> _listData = [];

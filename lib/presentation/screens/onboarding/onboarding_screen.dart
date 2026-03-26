@@ -8,20 +8,16 @@ import 'package:listm/presentation/bloc/app/app_event.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_text_button.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_button.dart';
-import 'package:listm/presentation/widgets/checklist_painter.dart';
-import 'package:listm/presentation/widgets/globe_painter.dart';
-import 'package:listm/presentation/widgets/suitcase_painter.dart';
 import 'package:listm/core/util/build_context_ext.dart';
 
-class MaterialOnboardingScreen extends StatefulWidget {
-  const MaterialOnboardingScreen({super.key});
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
 
   @override
-  State<MaterialOnboardingScreen> createState() =>
-      _MaterialOnboardingScreenState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _MaterialOnboardingScreenState extends State<MaterialOnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 

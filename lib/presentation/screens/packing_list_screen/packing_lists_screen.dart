@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listm/domain/entities/trip_entity.dart';
 import 'package:listm/domain/value_objects/trip_id.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
 import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
 import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
 import 'package:listm/presentation/widgets/app_swipeable_card.dart';
-import 'package:listm/presentation/widgets/arrow_painter.dart';
 import 'package:listm/presentation/widgets/suitcase_painter.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/trip_progress_indicator.dart';
 import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
@@ -16,19 +14,18 @@ import 'package:listm/core/util/build_context_ext.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.
-class MaterialPackingListsScreen extends StatefulWidget {
-  const MaterialPackingListsScreen({
+class PackingListsScreen extends StatefulWidget {
+  const PackingListsScreen({
     super.key,
     required this.tripsBloc,
   });
   final TripsBloc tripsBloc;
 
   @override
-  State<MaterialPackingListsScreen> createState() =>
-      _MaterialPackingListsScreenState();
+  State<PackingListsScreen> createState() => _PackingListsScreenState();
 }
 
-class _MaterialPackingListsScreenState extends State<MaterialPackingListsScreen>
+class _PackingListsScreenState extends State<PackingListsScreen>
     with SingleTickerProviderStateMixin {
   late TripsBloc _tripsBloc;
   late AnimationController _arrowController;
@@ -111,35 +108,6 @@ class _TripCard extends StatelessWidget {
     );
   }
 
-  void _handleRenameAction() {
-    // TODO: handle rename action
-  }
-
-  void _handleShowInfoDialog(BuildContext context) {
-    final loc = context.loc;
-
-    showAdaptiveDialog(
-      context: context,
-      builder: (context) => AdaptiveAlertDialog(
-        title: Text(loc.tripDetailsTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(loc.tripTitleLabel(trip.title)),
-            Text(loc.tripIdLabel(trip.id)),
-          ],
-        ),
-        actions: [
-          AdaptiveDialogAction(
-            onPressed: () => _handleCloseDialog(context),
-            child: Text(loc.closeButton),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _handleDeleteTrip() {
     tripsBloc.add(RemoveTripEvent(TripId(trip.id)));
   }
@@ -159,18 +127,6 @@ class _TripCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6),
       onDelete: _handleDeleteTrip,
       actions: [
-        SwipeAction(
-          icon: Icons.edit,
-          color: Colors.blue,
-          label: loc.renameAction,
-          onTap: _handleRenameAction,
-        ),
-        SwipeAction(
-          icon: Icons.info_outline,
-          color: Colors.green,
-          label: loc.infoAction,
-          onTap: () => _handleShowInfoDialog(context),
-        ),
         SwipeAction(
           icon: Icons.delete_outline,
           color: Colors.red,
@@ -219,7 +175,8 @@ class _TripCard extends StatelessWidget {
                       children: [
                         Text(
                           trip.title.isEmpty ? loc.untitledTrip : trip.title,
-                          style: titleTextStyle?.copyWith(fontWeight: FontWeight.w700),
+                          style: titleTextStyle?.copyWith(
+                              fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -235,9 +192,11 @@ class _TripCard extends StatelessWidget {
                   if (trip.itemCount > 0) ...[
                     const SizedBox(width: 12),
                     TripProgressIndicator(
-                      size: 60, // Exact match with the suitcase container width/height
+                      size:
+                          60, // Exact match with the suitcase container width/height
                       progress: trip.completedItemCount / trip.itemCount,
-                      progressColor: const Color(0xFF2CB567), // Vibrant modern green
+                      progressColor:
+                          const Color(0xFF2CB567), // Vibrant modern green
                     ),
                   ],
                 ],
@@ -264,109 +223,76 @@ class _PackingListEmptyState extends StatelessWidget {
     final mainMessage = loc.noTripsMessageTitle;
     final subMessage = loc.noTripsMessageSub;
 
-    return Stack(
-      children: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Animated floating suitcase
-                AnimatedBuilder(
-                  animation: arrowController,
-                  builder: (context, child) {
-                    // Use a sine wave for smooth floating up and down
-                    final offsetY = math.sin(arrowController.value * 2 * math.pi) * 8.0;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Animated floating suitcase
+            AnimatedBuilder(
+              animation: arrowController,
+              builder: (context, child) {
+                // Use a sine wave for smooth floating up and down
+                final offsetY =
+                    math.sin(arrowController.value * 2 * math.pi) * 8.0;
 
-                    return Transform.translate(
-                      offset: Offset(0, offsetY),
-                      child: child,
-                    );
-                  },
-                  child: Container(
-                    width: 220,
-                    height: 220,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                return Transform.translate(
+                  offset: Offset(0, offsetY),
+                  child: child,
+                );
+              },
+              child: Container(
+                width: 220,
+                height: 220,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                  boxShadow: [
+                    BoxShadow(
                       color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                          blurRadius: 40,
-                          spreadRadius: 10,
-                        ),
-                      ],
+                      blurRadius: 40,
+                      spreadRadius: 10,
                     ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 160,
-                        height: 200,
-                        child: CustomPaint(
-                          painter: SuitcasePainter(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 48),
-                Text(
-                  mainMessage,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  subMessage,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    fontWeight: FontWeight.w500,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 80), // Space to avoid arrow overlap
-              ],
-            ),
-          ),
-        ),
-        // Arrow pointing to lower right FAB area
-        Positioned(
-          bottom: 100,
-          right: 48,
-          child: AnimatedBuilder(
-            animation: arrowController,
-            builder: (context, child) {
-              // Smooth downward pointing animation
-              final offsetY = math.sin(arrowController.value * math.pi) * 12.0;
-
-              return Transform.translate(
-                offset: Offset(0, offsetY),
-                child: Opacity(
-                  opacity: 0.6 + (0.4 * math.sin(arrowController.value * math.pi)),
+                child: Center(
                   child: SizedBox(
-                    width: 80,
-                    height: 100,
+                    width: 160,
+                    height: 200,
                     child: CustomPaint(
-                      painter: ArrowPainter(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
-                        scale: 0.8,
-                        shimmerValue: arrowController.value,
+                      painter: SuitcasePainter(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+            const SizedBox(height: 48),
+            Text(
+              mainMessage,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.5,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              subMessage,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                fontWeight: FontWeight.w500,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 80), // Space to avoid arrow overlap
+          ],
         ),
-      ],
+      ),
     );
   }
 }
