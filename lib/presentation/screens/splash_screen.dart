@@ -44,12 +44,6 @@ class SplashBackground extends StatelessWidget {
           ],
         ),
       ),
-      child: Center(
-        child: Image.asset(
-          AssetPaths.splashImage,
-          scale: 6.0,
-        ),
-      ),
     );
   }
 }
