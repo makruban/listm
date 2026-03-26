@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_scaffold.dart';
 
-import 'package:listm/presentation/bloc/item/items_bloc.dart';
-import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
-import 'package:listm/presentation/cubit/navigation_cubit.dart';
-import 'package:listm/presentation/screens/all_items_screen/all_items_screen.dart';
-import 'package:listm/presentation/screens/packing_list_screen/packing_lists_screen.dart';
-import 'package:listm/core/util/unique_id_service.dart';
+import 'package:tripwise/presentation/bloc/item/items_bloc.dart';
+import 'package:tripwise/presentation/bloc/trip/trips_bloc.dart';
+import 'package:tripwise/presentation/cubit/navigation_cubit.dart';
+import 'package:tripwise/presentation/screens/all_items_screen/all_items_screen.dart';
+import 'package:tripwise/presentation/screens/packing_list_screen/packing_lists_screen.dart';
+import 'package:tripwise/core/util/unique_id_service.dart';
 
-import 'package:listm/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
-import 'package:listm/core/util/build_context_ext.dart';
-import 'package:listm/l10n/app_localizations.dart';
+import 'package:tripwise/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
+import 'package:tripwise/core/util/build_context_ext.dart';
+import 'package:tripwise/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listm/core/resources/app_routes.dart';
+import 'package:tripwise/core/resources/app_routes.dart';
 
 /// Material version of the main screen with bottom tabs and FAB.
 class MainScreen extends StatefulWidget {

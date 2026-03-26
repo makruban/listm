@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_scaffold.dart';
 
 void main() {
   group('AdaptiveScaffold Verification', () {

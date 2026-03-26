@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart' hide showAdaptiveDialog;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/core/di/injection.dart';
-import 'package:listm/domain/entities/trip_detail_item.dart';
-import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
-import 'package:listm/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
-import 'package:listm/presentation/widgets/app_swipeable_card.dart';
-import 'package:listm/core/util/list_diff_util.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_dialog.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
-import 'package:listm/core/util/build_context_ext.dart';
+import 'package:tripwise/core/di/injection.dart';
+import 'package:tripwise/domain/entities/trip_detail_item.dart';
+import 'package:tripwise/presentation/bloc/trip_details/trip_details_bloc.dart';
+import 'package:tripwise/presentation/bloc/trip_item_selector/trip_item_selector_bloc.dart';
+import 'package:tripwise/presentation/widgets/app_swipeable_card.dart';
+import 'package:tripwise/core/util/list_diff_util.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_dialog.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_spinner.dart';
+import 'package:tripwise/core/util/build_context_ext.dart';
 
 class TripDetailScreen extends StatefulWidget {
   final String tripId;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:listm/core/resources/theme_manager/material_theme_manager.dart';
-import 'package:listm/core/routes/app_router.dart';
-import 'package:listm/l10n/app_localizations.dart';
+import 'package:tripwise/core/resources/theme_manager/material_theme_manager.dart';
+import 'package:tripwise/core/routes/app_router.dart';
+import 'package:tripwise/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/presentation/bloc/settings/settings_bloc.dart';
+import 'package:tripwise/presentation/bloc/settings/settings_bloc.dart';
 
 class MaterialAppStructure extends StatelessWidget {
   const MaterialAppStructure({

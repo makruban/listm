@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'package:listm/core/resources/app_routes.dart';
-import 'package:listm/presentation/screens/main_screen/main_screen.dart';
-import 'package:listm/presentation/screens/onboarding/onboarding_screen.dart';
-import 'package:listm/presentation/screens/splash_screen.dart';
-import 'package:listm/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
-import 'package:listm/presentation/screens/settings_screen/app_settings_screen.dart';
+import 'package:tripwise/core/resources/app_routes.dart';
+import 'package:tripwise/presentation/screens/main_screen/main_screen.dart';
+import 'package:tripwise/presentation/screens/onboarding/onboarding_screen.dart';
+import 'package:tripwise/presentation/screens/splash_screen.dart';
+import 'package:tripwise/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
+import 'package:tripwise/presentation/screens/settings_screen/app_settings_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.splash,

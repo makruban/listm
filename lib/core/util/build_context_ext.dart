@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:listm/l10n/app_localizations.dart';
+import 'package:tripwise/l10n/app_localizations.dart';
 
 extension LocalizationsExtension on BuildContext {
   /// Returns the context's AppLocalizations or safely falls back to English

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listm/core/resources/app_routes.dart';
-import 'package:listm/core/resources/asset_paths.dart';
-import 'package:listm/presentation/bloc/app/app_bloc.dart';
-import 'package:listm/presentation/bloc/app/app_event.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_text_button.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_button.dart';
-import 'package:listm/core/util/build_context_ext.dart';
+import 'package:tripwise/core/resources/app_routes.dart';
+import 'package:tripwise/core/resources/asset_paths.dart';
+import 'package:tripwise/presentation/bloc/app/app_bloc.dart';
+import 'package:tripwise/presentation/bloc/app/app_event.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_text_button.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_button.dart';
+import 'package:tripwise/core/util/build_context_ext.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

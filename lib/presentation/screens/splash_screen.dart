@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listm/core/resources/app_routes.dart';
-import 'package:listm/core/resources/asset_paths.dart';
-import 'package:listm/presentation/bloc/app/app_bloc.dart';
-import 'package:listm/presentation/bloc/app/app_state.dart';
+import 'package:tripwise/core/resources/app_routes.dart';
+import 'package:tripwise/core/resources/asset_paths.dart';
+import 'package:tripwise/presentation/bloc/app/app_bloc.dart';
+import 'package:tripwise/presentation/bloc/app/app_state.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

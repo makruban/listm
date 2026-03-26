@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_base.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_base.dart';
 
 /// A button that looks like a [TextButton] on Material and a [CupertinoButton] without background on iOS.
 class AdaptiveTextButton extends AdaptiveWidget {

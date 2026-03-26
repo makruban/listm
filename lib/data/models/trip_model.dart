@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:listm/domain/entities/trip_entity.dart';
+import 'package:tripwise/domain/entities/trip_entity.dart';
 
 class TripModel extends TripEntity {
   TripModel({

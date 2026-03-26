@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/core/util/build_context_ext.dart';
-import 'package:listm/l10n/app_localizations.dart';
-import 'package:listm/presentation/bloc/settings/settings_bloc.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_scaffold.dart';
+import 'package:tripwise/core/util/build_context_ext.dart';
+import 'package:tripwise/l10n/app_localizations.dart';
+import 'package:tripwise/presentation/bloc/settings/settings_bloc.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_scaffold.dart';
 
 class AppSettingsScreen extends StatelessWidget {
   const AppSettingsScreen({super.key});

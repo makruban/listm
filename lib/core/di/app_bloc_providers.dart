@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/core/di/injection.dart';
-import 'package:listm/presentation/bloc/app/app_bloc.dart';
-import 'package:listm/presentation/bloc/app/app_event.dart';
-import 'package:listm/presentation/bloc/item/items_bloc.dart';
-import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
-import 'package:listm/presentation/bloc/trip_details/trip_details_bloc.dart';
-import 'package:listm/presentation/cubit/navigation_cubit.dart';
-import 'package:listm/presentation/bloc/settings/settings_bloc.dart';
+import 'package:tripwise/core/di/injection.dart';
+import 'package:tripwise/presentation/bloc/app/app_bloc.dart';
+import 'package:tripwise/presentation/bloc/app/app_event.dart';
+import 'package:tripwise/presentation/bloc/item/items_bloc.dart';
+import 'package:tripwise/presentation/bloc/trip/trips_bloc.dart';
+import 'package:tripwise/presentation/bloc/trip_details/trip_details_bloc.dart';
+import 'package:tripwise/presentation/cubit/navigation_cubit.dart';
+import 'package:tripwise/presentation/bloc/settings/settings_bloc.dart';
 
 class AppBlocProviders extends StatelessWidget {
   final Widget child;
@@ -24,7 +24,8 @@ class AppBlocProviders extends StatelessWidget {
         BlocProvider(create: (_) => getIt<TripsBloc>()..add(const LoadTrips())),
         BlocProvider(create: (_) => getIt<NavigationCubit>()),
         BlocProvider(create: (_) => getIt<TripDetailsBloc>()),
-        BlocProvider(create: (_) => getIt<SettingsBloc>()..add(const LoadSettings())),
+        BlocProvider(
+            create: (_) => getIt<SettingsBloc>()..add(const LoadSettings())),
         // …add more providers here…
       ],
       child: child,

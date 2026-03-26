@@ -1,9 +1,9 @@
-import 'package:listm/core/error/exceptions/repository_exception.dart';
-import 'package:listm/data/datasources/trip_local_data_source.dart';
-import 'package:listm/data/models/trip_model.dart';
-import 'package:listm/domain/entities/trip_entity.dart';
-import 'package:listm/domain/repositories/trip_repository.dart';
-import 'package:listm/domain/value_objects/trip_id.dart';
+import 'package:tripwise/core/error/exceptions/repository_exception.dart';
+import 'package:tripwise/data/datasources/trip_local_data_source.dart';
+import 'package:tripwise/data/models/trip_model.dart';
+import 'package:tripwise/domain/entities/trip_entity.dart';
+import 'package:tripwise/domain/repositories/trip_repository.dart';
+import 'package:tripwise/domain/value_objects/trip_id.dart';
 
 // Concrete implementation of [TripRepository], mapping between
 /// [TripModel] (data layer) and [TripEntity] (domain layer).

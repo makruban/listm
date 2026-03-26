@@ -1,6 +1,6 @@
-import 'package:listm/core/usecases/usecase.dart';
-import 'package:listm/domain/entities/item_entity.dart';
-import 'package:listm/domain/repositories/item_repository.dart';
+import 'package:tripwise/core/usecases/usecase.dart';
+import 'package:tripwise/domain/entities/item_entity.dart';
+import 'package:tripwise/domain/repositories/item_repository.dart';
 
 /// Use case for adding an item to the repository.
 class AddItemUseCase extends UseCase<void, ItemEntity> {

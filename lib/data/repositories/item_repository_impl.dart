@@ -1,9 +1,9 @@
-import 'package:listm/core/error/exceptions/repository_exception.dart';
-import 'package:listm/data/datasources/item_local_data_source.dart';
-import 'package:listm/data/models/item_model.dart';
-import 'package:listm/domain/entities/item_entity.dart';
-import 'package:listm/domain/repositories/item_repository.dart';
-import 'package:listm/domain/value_objects/item_id.dart';
+import 'package:tripwise/core/error/exceptions/repository_exception.dart';
+import 'package:tripwise/data/datasources/item_local_data_source.dart';
+import 'package:tripwise/data/models/item_model.dart';
+import 'package:tripwise/domain/entities/item_entity.dart';
+import 'package:tripwise/domain/repositories/item_repository.dart';
+import 'package:tripwise/domain/value_objects/item_id.dart';
 
 /// Concrete implementation of [ItemRepository], mapping between
 /// [ItemModel] (data layer) and [ItemEntity] (domain layer).

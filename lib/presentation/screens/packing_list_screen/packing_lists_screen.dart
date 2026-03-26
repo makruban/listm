@@ -2,15 +2,15 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart' hide showAdaptiveDialog;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listm/domain/entities/trip_entity.dart';
-import 'package:listm/domain/value_objects/trip_id.dart';
-import 'package:listm/core/widgets/adaptive/adaptive_spinner.dart';
-import 'package:listm/presentation/bloc/trip/trips_bloc.dart';
-import 'package:listm/presentation/widgets/app_swipeable_card.dart';
-import 'package:listm/presentation/widgets/suitcase_painter.dart';
-import 'package:listm/presentation/screens/packing_list_screen/widgets/trip_progress_indicator.dart';
-import 'package:listm/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
-import 'package:listm/core/util/build_context_ext.dart';
+import 'package:tripwise/domain/entities/trip_entity.dart';
+import 'package:tripwise/domain/value_objects/trip_id.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_spinner.dart';
+import 'package:tripwise/presentation/bloc/trip/trips_bloc.dart';
+import 'package:tripwise/presentation/widgets/app_swipeable_card.dart';
+import 'package:tripwise/presentation/widgets/suitcase_painter.dart';
+import 'package:tripwise/presentation/screens/packing_list_screen/widgets/trip_progress_indicator.dart';
+import 'package:tripwise/presentation/screens/packing_list_screen/widgets/simple_suitcase_icon.dart';
+import 'package:tripwise/core/util/build_context_ext.dart';
 
 /// Material-styled Packing Lists screen that listens to [TripsBloc]
 /// and displays a list of trips, handling loading, empty, and error states.

@@ -1,5 +1,5 @@
-import 'package:listm/domain/entities/app_settings_entity.dart';
-import 'package:listm/domain/repositories/app_settings_repository.dart';
+import 'package:tripwise/domain/entities/app_settings_entity.dart';
+import 'package:tripwise/domain/repositories/app_settings_repository.dart';
 
 class SaveAppSettingsUseCase {
   final AppSettingsRepository repository;

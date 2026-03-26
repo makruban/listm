@@ -1,4 +1,4 @@
-import 'package:listm/domain/entities/app_settings_entity.dart';
+import 'package:tripwise/domain/entities/app_settings_entity.dart';
 
 abstract class AppSettingsRepository {
   Future<AppSettingsEntity> getSettings();

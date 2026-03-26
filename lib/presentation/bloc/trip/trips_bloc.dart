@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:listm/domain/entities/trip_entity.dart';
-import 'package:listm/domain/usecases/trip_usecases/add_trip_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/delete_all_trips_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/delete_trip_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/get_trips_stream_usecase.dart';
-import 'package:listm/domain/value_objects/no_params.dart';
-import 'package:listm/domain/value_objects/trip_id.dart';
+import 'package:tripwise/domain/entities/trip_entity.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/add_trip_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/delete_all_trips_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/delete_trip_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/get_trips_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/update_trip_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/get_trips_stream_usecase.dart';
+import 'package:tripwise/domain/value_objects/no_params.dart';
+import 'package:tripwise/domain/value_objects/trip_id.dart';
 
 part 'trips_event.dart';
 part 'trips_state.dart';

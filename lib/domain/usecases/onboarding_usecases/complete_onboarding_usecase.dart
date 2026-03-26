@@ -1,4 +1,4 @@
-import 'package:listm/domain/repositories/onboarding_repository.dart';
+import 'package:tripwise/domain/repositories/onboarding_repository.dart';
 
 class CompleteOnboardingUseCase {
   final OnboardingRepository repository;
