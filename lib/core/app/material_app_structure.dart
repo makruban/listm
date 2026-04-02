@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:tripwise/core/resources/theme_manager/material_theme_manager.dart';
 import 'package:tripwise/core/routes/app_router.dart';
@@ -28,9 +29,11 @@ class MaterialAppStructure extends StatelessWidget {
         }
 
         return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          locale: locale,
+          locale: DevicePreview.locale(context) ?? locale,
+          builder: DevicePreview.appBuilder,
           localeResolutionCallback: (deviceLocale, supportedLocales) {
             if (deviceLocale != null) {
               for (var supportedLocale in supportedLocales) {
