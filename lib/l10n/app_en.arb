@@ -1,0 +1,167 @@
+{
+  "@@locale": "en",
+  "appTitle": "TripWise",
+  "@appTitle": {
+    "description": "The name of the application"
+  },
+  "welcome": "Welcome to TripWise",
+  "@welcome": {
+    "description": "Welcome message on the home screen"
+  },
+  "packingLists": "Packing Lists",
+  "@packingLists": {
+    "description": "Label for the Packing Lists tab"
+  },
+  "allItems": "All Items",
+  "@allItems": {
+    "description": "Label for the All Items tab"
+  },
+  "addPackingList": "Add Packing List",
+  "@addPackingList": {
+    "description": "Tooltip text for the FAB when on Packing Lists"
+  },
+  "addItem": "Add Item",
+  "@addItem": {
+    "description": "Tooltip text for the FAB when on All Items"
+  },
+  "noTripsMessage": "No packing lists found. Tap + to add one.",
+  "@noTripsMessage": {
+    "description": "Message shown when there are no trips in the list"
+  },
+  "tripsLoadError": "Failed to load packing lists: {error}",
+  "@tripsLoadError": {
+    "description": "Error message when trips fail to load",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "untitledTrip": "Untitled trip",
+  "@untitledTrip": {
+    "description": "Fallback title when a trip has no name"
+  },
+  "itemsLabel": "items",
+  "@itemsLabel": {
+    "description": "Label for the number of items in a trip"
+  },
+  "renameAction": "Rename",
+  "@renameAction": {
+    "description": "Label for rename action in swipe menu"
+  },
+  "infoAction": "Info",
+  "@infoAction": {
+    "description": "Label for info action in swipe menu"
+  },
+  "deleteAction": "Delete",
+  "@deleteAction": {
+    "description": "Label for delete action in swipe menu"
+  },
+  "tripDetailsTitle": "Trip Details",
+  "@tripDetailsTitle": {
+    "description": "Title for trip details dialog"
+  },
+  "tripTitleLabel": "Title: {title}",
+  "@tripTitleLabel": {
+    "description": "Label showing trip title in dialog",
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "tripIdLabel": "ID: {id}",
+  "@tripIdLabel": {
+    "description": "Label showing trip ID in dialog",
+    "placeholders": {
+      "id": {}
+    }
+  },
+  "closeButton": "Close",
+  "@closeButton": {
+    "description": "Close button text"
+  },
+  "removeAction": "Remove",
+  "@removeAction": {
+    "description": "Label for remove action"
+  },
+  "onboardingTitle1": "Plan your trips",
+  "@onboardingTitle1": {
+    "description": "Title for onboarding page 1"
+  },
+  "onboardingDesc1Part1": "Create a trip by clicking the ",
+  "onboardingDesc1Part2": " button",
+  "onboardingTitle2": "Never forget an item",
+  "onboardingDesc2": "Keep track of your items and ensure you have everything you need for your journey.",
+  "onboardingTitle3": "Ready for takeoff",
+  "onboardingDesc3": "Enjoy your trip with peace of mind knowing you are fully prepared.",
+  "skipButton": "Skip",
+  "nextButton": "Next",
+  "doneButton": "Done",
+  "noTripsMessageTitle": "No packing lists found",
+  "noTripsMessageSub": "Tap + to add one.",
+  "deleteItemTitle": "Delete Item",
+  "deleteItemConfirmation": "Are you sure you want to delete \"{title}\"?",
+  "@deleteItemConfirmation": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "itemUsedInTripsWarning": "Attention! This item is used in Trip(s):",
+  "cancelButton": "Cancel",
+  "deleteButton": "Delete",
+  "itemsLoadError": "Error: {error}",
+  "@itemsLoadError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "itemCounterLabel": "Item {index}",
+  "@itemCounterLabel": {
+    "placeholders": {
+      "index": {}
+    }
+  },
+  "itemDetailsTitle": "Item Details",
+  "itemTitleLabel": "Title: {title}",
+  "@itemTitleLabel": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "itemIdLabel": "ID: {id}",
+  "@itemIdLabel": {
+    "placeholders": {
+      "id": {}
+    }
+  },
+  "notPackedLabel": "Not packed",
+  "emptyInventoryTitle": "Your inventory is empty",
+  "emptyInventorySub": "Tap + to start adding items",
+  "tripTitleHint": "Trip Title",
+  "tripDetailsNavTitle": "Trip Details",
+  "clearAllButton": "Clear all",
+  "clearButton": "Clear",
+  "noItemsInTrip": "No items in this trip",
+  "addItemsTitle": "Add Items",
+  "createNewItem": "Create New Item",
+  "noItemsAvailableToAdd": "No items available to add",
+  "tripDetailsError": "Error: {error}",
+  "@tripDetailsError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "itemNameLabel": "Item Name",
+  "itemNameHint": "e.g., Toothbrush",
+  "createButton": "Create",
+  "congratulationsTitle": "Congratulations!",
+  "congratulationsMessage": "All items are packed! You are ready to go!",
+  "okButton": "OK",
+  "newTripTitle": "New Trip",
+  "settings": "Settings",
+  "preferences": "Preferences",
+  "language": "Language",
+  "selectLanguage": "Select Language",
+  "themeMode": "Theme Mode",
+  "selectThemeMode": "Select Theme Mode",
+  "themeSystem": "System Default",
+  "themeLight": "Light",
+  "themeDark": "Dark"
+}

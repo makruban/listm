@@ -1,0 +1,139 @@
+{
+  "@@locale": "de",
+  "appTitle": "TripWise",
+  "@appTitle": {
+    "description": "The name of the application"
+  },
+  "welcome": "Willkommen bei TripWise",
+  "@welcome": {
+    "description": "Welcome message on the home screen"
+  },
+  "packingLists": "Packlisten",
+  "@packingLists": {
+    "description": "Label für den Packlisten-Tab"
+  },
+  "allItems": "Alle Artikel",
+  "@allItems": {
+    "description": "Label für den Alle-Artikel-Tab"
+  },
+  "addPackingList": "Packliste hinzufügen",
+  "@addPackingList": {
+    "description": "Tooltip für FAB im Packlisten-Tab"
+  },
+  "addItem": "Artikel hinzufügen",
+  "@addItem": {
+    "description": "Tooltip für FAB im Alle-Artikel-Tab"
+  },
+  "noTripsMessage": "Keine Packlisten gefunden. Tippe auf +, um eine hinzuzufügen.",
+  "@noTripsMessage": {
+    "description": "Nachricht, wenn keine Packlisten vorhanden sind"
+  },
+  "tripsLoadError": "Fehler beim Laden der Packlisten: {error}",
+  "@tripsLoadError": {
+    "description": "Fehlermeldung, wenn Packlisten nicht geladen werden können",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "untitledTrip": "Unbenannte Reise",
+  "@untitledTrip": {
+    "description": "Fallback-Titel, wenn eine Reise keinen Namen hat"
+  },
+  "itemsLabel": "Elemente",
+  "@itemsLabel": {
+    "description": "Bezeichnung für die Anzahl der Elemente in einer Reise"
+  },
+  "renameAction": "Umbenennen",
+  "@renameAction": {
+    "description": "Bezeichnung für die Aktion Umbenennen im Wischmenü"
+  },
+  "infoAction": "Info",
+  "@infoAction": {
+    "description": "Bezeichnung für die Aktion Info im Wischmenü"
+  },
+  "deleteAction": "Löschen",
+  "@deleteAction": {
+    "description": "Bezeichnung für die Aktion Löschen im Wischmenü"
+  },
+  "tripDetailsTitle": "Reisedetails",
+  "@tripDetailsTitle": {
+    "description": "Titel für das Reisedetails-Dialogfenster"
+  },
+  "tripTitleLabel": "Titel: {title}",
+  "@tripTitleLabel": {
+    "description": "Bezeichnung für den Reisetitel im Dialogfenster",
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "tripIdLabel": "ID: {id}",
+  "@tripIdLabel": {
+    "description": "Bezeichnung für die Reise-ID im Dialogfenster",
+    "placeholders": {
+      "id": {}
+    }
+  },
+  "closeButton": "Schließen",
+  "@closeButton": {
+    "description": "Text für die Schließen-Schaltfläche"
+  },
+  "removeAction": "Entfernen",
+  "@removeAction": {
+    "description": "Bezeichnung für die Aktion Entfernen"
+  },
+  "onboardingTitle1": "Plane deine Reisen",
+  "onboardingDesc1Part1": "Erstelle eine Reise, indem du auf die Schaltfläche ",
+  "onboardingDesc1Part2": " klickst",
+  "onboardingTitle2": "Vergiss nie wieder etwas",
+  "onboardingDesc2": "Behalte den Überblick über deine Sachen und stelle sicher, dass du alles für deine Reise hast.",
+  "onboardingTitle3": "Bereit zum Abflug",
+  "onboardingDesc3": "Genieße deine Reise mit der Gewissheit, dass du bestens vorbereitet bist.",
+  "skipButton": "Überspringen",
+  "nextButton": "Weiter",
+  "doneButton": "Fertig",
+  "noTripsMessageTitle": "Keine Packlisten gefunden",
+  "noTripsMessageSub": "Tippe auf +, um eine hinzuzufügen.",
+  "deleteItemTitle": "Element löschen",
+  "deleteItemConfirmation": "Möchten Sie \"{title}\" wirklich löschen?",
+  "itemUsedInTripsWarning": "Achtung! Dieses Element wird in Reise(n) verwendet:",
+  "cancelButton": "Abbrechen",
+  "deleteButton": "Löschen",
+  "itemsLoadError": "Fehler: {error}",
+  "itemCounterLabel": "Element {index}",
+  "itemDetailsTitle": "Elementdetails",
+  "itemTitleLabel": "Titel: {title}",
+  "itemIdLabel": "ID: {id}",
+  "notPackedLabel": "Nicht gepackt",
+  "emptyInventoryTitle": "Dein Inventar ist leer",
+  "emptyInventorySub": "Tippe auf +, um Elemente hinzuzufügen",
+  "tripTitleHint": "Reisetitel",
+  "tripDetailsNavTitle": "Reisedetails",
+  "clearAllButton": "Alles löschen",
+  "clearButton": "Löschen",
+  "noItemsInTrip": "Keine Artikel auf dieser Reise",
+  "addItemsTitle": "Artikel hinzufügen",
+  "createNewItem": "Neuen Artikel erstellen",
+  "noItemsAvailableToAdd": "Keine Artikel zum Hinzufügen verfügbar",
+  "tripDetailsError": "Fehler: {error}",
+  "@tripDetailsError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "itemNameLabel": "Artikelname",
+  "itemNameHint": "z.B. Zahnbürste",
+  "createButton": "Erstellen",
+  "congratulationsTitle": "Herzlichen Glückwunsch!",
+  "congratulationsMessage": "Alle Artikel sind gepackt! Sie sind bereit zu gehen!",
+  "okButton": "OK",
+  "newTripTitle": "Neue Reise",
+  "settings": "Einstellungen",
+  "preferences": "Präferenzen",
+  "language": "Sprache",
+  "selectLanguage": "Sprache auswählen",
+  "themeMode": "Darstellungsmodus",
+  "selectThemeMode": "Darstellungsmodus auswählen",
+  "themeSystem": "Systemstandard",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel"
+}

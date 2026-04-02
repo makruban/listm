@@ -1,0 +1,17 @@
+import 'package:tripwise/core/usecases/usecase.dart';
+import 'package:tripwise/domain/entities/item_entity.dart';
+import 'package:tripwise/domain/repositories/item_repository.dart';
+
+/// Use case for adding an item to the repository.
+class AddItemUseCase extends UseCase<void, ItemEntity> {
+  final ItemRepository repository;
+
+  AddItemUseCase(this.repository);
+
+  @override
+
+  /// Calls the repository to add the item.
+  Future<void> call(ItemEntity item) async {
+    await repository.addItem(item);
+  }
+}

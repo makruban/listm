@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_background">#6CAFD9</color> <!-- Blue Start Color -->
+    <color name="splash_gradient_start">#6CAFD9</color>
+    <color name="splash_gradient_end">#B2DDF2</color>
+	<color name="ic_launcher_background">#FFFFFF</color>
+</resources>

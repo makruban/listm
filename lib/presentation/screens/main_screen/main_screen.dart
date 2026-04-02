@@ -1,0 +1,257 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tripwise/core/widgets/adaptive/adaptive_scaffold.dart';
+
+import 'package:tripwise/presentation/bloc/item/items_bloc.dart';
+import 'package:tripwise/presentation/bloc/trip/trips_bloc.dart';
+import 'package:tripwise/presentation/cubit/navigation_cubit.dart';
+import 'package:tripwise/presentation/screens/all_items_screen/all_items_screen.dart';
+import 'package:tripwise/presentation/screens/packing_list_screen/packing_lists_screen.dart';
+import 'package:tripwise/core/util/unique_id_service.dart';
+
+import 'package:tripwise/presentation/screens/trip_detail_screen/trip_detail_screen.dart';
+import 'package:tripwise/core/util/build_context_ext.dart';
+import 'package:tripwise/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tripwise/core/resources/app_routes.dart';
+
+/// Material version of the main screen with bottom tabs and FAB.
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+  /// Cubit to manage navigation state
+  late NavigationCubit _navigationCubit;
+  late ItemsBloc _itemsBloc;
+  late TripsBloc _tripsBloc;
+  late AppLocalizations _loc;
+// Once-only guards:
+  bool _isInitialized = false;
+  late List<_TabInfo> _tabs;
+
+  // Animation controllers
+  late AnimationController _fabAnimationController;
+  late Animation<double> _fabScaleAnimation;
+  @override
+  initState() {
+    super.initState();
+    // Initialize FAB animation
+    _fabAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _fabScaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _fabAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start with FAB visible
+    _fabAnimationController.reverse();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isInitialized) {
+      // 1️⃣ Grab your injected blocs
+      _navigationCubit = context.read<NavigationCubit>();
+      _itemsBloc = context.read<ItemsBloc>();
+      _tripsBloc = context.read<TripsBloc>();
+      _isInitialized = true;
+    }
+
+    // Always grab the latest localization and rebuild the tab titles dynamically
+    // whenever dependencies (like Locale) change.
+    _loc = context.loc;
+
+    // 2️⃣ Build your tab info with the real `loc`
+    _tabs = [
+      _TabInfo(
+        page: PackingListsScreen(
+          tripsBloc: _tripsBloc,
+        ),
+        materialAppBarBuilder: (context) => AppBar(
+          title: Text(_loc.packingLists),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () => context.push(AppRoutes.settings))
+          ],
+        ),
+        cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
+          middle: Text(_loc.packingLists),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.settings),
+            onPressed: () => context.push(AppRoutes.settings),
+          ),
+        ),
+        navBarItem: BottomNavigationBarItem(
+          icon: const Icon(Icons.list),
+          label: _loc.packingLists,
+        ),
+        cupertinoTabBarItem: BottomNavigationBarItem(
+          icon: const Icon(CupertinoIcons.list_bullet),
+          label: _loc.packingLists,
+        ),
+      ),
+      _TabInfo(
+        page: AllItemsScreen(
+          hideFab: _hideFab,
+          showFab: _showFab,
+          itemsBloc: _itemsBloc,
+        ),
+        materialAppBarBuilder: (context) => AppBar(
+          title: Text(_loc.allItems),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () => context.push(AppRoutes.settings))
+          ],
+        ),
+        cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
+          middle: Text(_loc.allItems),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.settings),
+            onPressed: () => context.push(AppRoutes.settings),
+          ),
+        ),
+        navBarItem: BottomNavigationBarItem(
+          icon: const Icon(Icons.all_inbox),
+          label: _loc.allItems,
+        ),
+        cupertinoTabBarItem: BottomNavigationBarItem(
+          icon: const Icon(CupertinoIcons.tray_full),
+          label: _loc.allItems,
+        ),
+      ),
+    ];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _fabAnimationController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NavigationCubit, NavigationTab>(
+      builder: (context, tab) {
+        final _TabInfo currentTab = _tabs[tab.index];
+        final platform = Theme.of(context).platform;
+        final isIOS =
+            platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+
+        return AdaptiveScaffold(
+          materialAppBar: currentTab.materialAppBarBuilder,
+          cupertinoNavigationBar: currentTab.cupertinoNavigationBarBuilder,
+          body: IndexedStack(
+            index: tab.index,
+            children: _tabs.map((tabInfo) => tabInfo.page).toList(),
+          ),
+          bottomNavigationBar: isIOS
+              ? CupertinoTabBar(
+                  currentIndex: tab.index,
+                  items: _tabs
+                      .map((tabInfo) => tabInfo.cupertinoTabBarItem)
+                      .toList(),
+                  onTap: (i) {
+                    _navigationCubit.setTab(NavigationTab.values[i]);
+                  },
+                )
+              : BottomNavigationBar(
+                  currentIndex: tab.index,
+                  items: _tabs.map((tabInfo) => tabInfo.navBarItem).toList(),
+                  onTap: (i) {
+                    // If leaving the AllItems tab, cancel any in-progress edit
+                    // if (_navigationCubit.state == NavigationTab.allItems) {}
+                    _navigationCubit.setTab(NavigationTab.values[i]);
+                  },
+                ),
+          floatingActionButton: ScaleTransition(
+            scale: _fabScaleAnimation,
+            child: _buildFab(context, tab),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget? _buildFab(BuildContext context, NavigationTab tab) {
+    // only show FAB on our two main tabs
+    if (tab == NavigationTab.packingLists || tab == NavigationTab.allItems) {
+      return FloatingActionButton(
+        heroTag: 'fab_${tab.index}',
+        onPressed: () async {
+          if (tab == NavigationTab.packingLists) {
+            // Generate a new Trip ID
+            final newId = await UniqueIdService.instance
+                .generateTripId(strategy: IdGenerationStrategy.uuid);
+
+            // Dispatch event to add the trip with just the ID and localized title
+            _tripsBloc
+                .add(AddTripEvent(id: newId, title: context.loc.newTripTitle));
+
+            // Navigate to the Trip Detail Page immediately
+            if (context.mounted) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => TripDetailScreen(
+                    tripId: newId,
+                    isNewTrip: true,
+                  ),
+                ),
+              );
+            }
+          } else {
+            // Hide FAB with animation
+            _hideFab();
+            _itemsBloc.add(AddItemEvent());
+          }
+        },
+        child: const Icon(Icons.add),
+      );
+    }
+    return null;
+  }
+
+  void _hideFab() {
+    // Hide FAB with animation
+    _fabAnimationController.forward();
+  }
+
+  void _showFab() {
+    // Show FAB with animation
+    _fabAnimationController.reverse();
+  }
+}
+
+// Helper class to encapsulate tab content and metadata
+class _TabInfo {
+  final Widget page;
+  final PreferredSizeWidget Function(BuildContext) materialAppBarBuilder;
+  final ObstructingPreferredSizeWidget Function(BuildContext)
+      cupertinoNavigationBarBuilder;
+  final BottomNavigationBarItem navBarItem;
+  final BottomNavigationBarItem cupertinoTabBarItem;
+
+  const _TabInfo({
+    required this.page,
+    required this.materialAppBarBuilder,
+    required this.cupertinoNavigationBarBuilder,
+    required this.navBarItem,
+    required this.cupertinoTabBarItem,
+  });
+}

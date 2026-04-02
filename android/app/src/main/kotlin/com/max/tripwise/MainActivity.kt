@@ -1,4 +1,4 @@
-package com.example.listm
+package com.max.tripwise
 
 import io.flutter.embedding.android.FlutterActivity
 

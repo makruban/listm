@@ -1,0 +1,139 @@
+{
+  "@@locale": "es",
+  "appTitle": "TripWise",
+  "@appTitle": {
+    "description": "The name of the application"
+  },
+  "welcome": "Bienvenido a TripWise",
+  "@welcome": {
+    "description": "Welcome message on the home screen"
+  },
+  "packingLists": "Listas de empaque",
+  "@packingLists": {
+    "description": "Etiqueta para la pestaña Listas de empaque"
+  },
+  "allItems": "Todos los artículos",
+  "@allItems": {
+    "description": "Etiqueta para la pestaña Todos los artículos"
+  },
+  "addPackingList": "Agregar lista de empaque",
+  "@addPackingList": {
+    "description": "Tooltip para FAB en Listas de empaque"
+  },
+  "addItem": "Agregar artículo",
+  "@addItem": {
+    "description": "Tooltip para FAB en Todos los artículos"
+  },
+  "noTripsMessage": "No se encontraron listas de viaje. Toque + para agregar una.",
+  "@noTripsMessage": {
+    "description": "Mensaje cuando no hay listas de viaje"
+  },
+  "tripsLoadError": "Error al cargar las listas de viaje: {error}",
+  "@tripsLoadError": {
+    "description": "Mensaje de error cuando las listas de viaje no se pueden cargar",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "untitledTrip": "Viaje sin título",
+  "@untitledTrip": {
+    "description": "Título alternativo cuando un viaje no tiene nombre"
+  },
+  "itemsLabel": "elementos",
+  "@itemsLabel": {
+    "description": "Etiqueta para el número de elementos en un viaje"
+  },
+  "renameAction": "Renombrar",
+  "@renameAction": {
+    "description": "Etiqueta para la acción de renombrar en el menú deslizante"
+  },
+  "infoAction": "Info",
+  "@infoAction": {
+    "description": "Etiqueta para la acción de información en el menú deslizante"
+  },
+  "deleteAction": "Eliminar",
+  "@deleteAction": {
+    "description": "Etiqueta para la acción de eliminar en el menú deslizante"
+  },
+  "tripDetailsTitle": "Detalles del viaje",
+  "@tripDetailsTitle": {
+    "description": "Título para el diálogo de detalles del viaje"
+  },
+  "tripTitleLabel": "Título: {title}",
+  "@tripTitleLabel": {
+    "description": "Etiqueta que muestra el título del viaje en el diálogo",
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "tripIdLabel": "ID: {id}",
+  "@tripIdLabel": {
+    "description": "Etiqueta que muestra el ID del viaje en el diálogo",
+    "placeholders": {
+      "id": {}
+    }
+  },
+  "closeButton": "Cerrar",
+  "@closeButton": {
+    "description": "Texto del botón cerrar"
+  },
+  "removeAction": "Quitar",
+  "@removeAction": {
+    "description": "Etiqueta para la acción de quitar"
+  },
+  "onboardingTitle1": "Planifica tus viajes",
+  "onboardingDesc1Part1": "Crea un viaje haciendo clic en el botón ",
+  "onboardingDesc1Part2": "",
+  "onboardingTitle2": "Nunca olvides un artículo",
+  "onboardingDesc2": "Lleva un registro de tus artículos y asegúrate de tener todo lo que necesitas.",
+  "onboardingTitle3": "Listo para el despegue",
+  "onboardingDesc3": "Disfruta de tu viaje con la tranquilidad de estar preparado.",
+  "skipButton": "Omitir",
+  "nextButton": "Siguiente",
+  "doneButton": "Listo",
+  "noTripsMessageTitle": "No se encontraron listas",
+  "noTripsMessageSub": "Toca + para agregar una.",
+  "deleteItemTitle": "Eliminar artículo",
+  "deleteItemConfirmation": "¿Seguro que quieres eliminar \"{title}\"?",
+  "itemUsedInTripsWarning": "¡Atención! Este artículo se usa en Viaje(s):",
+  "cancelButton": "Cancelar",
+  "deleteButton": "Eliminar",
+  "itemsLoadError": "Error: {error}",
+  "itemCounterLabel": "Artículo {index}",
+  "itemDetailsTitle": "Detalles del artículo",
+  "itemTitleLabel": "Título: {title}",
+  "itemIdLabel": "ID: {id}",
+  "notPackedLabel": "No empacado",
+  "emptyInventoryTitle": "Tu inventario está vacío",
+  "emptyInventorySub": "Toca + para comenzar a agregar artículos",
+  "tripTitleHint": "Título del viaje",
+  "tripDetailsNavTitle": "Detalles del viaje",
+  "clearAllButton": "Borrar todo",
+  "clearButton": "Borrar",
+  "noItemsInTrip": "No hay artículos en este viaje",
+  "addItemsTitle": "Agregar artículos",
+  "createNewItem": "Crear nuevo artículo",
+  "noItemsAvailableToAdd": "No hay artículos disponibles para agregar",
+  "tripDetailsError": "Error: {error}",
+  "@tripDetailsError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "itemNameLabel": "Nombre del artículo",
+  "itemNameHint": "ej. Cepillo de dientes",
+  "createButton": "Crear",
+  "congratulationsTitle": "¡Felicidades!",
+  "congratulationsMessage": "¡Todos los artículos están empacados! ¡Estás listo para ir!",
+  "okButton": "OK",
+  "newTripTitle": "Nuevo Viaje",
+  "settings": "Ajustes",
+  "preferences": "Preferencias",
+  "language": "Idioma",
+  "selectLanguage": "Seleccionar Idioma",
+  "themeMode": "Modo de Tema",
+  "selectThemeMode": "Seleccionar Modo de Tema",
+  "themeSystem": "Predeterminado del sistema",
+  "themeLight": "Claro",
+  "themeDark": "Oscuro"
+}
