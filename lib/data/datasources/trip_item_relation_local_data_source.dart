@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:listm/core/resources/app_key_constants.dart';
-import 'package:listm/domain/entities/trip_item_relation_entity.dart';
+import 'package:tripwise/core/resources/app_key_constants.dart';
+import 'package:tripwise/domain/entities/trip_item_relation_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class TripItemRelationLocalDataSource {

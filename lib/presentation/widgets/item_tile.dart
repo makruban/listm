@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:listm/domain/entities/item_entity.dart';
+import 'package:tripwise/domain/entities/item_entity.dart';
 
 class ItemTile extends StatelessWidget {
   final ItemEntity item;

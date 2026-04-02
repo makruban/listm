@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:listm/domain/entities/item_entity.dart';
+import 'package:tripwise/domain/entities/item_entity.dart';
 
 class ItemModel extends ItemEntity {
   ItemModel({

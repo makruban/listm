@@ -1,6 +1,6 @@
-import 'package:listm/data/datasources/trip_item_relation_local_data_source.dart';
-import 'package:listm/domain/entities/trip_item_relation_entity.dart';
-import 'package:listm/domain/repositories/trip_item_relation_repository.dart';
+import 'package:tripwise/data/datasources/trip_item_relation_local_data_source.dart';
+import 'package:tripwise/domain/entities/trip_item_relation_entity.dart';
+import 'package:tripwise/domain/repositories/trip_item_relation_repository.dart';
 
 class TripItemRelationRepositoryImpl implements TripItemRelationRepository {
   final TripItemRelationLocalDataSource localDataSource;

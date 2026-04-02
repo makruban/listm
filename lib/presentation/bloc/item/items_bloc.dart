@@ -1,19 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/core/util/unique_id_service.dart';
-import 'package:listm/domain/entities/item_entity.dart';
-import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/get_item_by_id_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/get_items_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/remove_item_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/update_item_usecase.dart';
-import 'package:listm/domain/value_objects/item_id.dart';
+import 'package:tripwise/core/util/unique_id_service.dart';
+import 'package:tripwise/domain/entities/item_entity.dart';
+import 'package:tripwise/domain/usecases/item_usecases/add_item_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/get_item_by_id_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/get_items_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/remove_item_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/update_item_usecase.dart';
+import 'package:tripwise/domain/value_objects/item_id.dart';
 import 'dart:async';
-import 'package:listm/domain/value_objects/item_id.dart';
-import 'package:listm/domain/value_objects/no_params.dart';
-import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
-import 'package:listm/domain/usecases/trip_item_usecases/get_trips_for_item_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/get_trips_usecase.dart';
-import 'package:listm/presentation/bloc/item/item_view_model.dart';
+import 'package:tripwise/domain/value_objects/item_id.dart';
+import 'package:tripwise/domain/value_objects/no_params.dart';
+import 'package:tripwise/domain/usecases/item_usecases/get_items_stream_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_item_usecases/get_trips_for_item_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/get_trips_usecase.dart';
+import 'package:tripwise/presentation/bloc/item/item_view_model.dart';
 part 'items_event.dart';
 part 'items_state.dart';
 
@@ -79,13 +79,15 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     final List<ItemViewModel> itemViewModels = [];
     for (var item in items) {
       final tripIds = await _getTripsForItemUseCase(item.id);
-      final tripNames = tripIds.map((id) => tripTitleMap[id] ?? 'Unknown Trip').toList();
+      final tripNames =
+          tripIds.map((id) => tripTitleMap[id] ?? 'Unknown Trip').toList();
       itemViewModels.add(ItemViewModel(item: item, tripNames: tripNames));
     }
     return itemViewModels;
   }
 
-  Future<void> _onItemsUpdated(ItemsUpdated event, Emitter<ItemsState> emit) async {
+  Future<void> _onItemsUpdated(
+      ItemsUpdated event, Emitter<ItemsState> emit) async {
     final viewModels = await _computeTripNames(event.items);
     emit(ItemsLoadSuccess(viewModels));
   }

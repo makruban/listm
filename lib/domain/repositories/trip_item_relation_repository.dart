@@ -1,4 +1,4 @@
-import 'package:listm/domain/entities/trip_item_relation_entity.dart';
+import 'package:tripwise/domain/entities/trip_item_relation_entity.dart';
 
 abstract class TripItemRelationRepository {
   List<String> getItemsForTrip(String tripId);

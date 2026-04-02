@@ -1,6 +1,6 @@
-import 'package:listm/core/resources/app_key_constants.dart';
-import 'package:listm/data/models/item_model.dart';
-import 'package:listm/domain/value_objects/item_id.dart';
+import 'package:tripwise/core/resources/app_key_constants.dart';
+import 'package:tripwise/data/models/item_model.dart';
+import 'package:tripwise/domain/value_objects/item_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';

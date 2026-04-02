@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/domain/usecases/onboarding_usecases/check_onboarding_status_usecase.dart';
-import 'package:listm/domain/usecases/onboarding_usecases/complete_onboarding_usecase.dart';
-import 'package:listm/presentation/bloc/app/app_event.dart';
-import 'package:listm/presentation/bloc/app/app_state.dart';
+import 'package:tripwise/domain/usecases/onboarding_usecases/check_onboarding_status_usecase.dart';
+import 'package:tripwise/domain/usecases/onboarding_usecases/complete_onboarding_usecase.dart';
+import 'package:tripwise/presentation/bloc/app/app_event.dart';
+import 'package:tripwise/presentation/bloc/app/app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final CheckOnboardingStatusUseCase checkOnboardingStatusUseCase;

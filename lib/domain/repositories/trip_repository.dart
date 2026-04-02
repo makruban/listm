@@ -1,5 +1,5 @@
-import 'package:listm/domain/entities/trip_entity.dart';
-import 'package:listm/domain/value_objects/trip_id.dart';
+import 'package:tripwise/domain/entities/trip_entity.dart';
+import 'package:tripwise/domain/value_objects/trip_id.dart';
 
 abstract class TripRepository {
   Future<List<TripEntity>> getTrips();

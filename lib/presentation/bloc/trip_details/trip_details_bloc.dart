@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:listm/domain/entities/trip_detail_item.dart';
-import 'package:listm/domain/entities/trip_entity.dart';
-import 'package:listm/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/get_items_usecase.dart';
-import 'package:listm/domain/value_objects/trip_id.dart';
+import 'package:tripwise/domain/entities/trip_detail_item.dart';
+import 'package:tripwise/domain/entities/trip_entity.dart';
+import 'package:tripwise/domain/usecases/trip_item_usecases/get_items_for_trip_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/get_trip_by_id_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/get_items_usecase.dart';
+import 'package:tripwise/domain/value_objects/trip_id.dart';
 
-import 'package:listm/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
-import 'package:listm/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
-import 'package:listm/domain/usecases/trip_item_usecases/toggle_trip_item_completion_usecase.dart';
-import 'package:listm/domain/usecases/trip_usecases/update_trip_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/add_item_usecase.dart';
-import 'package:listm/domain/usecases/item_usecases/get_items_stream_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_item_usecases/add_trip_item_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_item_usecases/remove_trip_item_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_item_usecases/toggle_trip_item_completion_usecase.dart';
+import 'package:tripwise/domain/usecases/trip_usecases/update_trip_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/add_item_usecase.dart';
+import 'package:tripwise/domain/usecases/item_usecases/get_items_stream_usecase.dart';
 import 'dart:async';
 
 part 'trip_details_event.dart';
@@ -160,7 +160,8 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     final currentState = state;
     if (currentState is TripDetailsLoaded) {
       try {
-        final completedItems = currentState.items.where((i) => i.isCompleted).toList();
+        final completedItems =
+            currentState.items.where((i) => i.isCompleted).toList();
         for (final item in completedItems) {
           await toggleTripItemCompletionUseCase(ToggleTripItemCompletionParams(
             tripId: currentState.trip.id,

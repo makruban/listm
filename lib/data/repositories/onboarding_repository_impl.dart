@@ -1,5 +1,5 @@
-import 'package:listm/core/resources/app_key_constants.dart';
-import 'package:listm/domain/repositories/onboarding_repository.dart';
+import 'package:tripwise/core/resources/app_key_constants.dart';
+import 'package:tripwise/domain/repositories/onboarding_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingRepositoryImpl implements OnboardingRepository {
