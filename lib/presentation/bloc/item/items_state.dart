@@ -21,11 +21,28 @@ class ItemsLoadInProgress extends ItemsState {
 /// State when a list of items has been successfully loaded.
 class ItemsLoadSuccess extends ItemsState {
   final List<ItemViewModel> items;
+  final String searchQuery;
 
-  const ItemsLoadSuccess(this.items);
+  const ItemsLoadSuccess(this.items, {this.searchQuery = ''});
+
+  List<ItemViewModel> get filteredItems {
+    if (searchQuery.isEmpty) return items;
+    final lower = searchQuery.toLowerCase();
+    return items.where((vm) => vm.item.title.toLowerCase().contains(lower)).toList();
+  }
+
+  ItemsLoadSuccess copyWith({
+    List<ItemViewModel>? items,
+    String? searchQuery,
+  }) {
+    return ItemsLoadSuccess(
+      items ?? this.items,
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items, searchQuery];
 }
 
 /// State when a single item has been successfully loaded.

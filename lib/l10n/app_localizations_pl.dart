@@ -15,7 +15,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get welcome => 'Witaj w TripWise';
 
   @override
-  String get packingLists => 'Listy pakowania';
+  String get packingLists => 'Podróże';
 
   @override
   String get allItems => 'Wszystkie przedmioty';
@@ -27,12 +27,11 @@ class AppLocalizationsPl extends AppLocalizations {
   String get addItem => 'Dodaj przedmiot';
 
   @override
-  String get noTripsMessage =>
-      'Nie znaleziono list pakowania. Dotknij +, aby dodać.';
+  String get noTripsMessage => 'Nie znaleziono podróży. Dotknij +, aby dodać.';
 
   @override
   String tripsLoadError(Object error) {
-    return 'Nie udało się wczytać list pakowania: $error';
+    return 'Nie udało się wczytać podróży: $error';
   }
 
   @override
@@ -102,7 +101,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get doneButton => 'Gotowe';
 
   @override
-  String get noTripsMessageTitle => 'Nie znaleziono list pakowania';
+  String get noTripsMessageTitle => 'Nie znaleziono podróży';
 
   @override
   String get noTripsMessageSub => 'Dotknij +, aby dodać.';
@@ -234,4 +233,10 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get themeDark => 'Ciemny';
+
+  @override
+  String get itemAlreadyExistsError => 'Element o tej nazwie już istnieje.';
+
+  @override
+  String get searchHint => 'Szukaj';
 }

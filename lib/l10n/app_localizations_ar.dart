@@ -15,24 +15,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcome => 'مرحبًا بك في TripWise';
 
   @override
-  String get packingLists => 'قوائم التعبئة';
+  String get packingLists => 'الرحلات';
 
   @override
-  String get allItems => 'جميع العناصر';
+  String get allItems => 'كل العناصر';
 
   @override
-  String get addPackingList => 'إضافة قائمة تعبئة';
+  String get addPackingList => 'إضافة قائمة';
 
   @override
   String get addItem => 'إضافة عنصر';
 
   @override
   String get noTripsMessage =>
-      'لم يتم العثور على قوائم تعبئة. اضغط على + لإضافة واحدة.';
+      'لم يتم العثور على رحلات. اضغط على + لإضافة واحدة.';
 
   @override
   String tripsLoadError(Object error) {
-    return 'فشل تحميل قوائم التعبئة: $error';
+    return 'فشل تحميل الرحلات: $error';
   }
 
   @override
@@ -102,7 +102,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get doneButton => 'تم';
 
   @override
-  String get noTripsMessageTitle => 'لم يتم العثور على قوائم تعبئة';
+  String get noTripsMessageTitle => 'لم يتم العثور على رحلات';
 
   @override
   String get noTripsMessageSub => 'اضغط على + لإضافة واحدة.';
@@ -232,4 +232,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get themeDark => 'داكن';
+
+  @override
+  String get itemAlreadyExistsError => 'عنصر بهذا الاسم موجود بالفعل.';
+
+  @override
+  String get searchHint => 'بحث';
 }

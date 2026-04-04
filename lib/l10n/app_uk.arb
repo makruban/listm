@@ -2,12 +2,12 @@
   "@@locale": "uk",
   "appTitle": "TripWise",
   "welcome": "Ласкаво просимо до TripWise",
-  "packingLists": "Списки речей",
+  "packingLists": "Подорожі",
   "allItems": "Усі предмети",
   "addPackingList": "Додати список",
   "addItem": "Додати предмет",
-  "noTripsMessage": "Списки речей не знайдено. Натисніть +, щоб додати.",
-  "tripsLoadError": "Не вдалося завантажити списки речей: {error}",
+  "noTripsMessage": "Подорожі не знайдено. Натисніть +, щоб додати.",
+  "tripsLoadError": "Не вдалося завантажити подорожі: {error}",
   "untitledTrip": "Подорож без назви",
   "itemsLabel": "предметів",
   "renameAction": "Перейменувати",
@@ -28,7 +28,7 @@
   "skipButton": "Пропустити",
   "nextButton": "Далі",
   "doneButton": "Готово",
-  "noTripsMessageTitle": "Списки речей не знайдено",
+  "noTripsMessageTitle": "Подорожі не знайдено",
   "noTripsMessageSub": "Натисніть +, щоб додати.",
   "deleteItemTitle": "Видалити предмет",
   "deleteItemConfirmation": "Ви впевнені, що хочете видалити \"{title}\"?",
@@ -72,5 +72,7 @@
   "selectThemeMode": "Вибрати режим теми",
   "themeSystem": "За замовчуванням системи",
   "themeLight": "Світлий",
-  "themeDark": "Темний"
+  "themeDark": "Темний",
+  "itemAlreadyExistsError": "Предмет з такою назвою вже існує.",
+  "searchHint": "Пошук"
 }

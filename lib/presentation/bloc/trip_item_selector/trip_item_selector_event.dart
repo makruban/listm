@@ -22,3 +22,9 @@ class AvailableItemsUpdated extends TripItemSelectorEvent {
   final List<ItemEntity> items;
   AvailableItemsUpdated(this.items);
 }
+
+class SearchQueryChanged extends TripItemSelectorEvent {
+  final String query;
+  SearchQueryChanged(this.query);
+}
+

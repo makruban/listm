@@ -15,7 +15,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get welcome => 'Ласкаво просимо до TripWise';
 
   @override
-  String get packingLists => 'Списки речей';
+  String get packingLists => 'Подорожі';
 
   @override
   String get allItems => 'Усі предмети';
@@ -27,12 +27,11 @@ class AppLocalizationsUk extends AppLocalizations {
   String get addItem => 'Додати предмет';
 
   @override
-  String get noTripsMessage =>
-      'Списки речей не знайдено. Натисніть +, щоб додати.';
+  String get noTripsMessage => 'Подорожі не знайдено. Натисніть +, щоб додати.';
 
   @override
   String tripsLoadError(Object error) {
-    return 'Не вдалося завантажити списки речей: $error';
+    return 'Не вдалося завантажити подорожі: $error';
   }
 
   @override
@@ -102,7 +101,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get doneButton => 'Готово';
 
   @override
-  String get noTripsMessageTitle => 'Списки речей не знайдено';
+  String get noTripsMessageTitle => 'Подорожі не знайдено';
 
   @override
   String get noTripsMessageSub => 'Натисніть +, щоб додати.';
@@ -233,4 +232,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get themeDark => 'Темний';
+
+  @override
+  String get itemAlreadyExistsError => 'Предмет з такою назвою вже існує.';
+
+  @override
+  String get searchHint => 'Пошук';
 }

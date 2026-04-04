@@ -43,6 +43,7 @@ class TripItemSelectorBloc
     on<AvailableItemsUpdated>(_onAvailableItemsUpdated);
     on<ToggleItemSelection>(_onToggleItemSelection);
     on<CreateAndSelectNewItem>(_onCreateAndSelectNewItem);
+    on<SearchQueryChanged>(_onSearchQueryChanged);
   }
 
   @override
@@ -113,6 +114,16 @@ class TripItemSelectorBloc
       emit(currentState.copyWith(
         availableItems: sortedItems,
       ));
+    }
+  }
+
+  void _onSearchQueryChanged(
+    SearchQueryChanged event,
+    Emitter<TripItemSelectorState> emit,
+  ) {
+    if (state is TripItemSelectorLoaded) {
+      final currentState = state as TripItemSelectorLoaded;
+      emit(currentState.copyWith(searchQuery: event.query));
     }
   }
 

@@ -53,6 +53,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     on<AddItemEvent>(_onAddItem);
     on<UpdateItemEvent>(_onUpdateItem);
     on<RemoveItemEvent>(_onRemoveItem);
+    on<ItemsSearchQueryChanged>(_onSearchQueryChanged);
 
     _subscribeToItems();
   }
@@ -100,6 +101,14 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
       emit(ItemsLoadSuccess(viewModels));
     } catch (e) {
       emit(ItemsFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onSearchQueryChanged(
+      ItemsSearchQueryChanged event, Emitter<ItemsState> emit) async {
+    if (state is ItemsLoadSuccess) {
+      final currentState = state as ItemsLoadSuccess;
+      emit(currentState.copyWith(searchQuery: event.query));
     }
   }
 
