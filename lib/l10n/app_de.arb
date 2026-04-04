@@ -8,7 +8,7 @@
   "@welcome": {
     "description": "Welcome message on the home screen"
   },
-  "packingLists": "Packlisten",
+  "packingLists": "Reisen",
   "@packingLists": {
     "description": "Label für den Packlisten-Tab"
   },
@@ -24,11 +24,11 @@
   "@addItem": {
     "description": "Tooltip für FAB im Alle-Artikel-Tab"
   },
-  "noTripsMessage": "Keine Packlisten gefunden. Tippe auf +, um eine hinzuzufügen.",
+  "noTripsMessage": "Keine Reisen gefunden. Tippe auf +, um eine hinzuzufügen.",
   "@noTripsMessage": {
     "description": "Nachricht, wenn keine Packlisten vorhanden sind"
   },
-  "tripsLoadError": "Fehler beim Laden der Packlisten: {error}",
+  "tripsLoadError": "Fehler beim Laden der Reisen: {error}",
   "@tripsLoadError": {
     "description": "Fehlermeldung, wenn Packlisten nicht geladen werden können",
     "placeholders": {
@@ -91,7 +91,7 @@
   "skipButton": "Überspringen",
   "nextButton": "Weiter",
   "doneButton": "Fertig",
-  "noTripsMessageTitle": "Keine Packlisten gefunden",
+  "noTripsMessageTitle": "Keine Reisen gefunden",
   "noTripsMessageSub": "Tippe auf +, um eine hinzuzufügen.",
   "deleteItemTitle": "Element löschen",
   "deleteItemConfirmation": "Möchten Sie \"{title}\" wirklich löschen?",
@@ -135,5 +135,7 @@
   "selectThemeMode": "Darstellungsmodus auswählen",
   "themeSystem": "Systemstandard",
   "themeLight": "Hell",
-  "themeDark": "Dunkel"
+  "themeDark": "Dunkel",
+  "itemAlreadyExistsError": "Ein Element mit diesem Namen existiert bereits.",
+  "searchHint": "Suchen"
 }

@@ -22,10 +22,14 @@ class AllItemsScreen extends StatefulWidget {
     required this.hideFab,
     required this.showFab,
     required this.itemsBloc,
+    this.showSearch = false,
+    this.onCloseSearch,
   });
   final VoidCallback hideFab;
   final VoidCallback showFab;
   final ItemsBloc itemsBloc;
+  final bool showSearch;
+  final VoidCallback? onCloseSearch;
 
   @override
   State<AllItemsScreen> createState() => _AllItemsScreenState();
@@ -40,6 +44,7 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
 
   final _controllers = <Key, TextEditingController>{};
   final _focusNodes = <Key, FocusNode>{};
+  final ScrollController _scrollController = ScrollController();
 
   void _startEditing(Key id, {String initial = ''}) {
     // Commit or cancel any previous edit first.
@@ -72,13 +77,26 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
     if (trimmed.isEmpty) {
       _itemsBloc.add(RemoveItemEvent(ItemId(entityId)));
     } else {
-      final exists = _isExisting(entityId);
-      if (exists) {
-        _itemsBloc.add(UpdateItemEvent(
-          ItemEntity(id: entityId, title: trimmed, description: ''),
-        ));
+      if (_isNameTaken(entityId, trimmed)) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(context.loc.itemAlreadyExistsError),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+        final exists = _isExisting(entityId);
+        if (!exists) {
+          _itemsBloc.add(RemoveItemEvent(ItemId(entityId)));
+        }
       } else {
-        _itemsBloc.add(AddItemEvent(name: trimmed));
+        final exists = _isExisting(entityId);
+        if (exists) {
+          _itemsBloc.add(UpdateItemEvent(
+            ItemEntity(id: entityId, title: trimmed, description: ''),
+          ));
+        } else {
+          _itemsBloc.add(AddItemEvent(name: trimmed));
+        }
       }
     }
 
@@ -99,6 +117,16 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
   bool _isExisting(String id) {
     final st = _itemsBloc.state;
     return st is ItemsLoadSuccess && st.items.any((e) => e.item.id == id);
+  }
+
+  bool _isNameTaken(String idToIgnore, String name) {
+    final st = _itemsBloc.state;
+    if (st is ItemsLoadSuccess) {
+      final lowerName = name.toLowerCase();
+      return st.items.any(
+          (e) => e.item.id != idToIgnore && e.item.title.toLowerCase() == lowerName);
+    }
+    return false;
   }
 
   void _confirmDelete(BuildContext context, ItemViewModel uiModel) {
@@ -161,6 +189,7 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
       // If we are currently editing, dispose that editor:
       _disposeLater(_editingId!);
     }
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -178,6 +207,29 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
             if (tab != NavigationTab.allItems && _editingId != null) {
               _submitOrCancel(_editingId!);
             }
+          },
+        ),
+
+        // Scroll to bottom when a new empty item is added
+        BlocListener<ItemsBloc, ItemsState>(
+          listenWhen: (prev, curr) {
+            if (prev is ItemsLoadSuccess && curr is ItemsLoadSuccess) {
+              final prevHasEmpty = prev.items.any((e) => e.item.title.isEmpty);
+              final currHasEmpty = curr.items.any((e) => e.item.title.isEmpty);
+              return !prevHasEmpty && currHasEmpty;
+            }
+            return false;
+          },
+          listener: (context, state) {
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (mounted && _scrollController.hasClients) {
+                _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                );
+              }
+            });
           },
         ),
 
@@ -200,7 +252,9 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
               setState(() => _editingId = null);
               _isSubmitting = false;
             }
-            widget.showFab(); // bring back the FAB after the list is stable
+            if (!widget.showSearch) {
+              widget.showFab(); // bring back the FAB after the list is stable
+            }
           },
         ),
       ],
@@ -213,20 +267,31 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
                 child:
                     Text(context.loc.itemsLoadError(state.error.toString())));
           } else if (state is ItemsLoadSuccess) {
+            final displayItems = state.filteredItems;
+            
+            Widget bodyContent;
             if (state.items.isEmpty) {
-              return _AllItemsEmptyState();
-            }
-            return GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: _onBackgroundTap,
-              child: ListView.separated(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 12),
-                itemCount: state.items.length,
-                itemBuilder: (context, index) {
-                  final uiModel = state.items[index];
+              bodyContent = const _AllItemsEmptyState();
+            } else if (displayItems.isEmpty) {
+              bodyContent = Center(
+                child: Text(
+                  context.loc.noItemsAvailableToAdd,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                ),
+              );
+            } else {
+              bodyContent = GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: _onBackgroundTap,
+                child: ListView.separated(
+                  controller: _scrollController,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemCount: displayItems.length,
+                  itemBuilder: (context, index) {
+                    final uiModel = displayItems[index];
                   final ItemEntity item = uiModel.item;
                   final tripNames = uiModel.tripNames;
                   final tripCount = tripNames.length;
@@ -358,8 +423,10 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
                         child: ListTile(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 16),
-                          leading: Text(
-                            item.title,
+                          leading: _HighlightedText(
+                            text: item.title,
+                            query: state.searchQuery,
+                            highlightColor: Theme.of(context).colorScheme.primary,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -419,9 +486,26 @@ class _AllItemsScreenState extends State<AllItemsScreen> {
                 },
               ),
             );
-          } else {
-            return const SizedBox.shrink();
           }
+          
+          return Column(
+            children: [
+              Expanded(child: bodyContent),
+              if (widget.showSearch)
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 16,
+                    bottom: 16 + MediaQuery.viewInsetsOf(context).bottom,
+                  ),
+                  child: _AllItemsSearchBar(onClose: widget.onCloseSearch),
+                ),
+            ],
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
         },
       ),
     );
@@ -486,6 +570,146 @@ class _AllItemsEmptyState extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AllItemsSearchBar extends StatefulWidget {
+  final VoidCallback? onClose;
+  const _AllItemsSearchBar({this.onClose});
+
+  @override
+  State<_AllItemsSearchBar> createState() => _AllItemsSearchBarState();
+}
+
+class _AllItemsSearchBarState extends State<_AllItemsSearchBar> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Row(
+              children: [
+                const SizedBox(width: 16),
+                Icon(Icons.search, color: theme.colorScheme.onSurfaceVariant),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: context.loc.searchHint,
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    onChanged: (val) {
+                      context.read<ItemsBloc>().add(ItemsSearchQueryChanged(val));
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        InkWell(
+          onTap: () {
+            context.read<ItemsBloc>().add(const ItemsSearchQueryChanged(''));
+            widget.onClose?.call();
+          },
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.close, color: theme.colorScheme.onSurfaceVariant),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HighlightedText extends StatelessWidget {
+  final String text;
+  final String query;
+  final TextStyle? style;
+  final Color highlightColor;
+
+  const _HighlightedText({
+    required this.text,
+    required this.query,
+    this.style,
+    required this.highlightColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (query.isEmpty) {
+      return Text(text, style: style);
+    }
+    
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    if (!lowerText.contains(lowerQuery)) {
+      return Text(text, style: style);
+    }
+    
+    final spans = <TextSpan>[];
+    int start = 0;
+    while (true) {
+      final index = lowerText.indexOf(lowerQuery, start);
+      if (index < 0) {
+        if (start < text.length) {
+          spans.add(TextSpan(text: text.substring(start), style: style));
+        }
+        break;
+      }
+      if (index > start) {
+        spans.add(TextSpan(text: text.substring(start, index), style: style));
+      }
+      spans.add(TextSpan(
+        text: text.substring(index, index + query.length),
+        style: style?.copyWith(
+          color: highlightColor,
+          fontWeight: FontWeight.bold,
+        ) ?? TextStyle(color: highlightColor, fontWeight: FontWeight.bold),
+      ));
+      start = index + query.length;
+    }
+    
+    return RichText(
+      text: TextSpan(children: spans),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

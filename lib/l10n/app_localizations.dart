@@ -133,7 +133,7 @@ abstract class AppLocalizations {
   /// Label for the Packing Lists tab
   ///
   /// In en, this message translates to:
-  /// **'Packing Lists'**
+  /// **'Trips'**
   String get packingLists;
 
   /// Label for the All Items tab
@@ -157,13 +157,13 @@ abstract class AppLocalizations {
   /// Message shown when there are no trips in the list
   ///
   /// In en, this message translates to:
-  /// **'No packing lists found. Tap + to add one.'**
+  /// **'No trips found. Tap + to add one.'**
   String get noTripsMessage;
 
   /// Error message when trips fail to load
   ///
   /// In en, this message translates to:
-  /// **'Failed to load packing lists: {error}'**
+  /// **'Failed to load trips: {error}'**
   String tripsLoadError(Object error);
 
   /// Fallback title when a trip has no name
@@ -289,7 +289,7 @@ abstract class AppLocalizations {
   /// No description provided for @noTripsMessageTitle.
   ///
   /// In en, this message translates to:
-  /// **'No packing lists found'**
+  /// **'No trips found'**
   String get noTripsMessageTitle;
 
   /// No description provided for @noTripsMessageSub.
@@ -525,6 +525,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark'**
   String get themeDark;
+
+  /// No description provided for @itemAlreadyExistsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Item with this name already exists.'**
+  String get itemAlreadyExistsError;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchHint;
 }
 
 class _AppLocalizationsDelegate

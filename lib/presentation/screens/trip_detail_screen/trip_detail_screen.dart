@@ -468,43 +468,15 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Material(
-                        color: theme.colorScheme.primaryContainer
-                            .withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(16),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
-                          onTap: () => _showCreateItemDialog(context),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Icon(Icons.add_circle_outline,
-                                    color: theme.colorScheme.primary),
-                                const SizedBox(width: 16),
-                                Text(
-                                  context.loc.createNewItem,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     const Divider(height: 1),
                     Expanded(
                       child: BlocBuilder<TripItemSelectorBloc,
                           TripItemSelectorState>(
                         builder: (context, state) {
                           if (state is TripItemSelectorLoaded) {
-                            if (state.availableItems.isEmpty) {
+                            final displayItems = state.filteredAvailableItems;
+                            if (displayItems.isEmpty) {
                               return Center(
                                 child: Text(
                                   context.loc.noItemsAvailableToAdd,
@@ -518,14 +490,14 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                               controller: scrollController,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 8),
-                              itemCount: state.availableItems.length,
+                              itemCount: displayItems.length,
                               separatorBuilder: (context, index) => Divider(
                                 height: 1,
                                 color: theme.colorScheme.outlineVariant
                                     .withValues(alpha: 0.3),
                               ),
                               itemBuilder: (context, index) {
-                                final item = state.availableItems[index];
+                                final item = displayItems[index];
                                 final isSelected =
                                     state.selectedItemIds.contains(item.id);
 
@@ -534,8 +506,10 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                       horizontal: 16, vertical: 4),
                                   value: isSelected,
                                   activeColor: theme.colorScheme.primary,
-                                  title: Text(
-                                    item.title,
+                                  title: _HighlightedText(
+                                    text: item.title,
+                                    query: state.searchQuery,
+                                    highlightColor: theme.colorScheme.primary,
                                     style:
                                         theme.textTheme.titleMedium?.copyWith(
                                       fontWeight: isSelected
@@ -566,6 +540,18 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                         },
                       ),
                     ),
+                    const Divider(height: 1),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 16,
+                        bottom: 16 + MediaQuery.viewInsetsOf(context).bottom,
+                      ),
+                      child: _AddItemsSearchBar(
+                        onCreateNewItem: () => _showCreateItemDialog(context),
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -581,41 +567,66 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   void _showCreateItemDialog(BuildContext parentContext) {
     final bloc = BlocProvider.of<TripItemSelectorBloc>(parentContext);
     final TextEditingController nameController = TextEditingController();
+    String? errorMessage;
 
     showAdaptiveDialog(
       context: parentContext,
       builder: (context) {
-        return AdaptiveAlertDialog(
-          title: Text(context.loc.createNewItem),
-          content: Material(
-            color: Colors.transparent,
-            child: TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: context.loc.itemNameLabel,
-                hintText: context.loc.itemNameHint,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AdaptiveAlertDialog(
+              title: Text(parentContext.loc.createNewItem),
+              content: Material(
+                color: Colors.transparent,
+                child: TextField(
+                  controller: nameController,
+                  onChanged: (val) {
+                    if (errorMessage != null) {
+                      setState(() {
+                        errorMessage = null;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                    labelText: parentContext.loc.itemNameLabel,
+                    hintText: parentContext.loc.itemNameHint,
+                    errorText: errorMessage,
+                  ),
+                  autofocus: true,
+                ),
               ),
-              autofocus: true,
-            ),
-          ),
-          actions: [
-            AdaptiveDialogAction(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(context.loc.cancelButton),
-            ),
-            AdaptiveDialogAction(
-              onPressed: () {
-                final name = nameController.text.trim();
-                if (name.isNotEmpty) {
-                  bloc.add(CreateAndSelectNewItem(name));
-                  Navigator.pop(context);
-                }
-              },
-              child: Text(context.loc.createButton),
-            ),
-          ],
+              actions: [
+                AdaptiveDialogAction(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(parentContext.loc.cancelButton),
+                ),
+                AdaptiveDialogAction(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final currentState = bloc.state;
+                    if (name.isNotEmpty) {
+                      if (currentState is TripItemSelectorLoaded) {
+                        final lowerName = name.toLowerCase();
+                        final exists = currentState.availableItems
+                            .any((e) => e.title.toLowerCase() == lowerName);
+                        if (exists) {
+                          setState(() {
+                            errorMessage = parentContext.loc.itemAlreadyExistsError;
+                          });
+                          return;
+                        }
+                      }
+                      bloc.add(CreateAndSelectNewItem(name));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(parentContext.loc.createButton),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -639,6 +650,194 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _AddItemsSearchBar extends StatefulWidget {
+  final VoidCallback onCreateNewItem;
+
+  const _AddItemsSearchBar({required this.onCreateNewItem});
+
+  @override
+  State<_AddItemsSearchBar> createState() => _AddItemsSearchBarState();
+}
+
+class _AddItemsSearchBarState extends State<_AddItemsSearchBar> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+  bool _isFocusedOrHasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _focusNode = FocusNode();
+
+    _controller.addListener(_updateState);
+    _focusNode.addListener(_updateState);
+  }
+
+  void _updateState() {
+    final isFocused = _focusNode.hasFocus;
+    final hasText = _controller.text.isNotEmpty;
+    bool shouldBeFocusedOrHasText = isFocused || hasText;
+
+    if (_isFocusedOrHasText != shouldBeFocusedOrHasText) {
+      setState(() {
+        _isFocusedOrHasText = shouldBeFocusedOrHasText;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_updateState);
+    _focusNode.removeListener(_updateState);
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Row(
+              children: [
+                const SizedBox(width: 16),
+                Icon(Icons.search, color: theme.colorScheme.onSurfaceVariant),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    decoration: InputDecoration(
+                      hintText: context.loc.searchHint,
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    onChanged: (val) {
+                      context
+                          .read<TripItemSelectorBloc>()
+                          .add(SearchQueryChanged(val));
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        if (_isFocusedOrHasText)
+          InkWell(
+            key: const ValueKey('search_cancel_btn'),
+            onTap: () {
+              if (_controller.text.isNotEmpty) {
+                _controller.clear();
+                context
+                    .read<TripItemSelectorBloc>()
+                    .add(SearchQueryChanged(''));
+              } else {
+                _focusNode.unfocus();
+              }
+            },
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest,
+                shape: BoxShape.circle,
+              ),
+              child:
+                  Icon(Icons.close, color: theme.colorScheme.onSurfaceVariant),
+            ),
+          )
+        else
+          InkWell(
+            key: const ValueKey('create_item_btn'),
+            onTap: widget.onCreateNewItem,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color:
+                    theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(Icons.add, color: theme.colorScheme.primary),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _HighlightedText extends StatelessWidget {
+  final String text;
+  final String query;
+  final TextStyle? style;
+  final Color highlightColor;
+
+  const _HighlightedText({
+    required this.text,
+    required this.query,
+    this.style,
+    required this.highlightColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (query.isEmpty) {
+      return Text(text, style: style);
+    }
+
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    if (!lowerText.contains(lowerQuery)) {
+      return Text(text, style: style);
+    }
+
+    final spans = <TextSpan>[];
+    int start = 0;
+    while (true) {
+      final index = lowerText.indexOf(lowerQuery, start);
+      if (index < 0) {
+        if (start < text.length) {
+          spans.add(TextSpan(text: text.substring(start), style: style));
+        }
+        break;
+      }
+      if (index > start) {
+        spans.add(TextSpan(text: text.substring(start, index), style: style));
+      }
+      spans.add(TextSpan(
+        text: text.substring(index, index + query.length),
+        style: style?.copyWith(
+              color: highlightColor,
+              fontWeight: FontWeight.bold,
+            ) ??
+            TextStyle(color: highlightColor, fontWeight: FontWeight.bold),
+      ));
+      start = index + query.length;
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
+      // Important to set maxLines and overflow similar to a standard list title
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

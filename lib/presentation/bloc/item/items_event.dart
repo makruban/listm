@@ -13,6 +13,14 @@ class LoadItems extends ItemsEvent {
   const LoadItems();
 }
 
+class ItemsSearchQueryChanged extends ItemsEvent {
+  final String query;
+  const ItemsSearchQueryChanged(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}
+
 class ItemsUpdated extends ItemsEvent {
   final List<ItemEntity> items;
   const ItemsUpdated(this.items);

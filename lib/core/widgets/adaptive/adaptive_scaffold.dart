@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'adaptive_base.dart';
+import 'app_safe_area.dart';
 
 class AdaptiveScaffold extends AdaptiveWidget {
   final Widget body;
@@ -41,7 +42,7 @@ class AdaptiveScaffold extends AdaptiveWidget {
               title: title != null ? Text(title!) : null,
               actions: trailing != null ? [trailing!] : null,
             ),
-      body: body,
+      body: AppSafeArea(child: body),
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
     );
