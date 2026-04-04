@@ -351,20 +351,47 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             ],
             child: Container(
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest
-                    .withValues(alpha: 0.3),
+                color: theme.brightness == Brightness.dark
+                    ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+                    : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.vertical(
-                  top: isFirstInGroup ? const Radius.circular(8) : Radius.zero,
-                  bottom:
-                      isLastInGroup ? const Radius.circular(8) : Radius.zero,
+                  top: isFirstInGroup ? const Radius.circular(12) : Radius.zero,
+                  bottom: isLastInGroup ? const Radius.circular(12) : Radius.zero,
                 ),
+                boxShadow: [
+                  if (theme.brightness == Brightness.dark && isLastInGroup)
+                    BoxShadow(
+                      color: Colors.white.withValues(alpha: 0.05), // Light subtle glow
+                      blurRadius: 16,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 2),
+                    ),
+                  if (theme.brightness == Brightness.light && isLastInGroup)
+                    BoxShadow(
+                      color: Colors.black.withAlpha(10),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                ],
                 border: Border(
                   top: isFirstInGroup
-                      ? BorderSide(color: Colors.grey.withValues(alpha: 0.3))
+                      ? BorderSide(
+                          color: theme.brightness == Brightness.dark
+                              ? theme.colorScheme.outlineVariant.withValues(alpha: 0.6)
+                              : Colors.grey.withValues(alpha: 0.3))
                       : BorderSide.none,
-                  bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
-                  left: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
-                  right: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                  bottom: BorderSide(
+                      color: theme.brightness == Brightness.dark
+                          ? theme.colorScheme.outlineVariant.withValues(alpha: 0.6)
+                          : Colors.grey.withValues(alpha: 0.3)),
+                  left: BorderSide(
+                      color: theme.brightness == Brightness.dark
+                          ? theme.colorScheme.outlineVariant.withValues(alpha: 0.6)
+                          : Colors.grey.withValues(alpha: 0.3)),
+                  right: BorderSide(
+                      color: theme.brightness == Brightness.dark
+                          ? theme.colorScheme.outlineVariant.withValues(alpha: 0.6)
+                          : Colors.grey.withValues(alpha: 0.3)),
                 ),
               ),
               child: ListTile(
