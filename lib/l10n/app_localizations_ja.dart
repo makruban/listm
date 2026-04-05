@@ -15,23 +15,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get welcome => 'TripWiseへようこそ';
 
   @override
-  String get packingLists => 'パッキングリスト';
+  String get packingLists => '旅行';
 
   @override
   String get allItems => 'すべてのアイテム';
 
   @override
-  String get addPackingList => 'パッキングリストを追加';
+  String get addPackingList => 'リストを追加';
 
   @override
   String get addItem => 'アイテムを追加';
 
   @override
-  String get noTripsMessage => 'パッキングリストが見つかりません。+をタップして追加してください。';
+  String get noTripsMessage => '旅行が見つかりません。+をタップして追加してください。';
 
   @override
   String tripsLoadError(Object error) {
-    return 'パッキングリストの読み込みに失敗しました：$error';
+    return '旅行の読み込みに失敗しました：$error';
   }
 
   @override
@@ -99,7 +99,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get doneButton => '完了';
 
   @override
-  String get noTripsMessageTitle => 'パッキングリストが見つかりません';
+  String get noTripsMessageTitle => '旅行が見つかりません';
 
   @override
   String get noTripsMessageSub => '+をタップして追加してください。';
@@ -229,4 +229,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get themeDark => 'ダーク';
+
+  @override
+  String get itemAlreadyExistsError => 'この名前のアイテムはすでに存在します。';
+
+  @override
+  String get searchHint => '検索';
 }

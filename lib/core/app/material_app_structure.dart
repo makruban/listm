@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:tripwise/core/resources/theme_manager/material_theme_manager.dart';
 import 'package:tripwise/core/routes/app_router.dart';
@@ -32,8 +31,7 @@ class MaterialAppStructure extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          locale: DevicePreview.locale(context) ?? locale,
-          builder: DevicePreview.appBuilder,
+          locale: locale,
           localeResolutionCallback: (deviceLocale, supportedLocales) {
             if (deviceLocale != null) {
               for (var supportedLocale in supportedLocales) {

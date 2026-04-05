@@ -137,15 +137,31 @@ class _TripCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: theme.brightness == Brightness.dark 
+              ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.7)
+              : theme.cardColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(12),
-              blurRadius: 15,
-              offset: const Offset(0, 4),
-            ),
+            if (theme.brightness == Brightness.light)
+              BoxShadow(
+                color: Colors.black.withAlpha(12),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              )
+            else
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.06), // Light subtle glow
+                blurRadius: 24,
+                spreadRadius: 0,
+                offset: const Offset(0, 2),
+              ),
           ],
+          border: theme.brightness == Brightness.dark
+              ? Border.all(
+                  color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  width: 1,
+                )
+              : null,
         ),
         child: Material(
           color: Colors.transparent,
@@ -160,7 +176,7 @@ class _TripCard extends StatelessWidget {
                     width: 60,
                     height: 60,
                     decoration: const BoxDecoration(
-                      color: Color(0xFFEFF3F8), // Soft rounded background
+                      color: Color(0xFFEFF3F8), // Restoring original soft rounded background
                       shape: BoxShape.circle,
                     ),
                     alignment: Alignment.center,

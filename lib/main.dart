@@ -1,5 +1,3 @@
-import 'package:device_preview/device_preview.dart';
-import 'package:device_preview_screenshot/device_preview_screenshot.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tripwise/core/app/material_app_structure.dart';
@@ -14,14 +12,7 @@ void main() async {
   await UniqueIdService.instance.initialize();
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      tools: [
-        ...DevicePreview.defaultTools,
-        DevicePreviewScreenshot(),
-      ],
-      builder: (context) => AppBlocProviders(child: const TripWiseApp()),
-    ),
+    const AppBlocProviders(child: TripWiseApp()),
   );
 }
 

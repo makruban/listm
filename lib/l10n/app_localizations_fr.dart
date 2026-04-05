@@ -15,7 +15,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get welcome => 'Bienvenue sur TripWise';
 
   @override
-  String get packingLists => 'Listes de bagages';
+  String get packingLists => 'Voyages';
 
   @override
   String get allItems => 'Tous les articles';
@@ -28,11 +28,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noTripsMessage =>
-      'Aucune liste trouvée. Appuyez sur + pour en ajouter une.';
+      'Aucun voyage trouvé. Appuyez sur + pour en ajouter un.';
 
   @override
   String tripsLoadError(Object error) {
-    return 'Échec du chargement des listes : $error';
+    return 'Échec du chargement des voyages : $error';
   }
 
   @override
@@ -103,7 +103,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get doneButton => 'Terminé';
 
   @override
-  String get noTripsMessageTitle => 'Aucune liste trouvée';
+  String get noTripsMessageTitle => 'Aucun voyage trouvé';
 
   @override
   String get noTripsMessageSub => 'Appuyez sur + pour en ajouter une.';
@@ -235,4 +235,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get themeDark => 'Sombre';
+
+  @override
+  String get itemAlreadyExistsError => 'Un élément portant ce nom existe déjà.';
+
+  @override
+  String get searchHint => 'Rechercher';
 }

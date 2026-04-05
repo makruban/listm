@@ -2,12 +2,12 @@
   "@@locale": "pt",
   "appTitle": "TripWise",
   "welcome": "Bem-vindo ao TripWise",
-  "packingLists": "Listas de bagagem",
+  "packingLists": "Viagens",
   "allItems": "Todos os itens",
   "addPackingList": "Adicionar lista",
   "addItem": "Adicionar item",
-  "noTripsMessage": "Nenhuma lista encontrada. Toque em + para adicionar uma.",
-  "tripsLoadError": "Falha ao carregar listas: {error}",
+  "noTripsMessage": "Nenhuma viagem encontrada. Toque em + para adicionar uma.",
+  "tripsLoadError": "Falha ao carregar as viagens: {error}",
   "untitledTrip": "Viagem sem título",
   "itemsLabel": "itens",
   "renameAction": "Renomear",
@@ -28,7 +28,7 @@
   "skipButton": "Pular",
   "nextButton": "Próximo",
   "doneButton": "Concluído",
-  "noTripsMessageTitle": "Nenhuma lista encontrada",
+  "noTripsMessageTitle": "Nenhuma viagem encontrada",
   "noTripsMessageSub": "Toque em + para adicionar uma.",
   "deleteItemTitle": "Excluir Item",
   "deleteItemConfirmation": "Tem certeza que deseja excluir \"{title}\"?",
@@ -72,5 +72,7 @@
   "selectThemeMode": "Selecionar Modo de Tema",
   "themeSystem": "Padrão do sistema",
   "themeLight": "Claro",
-  "themeDark": "Escuro"
+  "themeDark": "Escuro",
+  "itemAlreadyExistsError": "Já existe um item com este nome.",
+  "searchHint": "Pesquisar"
 }

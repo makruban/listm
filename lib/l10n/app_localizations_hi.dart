@@ -15,24 +15,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String get welcome => 'TripWise में आपका स्वागत है';
 
   @override
-  String get packingLists => 'पैकिंग सूचियाँ';
+  String get packingLists => 'यात्राएँ';
 
   @override
-  String get allItems => 'सभी आइटम';
+  String get allItems => 'सभी सामान';
 
   @override
-  String get addPackingList => 'पैकिंग सूची जोड़ें';
+  String get addPackingList => 'सूची जोड़ें';
 
   @override
-  String get addItem => 'आइटम जोड़ें';
+  String get addItem => 'सामान जोड़ें';
 
   @override
   String get noTripsMessage =>
-      'कोई पैकिंग सूची नहीं मिली। एक जोड़ने के लिए + पर टैप करें।';
+      'कोई यात्रा नहीं मिली। एक जोड़ने के लिए + पर टैप करें।';
 
   @override
   String tripsLoadError(Object error) {
-    return 'पैकिंग सूचियाँ लोड करने में विफल: $error';
+    return 'यात्राएँ लोड करने में विफल: $error';
   }
 
   @override
@@ -102,7 +102,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get doneButton => 'हो गया';
 
   @override
-  String get noTripsMessageTitle => 'कोई पैकिंग सूची नहीं मिली';
+  String get noTripsMessageTitle => 'कोई यात्रा नहीं मिली';
 
   @override
   String get noTripsMessageSub => 'एक जोड़ने के लिए + पर टैप करें।';
@@ -234,4 +234,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get themeDark => 'गहरा';
+
+  @override
+  String get itemAlreadyExistsError => 'इस नाम का आइटम पहले से मौजूद है।';
+
+  @override
+  String get searchHint => 'खोजें';
 }

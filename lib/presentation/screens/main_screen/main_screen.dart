@@ -32,7 +32,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late AppLocalizations _loc;
 // Once-only guards:
   bool _isInitialized = false;
-  late List<_TabInfo> _tabs;
+  bool _showAllItemsSearch = false;
 
   // Animation controllers
   late AnimationController _fabAnimationController;
@@ -69,13 +69,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       _tripsBloc = context.read<TripsBloc>();
       _isInitialized = true;
     }
+  }
 
+  List<_TabInfo> get _tabs {
     // Always grab the latest localization and rebuild the tab titles dynamically
     // whenever dependencies (like Locale) change.
     _loc = context.loc;
 
     // 2️⃣ Build your tab info with the real `loc`
-    _tabs = [
+    return [
       _TabInfo(
         page: PackingListsScreen(
           tripsBloc: _tripsBloc,
@@ -110,10 +112,22 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           hideFab: _hideFab,
           showFab: _showFab,
           itemsBloc: _itemsBloc,
+          showSearch: _showAllItemsSearch,
+          onCloseSearch: () {
+            _showFab();
+            setState(() => _showAllItemsSearch = false);
+          },
         ),
         materialAppBarBuilder: (context) => AppBar(
           title: Text(_loc.allItems),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                _hideFab();
+                setState(() => _showAllItemsSearch = true);
+              },
+            ),
             IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () => context.push(AppRoutes.settings))
@@ -121,10 +135,23 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ),
         cupertinoNavigationBarBuilder: (context) => CupertinoNavigationBar(
           middle: Text(_loc.allItems),
-          trailing: CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: const Icon(CupertinoIcons.settings),
-            onPressed: () => context.push(AppRoutes.settings),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Icon(CupertinoIcons.search),
+                onPressed: () {
+                  _hideFab();
+                  setState(() => _showAllItemsSearch = true);
+                },
+              ),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Icon(CupertinoIcons.settings),
+                onPressed: () => context.push(AppRoutes.settings),
+              ),
+            ],
           ),
         ),
         navBarItem: BottomNavigationBarItem(

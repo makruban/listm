@@ -2,12 +2,12 @@
   "@@locale": "pl",
   "appTitle": "TripWise",
   "welcome": "Witaj w TripWise",
-  "packingLists": "Listy pakowania",
+  "packingLists": "Podróże",
   "allItems": "Wszystkie przedmioty",
   "addPackingList": "Dodaj listę",
   "addItem": "Dodaj przedmiot",
-  "noTripsMessage": "Nie znaleziono list pakowania. Dotknij +, aby dodać.",
-  "tripsLoadError": "Nie udało się wczytać list pakowania: {error}",
+  "noTripsMessage": "Nie znaleziono podróży. Dotknij +, aby dodać.",
+  "tripsLoadError": "Nie udało się wczytać podróży: {error}",
   "untitledTrip": "Podróż bez tytułu",
   "itemsLabel": "przedmioty",
   "renameAction": "Zmień nazwę",
@@ -28,7 +28,7 @@
   "skipButton": "Pomiń",
   "nextButton": "Dalej",
   "doneButton": "Gotowe",
-  "noTripsMessageTitle": "Nie znaleziono list pakowania",
+  "noTripsMessageTitle": "Nie znaleziono podróży",
   "noTripsMessageSub": "Dotknij +, aby dodać.",
   "deleteItemTitle": "Usuń przedmiot",
   "deleteItemConfirmation": "Czy na pewno chcesz usunąć \"{title}\"?",
@@ -72,5 +72,7 @@
   "selectThemeMode": "Wybierz Tryb Motywu",
   "themeSystem": "Domyślny systemu",
   "themeLight": "Jasny",
-  "themeDark": "Ciemny"
+  "themeDark": "Ciemny",
+  "itemAlreadyExistsError": "Element o tej nazwie już istnieje.",
+  "searchHint": "Szukaj"
 }
